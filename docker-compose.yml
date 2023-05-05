@@ -1,0 +1,37 @@
+version: '3.1'
+
+services:
+
+  database:
+    image: postgres:15
+    container_name: database
+    restart: on-failure
+    ports:
+      - 5432:5432
+    volumes:
+      - "./backend/data:/var/lib/postgresql/data"
+    networks:
+      - database
+    environment:
+      POSTGRES_PASSWORD: 111
+      POSTGRES_PORT: 5432
+    env_file:
+      - .env
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+volumes:
+  database:
+    driver: local
+    name: database
+    driver_opts:
+      type: none
+      o: bind
+      device: ./backend/database
+
+networks:
+  database:
