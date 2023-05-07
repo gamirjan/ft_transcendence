@@ -15,4 +15,4 @@ jobs:
 
     - name: SSH into VM and deploy
       run: |
-        sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no '${{ secrets.USER }}'@'${{ secrets.VM_IP }}' 'cd ft_transendence && git pull && docker-compose up --build -d'
+        sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'cd ft_transendence && git pull && docker-compose up --build -d'
