@@ -1,6 +1,13 @@
 FROM node:18
-WORKDIR /app
-COPY . .
-RUN npm i
-CMD ["npm", "start"]
 
+RUN mkdir -p /backend
+WORKDIR /backend
+
+COPY --chown=node:node package*.json /backend
+
+RUN npm install
+
+COPY --chown=node:node . .
+EXPOSE 7000
+
+ENTRYPOINT ["npm", "run", "start:dev"]
