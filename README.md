@@ -1,4 +1,4 @@
-# ft_transcendence
+# ft_transendence
 
 run site with:
     npm install
