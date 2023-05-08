@@ -6,7 +6,7 @@ build:
 	docker compose build
 
 up:
-	docker compose up -d
+	@docker compose up -d
 
 down:
 	docker compose down
@@ -25,7 +25,7 @@ prune: down
 	rm -rf backend/dist
 	rm -rf frontend/node_modules
 	rm -rf frontend/dist
-	cd frontend && npm install && cd ..
+	# cd frontend && npm install && cd ..
 	rm -rf database/data
 	docker system prune -f -a
 

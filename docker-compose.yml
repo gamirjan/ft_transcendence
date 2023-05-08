@@ -1,28 +1,54 @@
-version: '3.1'
+version: '3.8'
 
 services:
 
   database:
+    build: ./
     image: postgres:15
     container_name: database
     restart: on-failure
-    ports:
-      - 5432:5432
     volumes:
       - "./backend/data:/var/lib/postgresql/data"
-    networks:
-      - database
-    environment:
-      POSTGRES_PASSWORD: 111
-      POSTGRES_PORT: 5432
+    ports:
+      - 5432:5432
+    # environment:
     env_file:
       - .env
 
-  adminer:
-    image: adminer
-    restart: always
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmimn
+    restart: on-failure
+    depends_on:
+      - database
     ports:
-      - 8080:8080
+      - 5050:80
+    links:
+      - database
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@42.fr
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+  backend:
+    build: ./backend
+    container_name: backend
+    # environment:
+    #   - 
+    ports:
+      - 7000:7000
+    links:
+      - database
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    # environment:
+    #   - 
+    ports:
+      - 3000:3000
+    links:
+      - backend
+
 
 volumes:
   database:
@@ -32,6 +58,3 @@ volumes:
       type: none
       o: bind
       device: ./backend/database
-
-networks:
-  database:
