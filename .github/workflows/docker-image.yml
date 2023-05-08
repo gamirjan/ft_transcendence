@@ -1,0 +1,18 @@
+name: Deploy to Azure VM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
+
+    - name: SSH into VM and deploy
+      run: |
+        sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'cd ft_transendence && git pull && docker compose up --build -d'
