@@ -4,29 +4,25 @@
   import { ShutdownService} from './signal.service'
   import { ConfigModule } from '@nestjs/config';
   import { TypeOrmModule } from '@nestjs/typeorm';
-  import { getConnection } from 'typeorm';
-  import { UserController } from './db.controller';
-  import { UserService } from './db.service';
+  import config from './ormconfig'
+  import { UsersController } from './Users/user.controller';
+  import { UsersService } from './Users/user.service';
+import { UsersModule } from './Users/users.module';
+import { UserRepository } from './Users/user.repository';
+import { User } from './Users/user.entity';
+import { AddUsersService } from './AddUser/addUser.service';
+import { AddUsersController } from './AddUser/addUsers.controller';
 
 
   @Module({
     imports: [
       ConfigModule.forRoot({isGlobal:true}),
-      TypeOrmModule.forRoot({
-        name:'replication',
-        type : 'postgres',
-        host: "postgresqltransendence.postgres.database.azure.com",
-        port:5432,
-        database: "development",
-        username: "admin2",
-        password:  "MekDad!89!",
-        autoLoadEntities: true,
-        synchronize: true,
-        ssl: true,
-      })
+      TypeOrmModule.forRoot(config),
+      UsersModule,
+      TypeOrmModule.forFeature([User, UserRepository]),
     ],
-    controllers: [AppController,UserController],
-    providers: [AppService, ShutdownService,UserService],
+    controllers: [AppController,UsersController, AddUsersController],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService],
   })
   export class AppModule {
     constructor(){

@@ -7,7 +7,7 @@ export class UserController {
 
   @Get()
   async findAll() {
-    const users = await this.userService.getData();
-    return { users };
+    // const users = await this.userService.getData();
+    return "nothing yet";
   }
 }
