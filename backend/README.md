@@ -22,6 +22,15 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Database connection
+
+[Postgresql] (to connect server to your local database you need to have .env file with this format =>
+HOST = "your local host ip address"
+USER_NAME= "username"
+PASS= "xxxxx"
+DB_NAME= "db"
+PORT = "5432" )
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

@@ -10,6 +10,6 @@ async function bootstrap() {
   });
   // const configService = app.get(ConfigService);
   // const port = configService.get('port');
-  await app.listen(7000);
+  await app.listen(7000,()=>{console.log("server is listening on port 7000!")});
 }
 bootstrap();

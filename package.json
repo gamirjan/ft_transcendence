@@ -24,6 +24,7 @@
     "axios": "^1.3.5",
     "bootstrap": "^5.2.3",
     "concurrently": "^7.6.0",
+    "nodemon": "^2.0.22",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-router-dom": "^6.10.0"
