@@ -27,6 +27,7 @@
     "nodemon": "^2.0.22",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
-    "react-router-dom": "^6.10.0"
+    "react-router-dom": "^6.10.0",
+    "typeorm": "^0.3.16"
   }
 }
