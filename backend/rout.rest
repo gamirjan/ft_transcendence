@@ -4,8 +4,8 @@ Content-Type: application/json
 
 {
 
-    "ID_42":"22",
-    "displayName": "arno",
+    "ID_42":"2",
+    "displayName": "arno222",
     "avatarUrl": "http://example.com/newuser.png",
     "isTwoFactorEnabled": true,
     "wins": 0,
