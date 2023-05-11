@@ -6,7 +6,7 @@ export class User {
   Id: number;
 
   @Column({ unique: true })
-  '42Id': number;
+  'ID_42': number;
 
   @Column({ unique: true })
   DisplayName: string;
@@ -18,7 +18,7 @@ export class User {
   IsTwoFactorEnabled: boolean;
 
   @Column()
-  Wins: number;
+  Wins: number; 
 
   @Column()
   Losses: number;

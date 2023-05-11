@@ -5,7 +5,7 @@ import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-val
 export class CreateUserDto {
   @IsNotEmpty()
   @IsNumber()
-  readonly '42Id': number;
+  readonly 'ID_42': number;
 
   @IsNotEmpty()
   @IsString()
