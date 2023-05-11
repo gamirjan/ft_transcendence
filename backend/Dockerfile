@@ -2,4 +2,4 @@ FROM node:18
 WORKDIR /app
 COPY . .
 RUN npm i
-CMD ["npm", "start"]
+CMD ["npm", "run", "start:dev"]
