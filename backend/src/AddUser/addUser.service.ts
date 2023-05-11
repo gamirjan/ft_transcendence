@@ -15,7 +15,7 @@ export class AddUsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> {
     const user = new User();
-    //user.{'42Id'} = createUserDto.{'42Id'};
+    user.ID_42 = createUserDto.ID_42;
     user.DisplayName = createUserDto.displayName;
     user.AvatarUrl = createUserDto.avatarUrl;
     user.IsTwoFactorEnabled = createUserDto.isTwoFactorEnabled;
