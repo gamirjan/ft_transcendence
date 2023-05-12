@@ -178,19 +178,14 @@ const Chat = () => {
                         <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
                             Play
                         </button>
-
                         <input
-                        className="w-5/6 w-full bg-gray-300 py-5 px-3 rounded-xl"
+                        className="w-4/5 w-full bg-gray-300 py-5 px-3 rounded-xl"
                         type="text"
-                        placeholder="type your message here..."
-                        
+                        placeholder="type your message here..."  
                         />
                         <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
                             Send
                         </button>
-
-
-
                     </div>
                 </div>
 
