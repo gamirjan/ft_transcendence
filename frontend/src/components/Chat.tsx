@@ -176,7 +176,7 @@ const Chat = () => {
                     </div>
                     <div className="py-5">
                         <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
-                            Play
+                            Game
                         </button>
                         <input
                         className="w-10/12 bg-gray-300 py-5 px-3 rounded-xl"
