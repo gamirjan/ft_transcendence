@@ -179,7 +179,7 @@ const Chat = () => {
                             Play
                         </button>
                         <input
-                        className="w-4/5 w-full bg-gray-300 py-5 px-3 rounded-xl"
+                        className="w-10/12 bg-gray-300 py-5 px-3 rounded-xl"
                         type="text"
                         placeholder="type your message here..."  
                         />
