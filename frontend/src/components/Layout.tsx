@@ -35,7 +35,7 @@ export const Layout = ({children}) => {
                         to="/chanels"
                         className="px-10 text-1xl mx-14 font-semibold leading-7 text-black-900"
                     >
-                        Chanels
+                        Channels
                     </Link>
                     <Link
                         to="/"
