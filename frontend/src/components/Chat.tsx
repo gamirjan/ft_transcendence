@@ -1,5 +1,7 @@
 import React from "react"
 import { Layout } from "./Layout";
+import profile from '@SRC_DIR/assets/images/profile.svg';
+
 
 const Chat = () => {
     return ( 
@@ -9,10 +11,8 @@ const Chat = () => {
                 <div className="font-semibold text-2xl">Mikhayil Arzumanyan
                 <h6 className="font-semibold text-lg">miarzuma</h6>
                 </div>
-                <div
-                    className="h-12 w-12 p-2 bg-yellow-500 rounded-full text-white font-semibold flex items-center justify-center"
-                >
-                    MA
+                <div>
+                    <img src={profile} className="w-40 border-4 border-white rounded-full"/>
                 </div>
                 </div>
 
@@ -174,11 +174,22 @@ const Chat = () => {
                     </div>
                     </div>
                     <div className="py-5">
-                    <input
-                        className="w-full bg-gray-300 py-5 px-3 rounded-xl"
+                        <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                            Game
+                        </button>
+
+                        <input
+                        className="w-10/12  bg-gray-300 py-5 px-3 rounded-xl"
                         type="text"
                         placeholder="type your message here..."
-                    />
+                        
+                        />
+                        <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                            Send
+                        </button>
+
+
+
                     </div>
                 </div>
 
