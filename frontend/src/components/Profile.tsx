@@ -18,6 +18,14 @@ const Profile = () => {
                 </div>
                 <p className="text-gray-700">miarzuma</p>
                 <p className="text-sm text-gray-500"> Created 7 June 2023</p>
+                <div className="flex">
+                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                        Friend
+                    </button>
+                    <button className="ml-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                        Black
+                    </button>
+                </div>
             </div>
 
         </div>
