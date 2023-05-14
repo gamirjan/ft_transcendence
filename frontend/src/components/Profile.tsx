@@ -10,7 +10,7 @@ const Profile = () => {
             <div x-data="{ openSettings: false }" className="absolute right-12 mt-4 rounded">
             </div>
 
-            <div className="flex flex-col items-center mt-20">
+            <div className="flex flex-col items-center mt-10">
                 <img src={profile} className="w-40 border-4 border-white rounded-full"/>
                 <div className="flex items-center space-x-2 mt-2">
                     <p className="text-2xl">Mikhayil Arzumanyan</p>
