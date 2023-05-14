@@ -12,6 +12,9 @@ import { UserRepository } from './Users/user.repository';
 import { User } from './Users/user.entity';
 import { AddUsersService } from './AddUser/addUser.service';
 import { AddUsersController } from './AddUser/addUsers.controller';
+import { FriendController } from './UserFriend/UserFriend.controller';
+import { UserFriendService } from './UserFriend/UserFriend.service';
+import { UserFriend } from './UserFriend/UserFriend.entity';
 
 
   @Module({
@@ -19,10 +22,10 @@ import { AddUsersController } from './AddUser/addUsers.controller';
       ConfigModule.forRoot({isGlobal:true}),
       TypeOrmModule.forRoot(config),
       UsersModule,
-      TypeOrmModule.forFeature([User, UserRepository]),
+      TypeOrmModule.forFeature([User, UserRepository,UserFriend]),
     ],
-    controllers: [AppController,UsersController, AddUsersController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService],
+    controllers: [AppController,UsersController, AddUsersController,FriendController],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService],
   })
   export class AppModule {
     constructor(){

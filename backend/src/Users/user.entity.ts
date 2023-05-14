@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-
+import { UserFriend } from '../UserFriend/UserFriend.entity';
+import { OneToMany } from 'typeorm';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -22,4 +23,8 @@ export class User {
 
   @Column()
   Losses: number;
+
+  @OneToMany(() => UserFriend, userFriend => userFriend.user)
+  friends: UserFriend[];
+
 }

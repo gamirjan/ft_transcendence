@@ -27,3 +27,19 @@ Content-Type: application/json
 }
 
 ###ddd
+### for getting friend
+GET http://localhost:7000/friends/1
+
+### for add friend
+
+POST http://localhost:7000/friends
+Content-Type: application/json
+
+{
+  "UserId": 22 ,
+  "friendId": 2
+}
+
+### for delete friend
+
+DELETE http://localhost:7000/friends/1/2
