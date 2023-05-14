@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { User } from './user.entity';
 
@@ -12,4 +12,15 @@ export class UsersController {
     
     return this.usersService.findAll();
   }
-}
+  @Get('/:id')
+  async findone(@Param('id') displayName: string): Promise<User> {
+  console.log("/user/:is requset");
+      const user = await this.usersService.findOneByDisplayName(displayName);
+      if (!user) {
+        throw new NotFoundException(`User with displayName '${displayName}' not found`);
+      }
+      return user;
+    }
+    
+  }
+

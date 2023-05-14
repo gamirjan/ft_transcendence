@@ -13,7 +13,7 @@ export class FriendController {
   }
 
   @Post()
-  async create(@Body() friend: UserFriend): Promise<UserFriend> {
+  async create(@Body() friend: User): Promise<User> {
     return this.friendService.create(friend);
   }
 

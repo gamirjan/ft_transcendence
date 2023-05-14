@@ -22,7 +22,7 @@ import { UserFriend } from './UserFriend/UserFriend.entity';
       ConfigModule.forRoot({isGlobal:true}),
       TypeOrmModule.forRoot(config),
       UsersModule,
-      TypeOrmModule.forFeature([User, UserRepository,UserFriend]),
+      TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
     controllers: [AppController,UsersController, AddUsersController,FriendController],
     providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService],

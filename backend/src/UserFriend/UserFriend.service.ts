@@ -17,16 +17,17 @@ export class UserFriendService {
     
       async findAll(userId: number): Promise<User[]> {
         const friends = await this.friendRepository
-          .createQueryBuilder('friend')
-          .innerJoinAndSelect('friend.friend', 'user')
-          .where('friend.user.id = :userId', { userId })
+          .createQueryBuilder('userfriends')
+          .innerJoinAndSelect('userfriends.friend', 'user')
+          .where('userfriends.userId = :userId', { userId })
           .getMany();
     
         return friends.map((friend) => friend.user);
       }
     
-      async create(friend: UserFriend): Promise<UserFriend> {
-        return this.friendRepository.save(friend);
+      async create(friend: User): Promise<User> {
+        const newFriend = this.userRepository.create(friend);
+        return this.userRepository.save(newFriend);
       }
     
       async remove(userId: number, friendId: number): Promise<void> {

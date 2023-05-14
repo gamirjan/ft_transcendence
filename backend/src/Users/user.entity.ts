@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { UserFriend } from '../UserFriend/UserFriend.entity';
 import { OneToMany } from 'typeorm';
 @Entity()
@@ -24,7 +24,7 @@ export class User {
   @Column()
   Losses: number;
 
-  @OneToMany(() => UserFriend, userFriend => userFriend.user)
-  friends: UserFriend[];
+  @ManyToMany(() => User, User => User.friends)
+  friends: User[];
 
 }
