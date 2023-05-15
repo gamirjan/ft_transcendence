@@ -27,8 +27,8 @@ CREATE TABLE UserFriends (
   Id SERIAL PRIMARY KEY,
   UserId INTEGER,
   FriendId INTEGER,
-  FOREIGN KEY (UserId) REFERENCES Users (Id),
-  FOREIGN KEY (FriendId) REFERENCES Users (Id),
+  FOREIGN KEY (UserId) REFERENCES User (Id),
+  FOREIGN KEY (FriendId) REFERENCES User (Id),
   CONSTRAINT unique_user_friend_pair UNIQUE (UserId, FriendId)
 );
 
