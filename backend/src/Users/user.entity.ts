@@ -23,7 +23,7 @@ export class User {
 
   @Column()
   Losses: number;
-
+  
   @ManyToMany(() => User, User => User.friends)
   friends: User[];
 
