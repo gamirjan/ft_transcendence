@@ -1,23 +1,21 @@
-import { Get, Module } from "@nestjs/common";
-import { AuthController } from "./auth.controller";
-import { GoogleStrategy } from "./utils/googleStrategy";
-import { PassportModule } from "@nestjs/passport";
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../entities/User'; 
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
+import { GoogleStrategy } from './utils/GoogleStrategy';
+import { SessionSerializer } from './utils/Serializer';
 
 @Module({
-    imports: [
-      PassportModule.register({ defaultStrategy: 'google' }),
-    ],
-    providers: [
-      AuthService,
-      GoogleStrategy,
-    ],
-  })
-  export class AuthModule {}
-
-/* @Module({
-    controllers:[AuthController],
-    providers:[GoogleStrategy],
+  imports: [TypeOrmModule.forFeature([User])],
+  controllers: [AuthController],
+  providers: [
+    GoogleStrategy,
+    SessionSerializer,
+    {
+      provide: 'AUTH_SERVICE',
+      useClass: AuthService,
+    },
+  ],
 })
-export class AuthModule {
-    
-} */
+export class AuthModule {}

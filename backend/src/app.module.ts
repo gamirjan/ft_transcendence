@@ -16,6 +16,7 @@ import { FriendController } from './UserFriend/UserFriend.controller';
 import { UserFriendService } from './UserFriend/UserFriend.service';
 import { UserFriend } from './UserFriend/UserFriend.entity';
 import { AuthController } from './auth/auth.controller';
+import { AuthService } from './auth/auth.service';
 
   @Module({
     imports: [
@@ -25,7 +26,7 @@ import { AuthController } from './auth/auth.controller';
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService],
   })
   export class AppModule {
     constructor(){
