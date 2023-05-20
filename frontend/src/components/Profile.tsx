@@ -30,8 +30,8 @@ const Profile = () => {
 
         </div>
 
-        <div className="flex justify-center mt-14">
-            <div className="w-6/12  flex flex-col 2xl:w-1/3">
+        <div className="grid grid-cols-1 md:grid-cols-2 flex justify-center mt-14">
+            <div className="flex flex-col">
                 <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
                     <h4 className="text-xl text-gray-900 font-bold">Personal Info</h4>
                     <ul className="mt-2 text-gray-700">
@@ -59,7 +59,7 @@ const Profile = () => {
                 </div>
             </div>
 
-            <div className="w-6/12 flex flex-col 2xl:w-1/3">
+            <div className="flex flex-col">
                 <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
                     <h4 className="text-xl text-gray-900 font-bold">Game Info</h4>
                     <ul className="mt-2 text-gray-700">
