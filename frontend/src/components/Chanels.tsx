@@ -11,10 +11,10 @@ const Chanels = () => {
                 <div className="mt-8 font-semibold text-2xl">Members List</div>
                 </div>
 
-                <div className="flex flex-row justify-between bg-white">
+                <div className="grid grid-cols-1 lg:grid-cols-4 flex flex-row justify-between bg-white">
 
                 <div style={{ height: '600px' }}
-                    className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+                    className="flex flex-col border-r-2 overflow-y-auto">
 
                     <div className="border-b-2 py-4 px-2">
                     <input
@@ -22,6 +22,24 @@ const Chanels = () => {
                         placeholder="search channel"
                         className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
                     />
+                    </div>
+
+                    <div className="flex flex-row py-4 px-2 items-center border-b-2">
+
+                    <div className="flex w-full justify-center items-center">
+                        <div className="w-1/2 py-4 px-2">
+                        <input
+                            type="text"
+                            placeholder="Channel Name"
+                            className="py-2 px-7 border-2 border-gray-200 rounded-2xl "
+                        />
+                        </div>
+                        <div className="w-1/2 text-lg font-semibold ml-14">
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                            Add
+                            </button>
+                        </div>
+                    </div>
                     </div>
 
                     <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2">
@@ -51,7 +69,7 @@ const Chanels = () => {
 
                 </div>
 
-            <div  className=" w-full px-5 flex flex-col justify-between">
+            <div  className="col-span-2 px-5 flex flex-col justify-between">
                 <div style={{ height: '500px' }} className="overflow-y-auto flex flex-col mt-5">
                     <div className="flex justify-end mb-4">
                         <div
@@ -161,7 +179,7 @@ const Chanels = () => {
 
 
                 <div  style={{ height: '600px' }}
-                    className="overflow-y-auto w-2/5 border-l-2 px-5">
+                    className="overflow-y-auto border-l-2 px-5">
 
                         <div className="border-b-2 py-4 px-2">
                         <input
