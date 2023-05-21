@@ -161,16 +161,14 @@ const Chanels = () => {
                  </div>
 
                     <div className="py-5">
-                        <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
-                            Kick
-                        </button>
+
 
                         <input
                         className="w-10/12  bg-gray-300 py-5 px-3 rounded-xl"
                         type="text"
                         placeholder="type your message here..."    
                         />
-                        <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                        <button className="w-2/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
                             Send
                         </button>
                     </div>
@@ -181,81 +179,113 @@ const Chanels = () => {
                 <div  style={{ height: '600px' }}
                     className="overflow-y-auto border-l-2 px-5">
 
-                        <div className="border-b-2 py-4 px-2">
+                    <div className="flex w-full border-b-2 justify-center items-center">
+                        <div className="w-1/2 py-4 px-2">
                         <input
                             type="text"
                             placeholder="search members"
-                            className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+                            className="py-2 px-7 border-2 border-gray-200 rounded-2xl "
                         />
                         </div>
+                        <div className="w-1/2 text-lg font-semibold ml-24">
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                            Invite
+                            </button>
+                        </div>
+                    </div>
 
                         <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2">
-                        <div className="w-1/4">
-                            <img
-                            src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-                            className="object-cover h-12 w-12 rounded-full"
-                            alt=""
-                            />
-                        </div>
-                        <div className="w-full">
-                            <div className="text-lg font-semibold">Arno Baboomian</div>
-                            <div className="text-gray-500">arbaboom</div>
-                        </div>
+                            <div className="w-1/3">
+                                <img
+                                src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
+                                className="object-cover h-12 w-12 rounded-full"
+                                alt=""
+                                />
+                            </div>
+                            <div className="w-5/12 ml-2">
+                                <div className="text-lg font-semibold">Arno Baboomian</div>
+                                <div className="text-gray-500">arbaboom</div>
+                            </div>
+                            <div className="w-1/5 text-lg font-semibold ml-14"> 
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                Kick
+                            </button>
+                             </div>
                         </div>
 
                         <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                        <div className="w-1/4">
+                        <div className="w-1/3">
                             <img
                             src="https://source.unsplash.com/otT2199XwI8/600x600"
                             className="object-cover h-12 w-12 rounded-full"
                             alt=""
                             />
                         </div>
-                        <div className="w-full">
+                        <div className="w-5/12 ml-2">
                             <div className="text-lg font-semibold">Arman Kazaryan</div>
                             <div className="text-gray-500">armanarut</div>
+                        </div>
+                        <div className="w-1/5 text-lg font-semibold ml-14"> 
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                Kick
+                            </button>
                         </div>
                         </div>
 
                         <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                        <div className="w-1/4">
+                        <div className="w-1/3">
                             <img
                             src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
                             className="object-cover h-12 w-12 rounded-full"
                             alt=""
                             />
                         </div>
-                        <div className="w-full">
+                        <div className="w-5/12">
                             <div className="text-lg font-semibold">Gevorg Amirjanyan</div>
                             <div className="text-gray-500">gamirjan</div>
+                        </div>
+                        <div className="w-1/5 text-lg font-semibold ml-14"> 
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                Kick
+                            </button>
                         </div>
                         </div>
 
                         <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                        <div className="w-1/4">
+                        <div className="w-1/3">
                             <img
                             src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
                             className="object-cover h-12 w-12 rounded-full"
                             alt=""
                             />
                         </div>
-                        <div className="w-full">
+                        <div className="w-5/12 ml-2">
                             <div className="text-lg font-semibold">Vruyr Sargsyan</div>
                             <div className="text-gray-500">vrsargsy</div>
+                        </div>
+                        <div className="w-1/5 text-lg font-semibold ml-14"> 
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                Kick
+                            </button>
                         </div>
                         </div>
 
                         <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                        <div className="w-1/4">
+                        <div className="w-1/3">
                             <img
                             src={profile}
                             className="object-cover h-12 w-12 rounded-full"
                             alt=""
                             />
                         </div>
-                        <div className="w-full">
+                        <div className="w-5/12 ml-2">
                             <div className="text-lg font-semibold">Mikhayil Arzumanyan</div>
                             <div className="text-gray-500">miarzuma</div>
+                        </div>
+                        <div className="w-1/5 text-lg font-semibold ml-14"> 
+                            <button className="bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                                Kick
+                            </button>
                         </div>
                         </div>
 
