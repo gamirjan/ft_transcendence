@@ -22,7 +22,10 @@ const Profile = () => {
                     <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                         Friend
                     </button>
-                    <button className="ml-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                        Chat
+                    </button>
+                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                         Black
                     </button>
                 </div>

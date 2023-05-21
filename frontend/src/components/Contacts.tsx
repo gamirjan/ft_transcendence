@@ -7,8 +7,8 @@ const Contacts = () => {
     return (
         <Layout>
              <div className="grid grid-cols-1 md:grid-cols-2 flex justify-center">
-               <div className="">
-                <ul className="max-w-xl divide-y divide-gray-200 dark:divide-gray-700 mt-20 ml-20 mr-20">
+               <div className="flex justify-center">
+                <ul className="w-3/4 divide-y divide-gray-200 dark:divide-gray-700 mt-20">
                     <li className="pb-3 sm:pb-4">
                         <div className="flex items-center space-x-4">
 
@@ -115,8 +115,9 @@ const Contacts = () => {
                     </li>
                     </ul>
                 </div>
-                <div className="">
-                    <ul className=" max-w-xl divide-y divide-gray-200 dark:divide-gray-700 mt-20 ml-20 mr-20">
+
+                <div className="flex justify-center">
+                    <ul className="w-3/4 divide-y divide-gray-200 dark:divide-gray-700 mt-20">
                     <li className="pb-3 sm:pb-4">
                         <div className="flex items-center space-x-4">
 
