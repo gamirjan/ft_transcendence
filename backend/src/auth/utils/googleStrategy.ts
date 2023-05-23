@@ -9,9 +9,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy) {
     @Inject('AUTH_SERVICE') private readonly authService: AuthService,
   ) {
     super({
-      clientID: '313268611879-9nm02b6gb6r657fvl686cvtbuhmdf1vk.apps.googleusercontent.com',
-      clientSecret: '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',
-      callbackURL: 'http://localhost:3000',
+      clientID: '472681490682-cofucv7fr3j0v654ti873v4flktohgdq.apps.googleusercontent.com',
+      clientSecret: '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',
+      callbackURL: 'http://localhost:7000/auth/google/redirect',
       scope: ['profile', 'email'],
     });
   }
