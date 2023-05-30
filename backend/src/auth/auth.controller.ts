@@ -15,7 +15,7 @@ export class AuthController {
   @Get('google/redirect')
   handleRedirect(@Req() req ,@Res() res) {
     googleOauthHandler(req,res)
-    console.log(req.body);
+    // console.log("request :",req.query);
     
     return { msg: 'OK' };
     //@UseGuards(GoogleAuthGuard)
