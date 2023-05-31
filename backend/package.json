@@ -31,6 +31,7 @@
     "@nestjs/websockets": "^9.4.2",
     "class-validator": "^0.14.0",
     "dotenv": "^16.0.3",
+    "express": "^4.18.2",
     "nest": "^0.1.6",
     "nodemon": "^2.0.22",
     "passport": "^0.6.0",
@@ -38,7 +39,8 @@
     "passport-oauth2": "^1.7.0",
     "pg": "^8.10.0",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.2.0"
+    "rxjs": "^7.2.0",
+    "socket.io": "^4.6.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.4.2",
