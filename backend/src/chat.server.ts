@@ -10,7 +10,7 @@ import {
 import { Server } from "socket.io";
 import { Socket } from "socket.io";
 
-@WebSocketGateway(4000, { cors: 'http://localhost:3000' })
+@WebSocketGateway(4000, { cors: ['http://localhost:3000','http://20.123.193.166:3000/'] })
 
 export class ChatServer implements OnGatewayInit, OnGatewayConnection{
     @WebSocketServer()
