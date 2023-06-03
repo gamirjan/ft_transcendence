@@ -1,83 +1,54 @@
 import React from "react"
 import { Layout } from "./Layout";
-import ReactDOM from 'react-dom';
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useState } from "react"
-import io from 'socket.io-client';
-
-const socket = io('http://localhost:4000');
-
-// read room in querystring
-const queryString = window.location.search;
-const urlParams = new URLSearchParams(queryString);
-const room = urlParams.get('room'); // ?room=white
+import ChatMsg from "./ChatMsg";
+import { IMassage } from "./utils/index";
+import { socket } from "./Socket";
 
 const generateRandomString = (length=6) => Math.random().toString(20).substr(2, length);
 
-const generateRandomDarkColor = () => {
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-      color += Math.floor(Math.random() * 10);
-  }
-  return color;
-}
+let username  : string | null = "";
+username = generateRandomString(8);
+
+// read id in querystring
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const chatid = urlParams.get('id');
 
 window.onload = function () {
-  socket.emit('room', room);
-  let userid  : string | null = "";
-  if (localStorage.getItem("userid")) {
-    userid = localStorage.getItem("userid");
-  } else {
-    userid = generateRandomString(8);
-    localStorage.setItem("userid",userid);
-    localStorage.setItem("userColor",generateRandomDarkColor());
-  } 
+    socket.emit('online', chatid);
 };
 
 const Chat = () => {
-const [textMessages, setTextMessages] = useState([]);
-const [message, setMessage] = useState("");
-const [showSenderMessage, setShowSenderMessage] = useState(false);
 
-const sendMessage = async (event) => {
-    event.preventDefault();
-    setShowSenderMessage(true);
+    const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
+    const [message, setMessage] = useState("");
 
-    
-        let msg1 = message;
-        msg1 =  msg1.replace(/(<([^>]+)>)/gi, "");
-        const userid = localStorage.getItem("userid");
-        const userColor = localStorage.getItem("userColor");
-        console.log("sending msg: " + msg1 + " from " + userid);
-        socket.emit('message', {"msg" : msg1, "userid" : userid, "room": room, "userColor": userColor});
-        
-    setMessage("");
-}
+    const sendMessage = async (event) => {
+        event.preventDefault();
 
- socket.on('message', function (obj) {
-    
-    if (obj.msg !== '') {
-        setTextMessages([
-            ...textMessages,
-            obj.userid + ": " + obj.msg,
-        ]);
+            let msg = message;
+            msg =  msg.replace(/(<([^>]+)>)/gi, "");
+            console.log("sending msg: " + msg + " from " + username);
+            socket.emit('chat', {"msg" : msg, "userid" : chatid, "username" : username});
+
+        setMessage("");
     }
-  
-    // let prevChat = $("#chatBoard").html();
-    // const ts = new Date().toLocaleString([], {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit'});
-    // $("#chatBoard").html(prevChat + '<div class="msgRow"><span class="userid" style="color:'+obj.userColor+'">' + obj.userid + "</span><br />" + obj.msg + '<span class="ts">' + ts +'</span></div>');
-    // var chatboard = document.getElementById("chatBoard");
-    // chatboard.scrollTop = chatboard.scrollHeight;
-    // console.log(prevChat + obj.userid + ": " + obj.msg);
-    console.log(obj.userid + ": " + obj.msg);
-  });
 
-  socket.on('participants', function(count) {
-    console.log("online :" + count);
-//     $("#participants").html(count);
-  });
+    socket.on('chat', function (obj) {
+        if (obj.msg !== '') {
+            setTextMessages([...(textMessages || []), 
+                {msg: obj.username + ": " + obj.msg, username: obj.username}])
+        }
+        console.log(obj.username + ": " + obj.msg);
+    });
 
-    return ( 
+    socket.on('participants', function(count) {
+        console.log("online :" + count);
+    });
+
+    return (
         <Layout>
             <div className="mt-8 container mx-auto shadow-lg rounded-lg">
                 <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
@@ -245,7 +216,13 @@ const sendMessage = async (event) => {
 
                         <div className="col-span-2 px-5 flex flex-col justify-between">
                             <div id="chatBoard" style={{ height: '500px' }} className="overflow-y-auto flex flex-col mt-5">
-                                {showSenderMessage && textMessages.map((text) => (
+                                {textMessages && textMessages.map((buff) => (
+                                    <ChatMsg
+                                        massage = {buff.msg}
+                                        user = {buff.username == username}
+                                    />
+                                ))}
+                                {/* {textMessages.map((text) => (
                                 <div className="flex justify-end mb-4">
                                     <div
                                     className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
@@ -258,7 +235,7 @@ const sendMessage = async (event) => {
                                     alt=""
                                     />
                                 </div>
-                                ))}
+                                ))} */}
                             
                                 {/* <div className="flex justify-end mb-4">
                                     <div
