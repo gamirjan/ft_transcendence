@@ -1,8 +1,53 @@
 import React from "react"
 import { Layout } from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
+import { useState } from "react"
+import ChatMsg from "./ChatMsg";
+import { IMassage } from "./utils/index";
+import { socket } from "./Socket";
+
+const generateRandomString = (length=6) => Math.random().toString(20).substr(2, length);
+
+let username  : string | null = "";
+username = generateRandomString(8);
+
+// read room in querystring
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const room = urlParams.get('room'); // /?room=white
+
+window.onload = function () {
+    socket.emit('room', room);
+};
 
 const Chanels = () => {
+
+    const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
+    const [message, setMessage] = useState("");
+
+    const sendMessage = async (event) => {
+        event.preventDefault();
+
+            let msg = message;
+            msg =  msg.replace(/(<([^>]+)>)/gi, "");
+            console.log("sending msg: " + msg + " from " + username);
+            socket.emit('channels', {"msg" : msg, "username" : username, "room": room});
+            
+        setMessage("");
+    }
+
+    socket.on('channels', function (obj) {
+        if (obj.msg !== '') {
+            setTextMessages([...(textMessages || []), 
+                {msg: obj.username + ": " + obj.msg, username: obj.username}])
+        };
+        console.log(obj.username + ": " + obj.msg);
+    });
+
+    socket.on('participants', function(count) {
+        console.log("online :" + count);
+    });
+
     return (
         <Layout>
             <div className="mt-8 container mx-auto shadow-lg rounded-lg">
@@ -69,110 +114,35 @@ const Chanels = () => {
 
                 </div>
 
-            <div  className="col-span-2 px-5 flex flex-col justify-between">
-                <div style={{ height: '500px' }} className="overflow-y-auto flex flex-col mt-5">
-                    <div className="flex justify-end mb-4">
-                        <div
-                        className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
-                        >
-                        Welcome to game everyone !
-                        </div>
-                        <img
-                        src="https://source.unsplash.com/otT2199XwI8/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
+                <div  className="col-span-2 px-5 flex flex-col justify-between">
+                    <div style={{ height: '500px' }} className="overflow-y-auto flex flex-col mt-5">
+                        {textMessages && textMessages.map((buff) => (
+                            <ChatMsg
+                                massage = {buff.msg}
+                                user = {buff.username == username}
+                            />
+                        ))}
                     </div>
-                    <div className="flex justify-start mb-4">
-                        <img
-                        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                        <div
-                        className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
-                        >
-                        Many new games can boast beautiful graphics in recent times. But some of them deserve a special attention.
-                        </div>
-                    </div>
-                    <div className="flex justify-end mb-4">
-                        <div>
-                        <div
-                            className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
-                        >
-                            According to experts, it is the integration of ray tracing that makes this game especially beautiful.
-                        </div>
-
-                        <div
-                            className="mt-4 mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
-                        >
-                            Realistic graphics, well-detailed models, quality facial animation - all this makes the game's visuals really impressive.
-                        </div>
-                        </div>
-                        <img
-                        src="https://source.unsplash.com/otT2199XwI8/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                    </div>
-                    <div className="flex justify-start mb-4">
-                        <img
-                        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                        <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                        happy holiday guys!
-                        </div>
-                    </div>
-
-
-                    <div className="flex justify-start mb-4">
-                        <img
-                        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                        <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                        happy holiday guys!
-                        </div>
-                    </div>
-                    <div className="flex justify-start mb-4">
-                        <img
-                        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                        <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                        happy holiday guys!
-                        </div>
-                    </div>
-                    <div className="flex justify-start mb-4">
-                        <img
-                        src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                        className="object-cover h-8 w-8 rounded-full"
-                        alt=""
-                        />
-                        <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                        happy holiday guys!
-                        </div>
-                    </div>
-
-                 </div>
-
                     <div className="py-5">
-
-
-                        <input
-                        className="w-10/12  bg-gray-300 py-5 px-3 rounded-xl"
-                        type="text"
-                        placeholder="type your message here..."    
-                        />
-                        <button className="w-2/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
-                            Send
-                        </button>
+                        <form onSubmit={(event) => sendMessage(event)}>
+                            <input 
+                                className="w-10/12  bg-gray-300 py-5 px-3 rounded-xl"
+                                type="text" 
+                                placeholder="your message..." 
+                                aria-label="your message..." 
+                                aria-describedby="basic-addon2" 
+                                value={message}
+                                onChange={(e) => setMessage(e.target.value)}
+                                id="msg" required
+                            />
+                            <button 
+                                id="sendMsg" 
+                                type="submit"
+                                className="w-2/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                                Send
+                            </button>
+                        </form>
                     </div>
-
                 </div>
 
 

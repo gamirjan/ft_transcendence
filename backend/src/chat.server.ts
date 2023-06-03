@@ -10,7 +10,12 @@ import {
 import { Server } from "socket.io";
 import { Socket } from "socket.io";
 
-@WebSocketGateway(4000, { cors: ['http://localhost:3000','http://20.123.193.166:3000/'] })
+let sockets = [];
+@WebSocketGateway(4000, { 
+    cors: {
+    origin: ['http://localhost:3000','*']
+    }
+})
 
 export class ChatServer implements OnGatewayInit, OnGatewayConnection{
     @WebSocketServer()
@@ -30,18 +35,35 @@ export class ChatServer implements OnGatewayInit, OnGatewayConnection{
         console.log("Connected clients: " + count);
         this.server.emit('participants',count);
     }
-    
-    @SubscribeMessage('message')
-    handleMassage(
+    @SubscribeMessage('online')
+    addUser(
+        @MessageBody() userid: any,
+        @ConnectedSocket() client: Socket,
+        ) {
+        sockets[userid] = client.id;
+    }
+
+    @SubscribeMessage('chat')
+    handleChatMassage(
         @MessageBody() data: any,
         @ConnectedSocket() client: Socket,
         ) {
-        console.log('Chatlog - Room: ' + data.room + ' | ' + data.userid + ': ' + data.msg);     
+        console.log(data.userid + ': ' + data.msg);     
         // socket.broadcast.emit('message', msg); // to all, but the sender
         // this.server.emit('message',data); // to all, including the sender
-        this.server.to(data.room).emit('message',data); // to all, including the sender
+        this.server/*to(sockets[data.userid])*/.emit('chat',data); // to all, including the sender
+        // client.emit('chat',data);
     }
-    
+    @SubscribeMessage('channels')
+    handleChannelsMassage(
+        @MessageBody() data: any,
+        @ConnectedSocket() client: Socket,
+        ) {
+        console.log('Channellog - Room: ' + data.room + ' | ' + data.username + ': ' + data.msg);     
+        // socket.broadcast.emit('message', msg); // to all, but the sender
+        // this.server.emit('message',data); // to all, including the sender
+        this.server.to(data.room).emit('channels',data); // to all, including the sender
+    }
     @SubscribeMessage('room')
     joinRoom(
         @MessageBody() room: string,
