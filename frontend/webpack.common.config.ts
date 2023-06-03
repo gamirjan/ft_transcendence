@@ -93,6 +93,7 @@ const config = {
     ],
     devServer: {
           historyApiFallback: true,
+          allowedHosts: "all",
           static: {
               directory: path.join(__dirname, "build"),
           },

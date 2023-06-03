@@ -7,6 +7,7 @@
   import config from './ormconfig'
   import { UsersController } from './Users/user.controller';
   import { UsersService } from './Users/user.service';
+  import { ChatServer } from './chat.server';
 import { UsersModule } from './Users/users.module';
 import { UserRepository } from './Users/user.repository';
 import { User } from './Users/user.entity';
@@ -26,7 +27,7 @@ import { AuthService } from './auth/auth.service';
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer],
   })
   export class AppModule {
     constructor(){

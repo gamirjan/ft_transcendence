@@ -8,7 +8,7 @@ const Home = () => {
     return (
     <Layout>
         <div className="mt-8 relative w-full h-screen">
-             <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="/" />
+             <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" />
 
                 <div className="grid place-items-center h-screen inline-flax">
                     <Link   

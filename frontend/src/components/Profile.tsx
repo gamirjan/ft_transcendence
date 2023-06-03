@@ -22,7 +22,10 @@ const Profile = () => {
                     <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                         Friend
                     </button>
-                    <button className="ml-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                        Chat
+                    </button>
+                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                         Black
                     </button>
                 </div>
@@ -30,8 +33,8 @@ const Profile = () => {
 
         </div>
 
-        <div className="flex flex-col items-center mt-2">
-            <div className="w-full flex flex-col 2xl:w-1/3">
+        <div className="grid grid-cols-1 md:grid-cols-2 flex justify-center mt-14">
+            <div className="flex flex-col">
                 <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
                     <h4 className="text-xl text-gray-900 font-bold">Personal Info</h4>
                     <ul className="mt-2 text-gray-700">
@@ -58,11 +61,12 @@ const Profile = () => {
                     </ul>
                 </div>
             </div>
-            <div className="w-full flex flex-col 2xl:w-1/3">
-                <div className="flex-1 bg-white rounded-b-lg shadow-xl p-8">
+
+            <div className="flex flex-col">
+                <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
                     <h4 className="text-xl text-gray-900 font-bold">Game Info</h4>
                     <ul className="mt-2 text-gray-700">
-                        <li className="flex border-y py-2">
+                        <li className="flex border-b py-2">
                             <span className="font-bold w-24">Total:</span>
                             <span className="text-gray-700">13</span>
                         </li>
