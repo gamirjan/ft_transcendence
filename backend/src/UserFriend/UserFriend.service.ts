@@ -14,23 +14,23 @@ export class UserFriendService {
         @InjectRepository(UserFriend)
         private friendRepository: Repository<UserFriend>,
       ) {}
-    
-      async findAll(userId: number): Promise<User[]> {
-        const friends = await this.friendRepository
-          .createQueryBuilder('userfriends')
-          .innerJoinAndSelect('userfriends.friend', 'user')
-          .where('userfriends.userId = :userId', { userId })
-          .getMany();
-    
-        return friends.map((friend) => friend.user);
+
+      async getUserFriends(userId: number): Promise<User[]> {
+        const user = await this.userRepository.findOne({ relations: ['friends'], where: { id: userId }});
+        console.log(user.friends);
+        return user.friends.map(friend => friend.friend);
+      }
+
+      async addFriend(userid: number, friendid: number): Promise<UserFriend> {
+        console.log(userid);
+        console.log(friendid);
+        const userFriend = new UserFriend();
+        userFriend.user = await this.userRepository.findOne({ where: { id: userid } });
+        userFriend.friend = await this.userRepository.findOne({ where: { id: friendid } });
+        return this.friendRepository.save(userFriend);
       }
     
-      async create(friend: User): Promise<User> {
-        const newFriend = this.userRepository.create(friend);
-        return this.userRepository.save(newFriend);
-      }
-    
-      async remove(userId: number, friendId: number): Promise<void> {
-        await this.friendRepository.delete({ user: { Id: userId }});
+      async removeFriend(userFriendId: number): Promise<void> {
+        await this.friendRepository.delete({ id: userFriendId });
       }
 }

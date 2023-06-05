@@ -1,21 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, ManyToOne, JoinColumn } from 'typeorm';
 import { User } from '../Users/user.entity';
 
-@Entity('user_friend')
-@Unique(['friendId'])
+@Entity('userfriends')
 export class UserFriend {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({
-    default: -1
-  })
-  userId: number;
-
-  @Column({
-    default:0,
-  })
-  friendId: number;
   @ManyToOne(() => User, user => user.friends)
+  @JoinColumn({ name: 'userid' })
   user: User;
+
+  @ManyToOne(() => User, { eager: true })
+  @JoinColumn({ name: 'friendid' })
+  friend: User;
 }
