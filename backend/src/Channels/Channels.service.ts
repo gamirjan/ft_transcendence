@@ -8,7 +8,7 @@ import { CreateChannelDto } from './CreateChannelDto';
 export class ChannelsService {
   constructor(
     @InjectRepository(Channel)
-    private readonly channelRepository: Repository<Channel>,
+    private channelRepository: Repository<Channel>
   ) {}
 
   async getChannelById(id: number): Promise<Channel> {

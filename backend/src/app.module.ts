@@ -31,7 +31,7 @@ import { ChannelsService } from './Channels/Channels.service';
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChannelsService, ChatServer],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer],
   })
   export class AppModule {
     constructor(){
