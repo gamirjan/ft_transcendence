@@ -16,17 +16,15 @@ export class UserFriendService {
       ) {}
 
       async getUserFriends(userId: number): Promise<User[]> {
-        const user = await this.userRepository.findOne({ relations: ['friends'], where: { id: userId }});
-        console.log(user.friends);
-        return user.friends.map(friend => friend.friend);
+        const user = await this.userRepository.findOne({ where: { id: userId }});
+        console.log(user.userfriends)
+        return user.userfriends.map(friend => friend.friend);
       }
 
       async addFriend(userid: number, friendid: number): Promise<UserFriend> {
-        console.log(userid);
-        console.log(friendid);
         const userFriend = new UserFriend();
-        userFriend.user = await this.userRepository.findOne({ where: { id: userid } });
-        userFriend.friend = await this.userRepository.findOne({ where: { id: friendid } });
+        userFriend.userid = userid;
+        userFriend.friendid = friendid;
         return this.friendRepository.save(userFriend);
       }
     

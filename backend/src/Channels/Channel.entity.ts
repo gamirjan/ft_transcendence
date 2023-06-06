@@ -1,23 +1,56 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { User } from '../Users/user.entity';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from "typeorm";
+import { Channeladmin } from "../ChannelAdmins/ChannelAdmin.entity";
+import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
+import { User } from "../Users/user.entity";
+import { ChannelUser} from "../ChannelUsers/ChannelUser.entity";
+import { Mutelist } from "../Mutelist/Mutelist.entity";
 
-export enum ChannelType {
-    Public = 'public',
-    Private = 'private',
-}
-
-@Entity('channels')
+@Index("channels_channelname_key", ["channelname"], { unique: true })
+@Index("channels_pkey", ["id"], { unique: true })
+@Entity("channels", { schema: "public" })
 export class Channel {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: "integer", name: "id" })
   id: number;
 
-  @Column({ type: 'enum', enum: ChannelType })
-  channeltype: ChannelType;
+  @Column("enum", {
+    name: "channeltype",
+    nullable: true,
+    enum: ["1", "2", "3"],
+  })
+  channeltype: "1" | "2" | "3" | null;
 
-  @Column()
-  channelname: string;
+  @Column("character varying", {
+    name: "channelname",
+    nullable: true,
+    unique: true,
+    length: 50,
+  })
+  channelname: string | null;
 
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'ownerid' })
+  @OneToMany(() => Channeladmin, (channeladmins) => channeladmins.channel)
+  channeladmins: Channeladmin[];
+
+  @OneToMany(
+    () => Channelmessage,
+    (channelmessages) => channelmessages.channel
+  )
+  channelmessages: Channelmessage[];
+
+  @ManyToOne(() => User, (users) => users.channels)
+  @JoinColumn([{ name: "ownerid", referencedColumnName: "id" }])
   owner: User;
+
+  @OneToMany(() => ChannelUser, (channelusers) => channelusers.channel)
+  channelusers: ChannelUser[];
+
+  // @OneToMany(() => Mutelist, (mutelist) => mutelist.channel)
+  // mutelists: Mutelist[];
 }
