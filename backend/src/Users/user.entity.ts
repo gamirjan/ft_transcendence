@@ -1,30 +1,30 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { UserFriend } from '../UserFriend/UserFriend.entity';
 import { OneToMany } from 'typeorm';
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn()
-  Id: number;
+  id: number;
 
   @Column({ unique: true })
-  'ID_42': number;
+  'id_42': number;
 
   @Column({ unique: true })
-  DisplayName: string;
+  displayname: string;
 
   @Column()
-  AvatarUrl: string;
+  avatarurl: string;
 
   @Column()
-  IsTwoFactorEnabled: boolean;
+  istwofactorenabled: boolean;
 
   @Column()
-  Wins: number; 
+  wins: number; 
 
   @Column()
-  Losses: number;
+  losses: number;
   
-  @ManyToMany(() => User, User => User.friends)
-  friends: User[];
+  @OneToMany(() => UserFriend, userFriend => userFriend.user)
+  friends: UserFriend[];
 
 }

@@ -11,7 +11,7 @@ const config :TypeOrmModuleOptions=
     username: "admin2",
     password:  "MekDad!89!",
     autoLoadEntities: true,
-    synchronize: true,
+    synchronize: false,
     entities:['src/**/*.entity.ts'],
     ssl: true,
 
