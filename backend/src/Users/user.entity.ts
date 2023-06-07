@@ -5,7 +5,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Channeladmin } from "../ChannelAdmins/ChannelAdmin.entity";
+import { ChannelAdmin } from "../ChannelAdmins/ChannelAdmin.entity";
 import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
 import { Channel } from "../Channels/Channel.entity";
 import { ChannelUser } from "../ChannelUsers/ChannelUser.entity";
@@ -44,8 +44,8 @@ export class User {
   @Column("integer", { name: "losses", nullable: true })
   losses: number | null;
 
-  @OneToMany(() => Channeladmin, (channeladmins) => channeladmins.admin)
-  channeladmins: Channeladmin[];
+  @OneToMany(() => ChannelAdmin, (channeladmins) => channeladmins.admin)
+  channeladmins: ChannelAdmin[];
 
   @OneToMany(() => Channelmessage, (channelmessages) => channelmessages.user)
   channelmessages: Channelmessage[];

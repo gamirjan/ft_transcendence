@@ -12,7 +12,7 @@ import {
   @Index("unique_channel_admin_pair", ["adminid", "channelid"], { unique: true })
   @Index("channeladmins_pkey", ["id"], { unique: true })
   @Entity("channeladmins", { schema: "public" })
-  export class Channeladmin {
+  export class ChannelAdmin {
     @PrimaryGeneratedColumn({ type: "integer", name: "id" })
     id: number;
   

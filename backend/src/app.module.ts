@@ -11,6 +11,7 @@
   import { ChannelsModule } from './Channels/Channel.module';
   import { UsersModule } from './Users/users.module';
   import { ChannelUsersModule } from './ChannelUsers/ChannelUsers.module';
+  import { ChannelAdminsModule } from './ChannelAdmins/ChannelAdmins.module';
 import { UserRepository } from './Users/user.repository';
 import { User } from './Users/user.entity';
 import { AddUsersService } from './AddUser/addUser.service';
@@ -34,6 +35,7 @@ import { ChannelUsersService } from './ChannelUsers/ChannelUsers.service';
       ConfigModule.forRoot({isGlobal:true}),
       TypeOrmModule.forRoot(config),
       ChannelUsersModule,
+      ChannelAdminsModule,
       ChannelsModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  

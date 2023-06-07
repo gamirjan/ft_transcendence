@@ -7,7 +7,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
-import { Channeladmin } from "../ChannelAdmins/ChannelAdmin.entity";
+import { ChannelAdmin } from "../ChannelAdmins/ChannelAdmin.entity";
 import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
 import { User } from "../Users/user.entity";
 import { ChannelUser} from "../ChannelUsers/ChannelUser.entity";
@@ -35,8 +35,8 @@ export class Channel {
   })
   channelname: string | null;
 
-  @OneToMany(() => Channeladmin, (channeladmins) => channeladmins.channel)
-  channeladmins: Channeladmin[];
+  @OneToMany(() => ChannelAdmin, (channeladmins) => channeladmins.channel)
+  channeladmins: ChannelAdmin[];
 
   @OneToMany(
     () => Channelmessage,
