@@ -68,6 +68,7 @@ export async function googleOauthHandler(req: any, res : Response)
         //create a session 
         //create a access and refresh tockens
         //redirect back to the client
+        // return res.send({msg:"loooggg in compelete"});
         return res.redirect("http://localhost:3000/home")
         
     } catch (error) {

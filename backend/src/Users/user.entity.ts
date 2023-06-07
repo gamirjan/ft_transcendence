@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { UserFriend } from '../UserFriend/UserFriend.entity';
 import { OneToMany } from 'typeorm';
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()

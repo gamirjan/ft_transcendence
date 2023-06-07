@@ -12,12 +12,13 @@ let username  : string | null = "";
 username = generateRandomString(8);
 
 // read id in querystring
+
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const chatid = urlParams.get('id');
 
 window.onload = function () {
-    socket.emit('online', chatid);
+    socket.emit(`online`, chatid);
 };
 
 const Chat = () => {
