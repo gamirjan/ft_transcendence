@@ -324,11 +324,11 @@ const Chat = () => {
                             </div>
                             <div className="py-5">
                                 <form onSubmit={(event) => sendMessage(event)}>
-                                    <button className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                                    <button className="w-2/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
                                         Game
                                     </button>
                                     <input 
-                                        className="w-10/12  bg-gray-300 py-5 px-3 rounded-xl"
+                                        className="w-8/12  bg-gray-300 py-5 px-3 rounded-xl"
                                         type="text" 
                                         placeholder="your message..." 
                                         aria-label="your message..." 
@@ -340,7 +340,7 @@ const Chat = () => {
                                     <button 
                                         id="sendMsg" 
                                         type="submit"
-                                        className="w-1/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
+                                        className="w-2/12 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-5 px-4 rounded-xl">
                                         Send
                                     </button>
                                 </form>

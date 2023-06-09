@@ -8,6 +8,7 @@
   import { UsersController } from './Users/user.controller';
   import { UsersService } from './Users/user.service';
   import { ChatServer } from './chat.server';
+  import { ChannelsModule } from './Channels/Channel.module';
 import { UsersModule } from './Users/users.module';
 import { UserRepository } from './Users/user.repository';
 import { User } from './Users/user.entity';
@@ -17,19 +18,26 @@ import { FriendController } from './UserFriend/UserFriend.controller';
 import { UserFriendService } from './UserFriend/UserFriend.service';
 import { UserFriend } from './UserFriend/UserFriend.entity';
 import { AuthController } from './auth/auth.controller';
+import { ChannelsController } from './Channels/Channels.controller';
 import { AuthService } from './auth/auth.service';
+
 import { GoogleController } from './GoogleAuth/google.controller';
 import { GoogleService } from './GoogleAuth/google.service';
+import { ChannelsService } from './Channels/Channels.service';
+
 
   @Module({
     imports: [
       ConfigModule.forRoot({isGlobal:true}),
       TypeOrmModule.forRoot(config),
+      ChannelsModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
+
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController,GoogleController],
     providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer,GoogleService],
+
   })
   export class AppModule {
     constructor(){

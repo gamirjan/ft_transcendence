@@ -9,19 +9,17 @@ export class FriendController {
 
   @Get(':userId')
   async findAll(@Param('userId') userId: number): Promise<User[]> {
-    return this.friendService.findAll(userId);
+    return await this.friendService.getUserFriends(userId);
   }
 
   @Post()
-  async create(@Body() friend: User): Promise<User> {
-    return this.friendService.create(friend);
+  async addFriend(@Body() payload: { userid: number, friendid: number }): Promise<UserFriend> {
+    const { userid, friendid } = payload;
+    return this.friendService.addFriend(userid, friendid);
   }
 
-  @Delete(':userId/:friendId')
-  async remove(
-    @Param('userId') userId: number,
-    @Param('friendId') friendId: number,
-  ): Promise<void> {
-    return this.friendService.remove(userId, friendId);
+  @Delete(':userFriendId')
+  async remove(@Param('userFriendId') userFriendId: number): Promise<void> {
+    return this.friendService.removeFriend(userFriendId);
   }
 }
