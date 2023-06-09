@@ -72,9 +72,9 @@ export async function googleOauthHandler(req: any, res : Response)
         return res.redirect("http://localhost:3000/home")
         
     } catch (error) {
-        return res.redirect('http://localhost:3000');
+        return res.redirect('http://sergey.ml:3000');
     }
-  
+
 
 }
 
@@ -86,7 +86,7 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
         code,
         client_id: '472681490682-cofucv7fr3j0v654ti873v4flktohgdq.apps.googleusercontent.com',
         client_secret: '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',
-        redirect_uri: 'http://localhost:7000/auth/google/redirect',
+        redirect_uri: 'http://sergey.ml:7000/auth/google/redirect',
         grant_type: 'authorization_code',
         // code:code,
     };
