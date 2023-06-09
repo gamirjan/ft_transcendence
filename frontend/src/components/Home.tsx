@@ -8,7 +8,8 @@ const Home = () => {
     return (
     <Layout>
         <div className="mt-8 relative w-full h-screen">
-             <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" />
+             {/* <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" /> */}
+             <img className="absolute w-full h-full object-cover mix-blend-overlay" style={{opacity: "0.5", marginTop: "-32px"}}   src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/129325364/original/afaddcb9d7dfaaf5bff7ef04101935814665ac16/design-an-attractive-background-for-your-website.png" alt="" />
 
                 <div className="grid place-items-center h-screen inline-flax">
                     <Link   

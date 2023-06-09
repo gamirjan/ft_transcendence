@@ -1,7 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
 import { UserFriend } from '../UserFriend/UserFriend.entity';
 import { OneToMany } from 'typeorm';
+
 @Entity('users')
+
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -23,8 +25,7 @@ export class User {
 
   @Column()
   losses: number;
-  
+
   @OneToMany(() => UserFriend, userFriend => userFriend.user)
   friends: UserFriend[];
-
 }

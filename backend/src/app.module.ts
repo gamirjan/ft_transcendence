@@ -20,7 +20,11 @@ import { UserFriend } from './UserFriend/UserFriend.entity';
 import { AuthController } from './auth/auth.controller';
 import { ChannelsController } from './Channels/Channels.controller';
 import { AuthService } from './auth/auth.service';
+
+import { GoogleController } from './GoogleAuth/google.controller';
+import { GoogleService } from './GoogleAuth/google.service';
 import { ChannelsService } from './Channels/Channels.service';
+
 
   @Module({
     imports: [
@@ -30,8 +34,10 @@ import { ChannelsService } from './Channels/Channels.service';
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
-    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer],
+
+    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController,GoogleController],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer,GoogleService],
+
   })
   export class AppModule {
     constructor(){

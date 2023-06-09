@@ -1,6 +1,5 @@
 import React from "react"
 
-
 class ChatMsg extends React.Component<any, any> {
 render() {
 

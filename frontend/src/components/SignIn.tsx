@@ -6,7 +6,7 @@ function getUrl()
 {
     const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
     const option = {
-        redirect_uri: "http://localhost:7000/auth/google/redirect" as string,
+        redirect_uri: "http://sergey.ml:7000/auth/google/redirect" as string,
         client_id : "472681490682-cofucv7fr3j0v654ti873v4flktohgdq.apps.googleusercontent.com" as string,
         access_type: "offline",
         response_type: "code",

@@ -6,7 +6,7 @@ export const Layout = ({children}) => {
         <div className="">
             <div className="">
               <div>
-                <div className="grid grid-cols-1 md:grid-cols-6 xs:grid-cols-3 2xs:grid-cols-2 items-center justify-center relative backdrop-blur-md z-[668] min-w-full  sm:text-center container mx-auto pt-5 text-2xl font-bold flex">
+                <div style={{background: 'rgb(2,0,36)', opacity: "0.9", backgroundImage: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(8,9,83,1) 35%, rgba(33,58,63,1) 100%)'}} className="grid grid-cols-1 md:grid-cols-6 xs:grid-cols-3 2xs:grid-cols-2 items-center justify-center relative backdrop-blur-md z-[668] min-w-full  sm:text-center container mx-auto pt-5 text-2xl font-bold flex">
                     <Link
                         to="/home"
                         className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300  rounded-2xl text-1xl mx-14 font-semibold leading-7 text-black-900"
