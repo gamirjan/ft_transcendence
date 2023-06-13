@@ -8,6 +8,7 @@ import TheGame from "./components/TheGame";
 import Chanels from "./components/Chanels";
 import SignIn from "./components/SignIn";
 import { Routes, Route, BrowserRouter as Router} from "react-router-dom";
+import Auth from "./components/Auth";
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
             <Route path="/thegame" element={<TheGame />} />
             <Route path="/chanels" element={<Chanels />} />
             <Route path="/profile" element={<Profile />} />
+			<Route path="/auth" element={<Auth/>}/>
           </Routes>
        </Router>
   )
