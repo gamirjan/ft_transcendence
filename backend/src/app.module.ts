@@ -24,6 +24,8 @@ import { AuthService } from './auth/auth.service';
 import { GoogleController } from './GoogleAuth/google.controller';
 import { GoogleService } from './GoogleAuth/google.service';
 import { ChannelsService } from './Channels/Channels.service';
+import { Ft_AuthController } from './ft_auth/auth.controller';
+import { Ft_AuthService } from './ft_auth/auth.service';
 
 
   @Module({
@@ -35,8 +37,8 @@ import { ChannelsService } from './Channels/Channels.service';
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
 
-    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController,GoogleController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer,GoogleService],
+    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController,GoogleController,Ft_AuthController],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer,GoogleService,Ft_AuthService],
 
   })
   export class AppModule {

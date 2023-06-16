@@ -4,8 +4,8 @@ import { GoogleAuthGuard } from './utils/Guards';
 import { googleOauthHandler } from './auth.handler';
 
 @Controller('auth')
-export class AuthController {
-  @Post('google/login')
+export class Ft_AuthController {
+  @Post('42/login')
   async handleLogin(@Req() req:Request, @Res() res:Response) 
   {
       try {
@@ -29,7 +29,7 @@ export class AuthController {
   
 
   // api/auth/google/redirect
-  @Get('google/redirect')
+  @Get('42/redirect')
   handleRedirect(@Req() req ,@Res() res) {
     googleOauthHandler(req,res)
     console.log("done!");

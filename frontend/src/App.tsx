@@ -9,6 +9,7 @@ import Chanels from "./components/Chanels";
 import SignIn from "./components/SignIn";
 import { Routes, Route, BrowserRouter as Router} from "react-router-dom";
 import Auth from "./components/Auth";
+import Ft_Auth from "./components/Ft_Auth";
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/chanels" element={<Chanels />} />
             <Route path="/profile" element={<Profile />} />
 			<Route path="/auth" element={<Auth/>}/>
+      <Route path="/ft_auth" element={<Ft_Auth/>}/>
           </Routes>
        </Router>
   )

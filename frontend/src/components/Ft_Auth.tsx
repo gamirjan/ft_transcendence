@@ -1,10 +1,9 @@
+import queryString from 'query-string';
 import React, { useEffect } from 'react'
-import queryString from 'query-string'
 import { useNavigate } from 'react-router-dom';
 
-
-function Auth() {
-	const navigate = useNavigate();
+function Ft_Auth() {
+    const navigate = useNavigate();
 	async function login(params:object) 
 	{
 				fetch('http://localhost:7000/auth/google/login', {
@@ -34,7 +33,9 @@ function Auth() {
 		const params = new URLSearchParams(queryParams).toString();
 	
 		// Append the URL-encoded parameters to the server endpoint
-		const url = `http://localhost:7000/auth/google/redirect?${params}`;
+        console.log(params);
+        
+		const url = `http://localhost:7000/auth/42/redirect?${params}`;
 		//console.log("qqqqqqqqqqqqqq",queryParams);
 		
 		// Send the GET request using fetch()
@@ -56,8 +57,8 @@ function Auth() {
 		  });
 	  }, []);
   return (
-	<div>Auth</div>
+    <div>Ft_Auth</div>
   )
 }
 
-export default Auth
+export default Ft_Auth
