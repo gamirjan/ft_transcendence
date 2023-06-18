@@ -8,7 +8,7 @@ import { UserFriendService } from './UserFriend.service';
 import { Module } from '@nestjs/common';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, UserRepository,UserFriend])],
+  imports: [TypeOrmModule.forFeature([User, UserRepository, UserFriend])],
   controllers: [FriendController],
   providers: [UserFriendService, UserRepository],
 })
