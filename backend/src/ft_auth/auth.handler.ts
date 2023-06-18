@@ -42,8 +42,7 @@ export async function getGoogleUser(id_token,access_token):Promise<GoogleUserRes
         })
         return (await res).data;
     } catch (error) {
-        return error
-        console.log(error,"invaliddd!");
+        console.log("invaliddd!");
         
     }
 }
@@ -55,6 +54,8 @@ export async function googleOauthHandler(req: any, res : Response)
 		
         const code  = req.query.code as string
         const {id_token,access_token} = await getGoogleOauthTokens( {code : code})
+        console.log(access_token);
+        
         const user = await getGoogleUser(id_token,access_token);
         console.log(user);
         
@@ -100,7 +101,7 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
       return response.data;
     } catch (error) {
       // Handle error appropriately
-      console.error(error);
+      //console.error(error);
       throw new Error('Failed to retrieve token');
     }
 }
