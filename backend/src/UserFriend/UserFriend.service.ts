@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserFriend } from './UserFriend.entity';
 import { User } from '../Users/user.entity'; 
-
-
+import { UserFriendModel } from './UserFriendModel';
 
 @Injectable()
 export class UserFriendService {
@@ -15,18 +14,19 @@ export class UserFriendService {
         private friendRepository: Repository<UserFriend>,
       ) {}
 
-      async getUserFriends(userId: number): Promise<User[]> {
-        const user = await this.userRepository.findOne({ relations: ['friends'], where: { id: userId }});
-        console.log(user.friends);
-        return user.friends.map(friend => friend.friend);
+      async getUserFriends(userId: number): Promise<UserFriendModel[]> {
+        const userfriends = await this.friendRepository.find({ relations: ['friend'], where: { userid: userId }});
+        console.log(userfriends)
+        return userfriends.map((uf) => ({
+          id: uf.id,
+          user: uf.friend
+        }));
       }
 
       async addFriend(userid: number, friendid: number): Promise<UserFriend> {
-        console.log(userid);
-        console.log(friendid);
         const userFriend = new UserFriend();
-        userFriend.user = await this.userRepository.findOne({ where: { id: userid } });
-        userFriend.friend = await this.userRepository.findOne({ where: { id: friendid } });
+        userFriend.userid = userid;
+        userFriend.friendid = friendid;
         return this.friendRepository.save(userFriend);
       }
     

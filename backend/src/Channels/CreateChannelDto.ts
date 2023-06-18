@@ -1,8 +1,7 @@
 import { User } from '../Users/user.entity'
-import { ChannelType } from './Channel.entity'
 
 export class CreateChannelDto {
-    channelType: ChannelType;
+    channelType: "1" | "2" | "3";
     channelName: string;
     owner: User;
 }  

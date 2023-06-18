@@ -9,7 +9,9 @@
   import { UsersService } from './Users/user.service';
   import { ChatServer } from './chat.server';
   import { ChannelsModule } from './Channels/Channel.module';
-import { UsersModule } from './Users/users.module';
+  import { UsersModule } from './Users/users.module';
+  import { ChannelUsersModule } from './ChannelUsers/ChannelUsers.module';
+  import { ChannelAdminsModule } from './ChannelAdmins/ChannelAdmins.module';
 import { UserRepository } from './Users/user.repository';
 import { User } from './Users/user.entity';
 import { AddUsersService } from './AddUser/addUser.service';
@@ -24,20 +26,23 @@ import { AuthService } from './auth/auth.service';
 import { GoogleController } from './GoogleAuth/google.controller';
 import { GoogleService } from './GoogleAuth/google.service';
 import { ChannelsService } from './Channels/Channels.service';
+import { ChannelUsersController } from './ChannelUsers/ChannelUser.controller';
+import { ChannelUsersService } from './ChannelUsers/ChannelUsers.service';
 
 
   @Module({
     imports: [
       ConfigModule.forRoot({isGlobal:true}),
       TypeOrmModule.forRoot(config),
+      ChannelUsersModule,
+      ChannelAdminsModule,
       ChannelsModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
 
-    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController,GoogleController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer,GoogleService],
-
+    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController, ChannelUsersController, GoogleController],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService],
   })
   export class AppModule {
     constructor(){
