@@ -1,14 +1,14 @@
 import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
-import { User } from '../Users/user.entity'
 import { UserFriend } from './UserFriend.entity';
 import { UserFriendService } from './UserFriend.service'; 
+import { UserFriendModel } from './UserFriendModel';
 
 @Controller('friends')
 export class FriendController {
   constructor(private friendService: UserFriendService) {}
 
   @Get(':userId')
-  async findAll(@Param('userId') userId: number): Promise<User[]> {
+  async findAll(@Param('userId') userId: number): Promise<UserFriendModel[]> {
     return await this.friendService.getUserFriends(userId);
   }
 
