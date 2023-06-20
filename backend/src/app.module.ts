@@ -32,6 +32,11 @@ import { Ft_AuthService } from './ft_auth/auth.service';
 
 import { ChannelUsersController } from './ChannelUsers/ChannelUser.controller';
 import { ChannelUsersService } from './ChannelUsers/ChannelUsers.service';
+import { ChannelMessagesModule } from './ChannelMessages/ChannelMessage.module';
+import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.controller';
+import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
+import { GameModule } from './GameHistory/GameHistory.module';
+import { GameController } from './GameHistory/GameHistory.controller';
 
 
 
@@ -42,11 +47,14 @@ import { ChannelUsersService } from './ChannelUsers/ChannelUsers.service';
       ChannelUsersModule,
       ChannelAdminsModule,
       ChannelsModule,
+      ChannelMessagesModule,
+      GameModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
 
-    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController, ChannelUsersController, GoogleController,Ft_AuthController],
+    controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
+      ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController],
     providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService],
   })
   export class AppModule {
