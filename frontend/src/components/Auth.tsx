@@ -16,6 +16,8 @@ function Auth() {
 		})
 		.then(response => response.json())
 		.then(data => {
+			console.log(data.status);
+			
 			navigate("/home",{replace:true})
 			// Process the response data received from the server
 			console.log(data);

@@ -21,7 +21,6 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException(`User with id '${userId}' not found`);
     }
-    return user;
   }
 
   @Get('byName/:displayName')

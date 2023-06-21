@@ -17,8 +17,9 @@ export class UsersService {
   async findOneById(userId: number): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { id: userId } });
   }
-
+  
   async findOneByDisplayName(displayName: string): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { displayname: displayName } });
+
   }
 }
