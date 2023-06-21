@@ -23,5 +23,14 @@ export class UsersController {
       }
       return user;
     }
+  @Get("/me/:name")
+  async findByName(@Param('name') userName:string):Promise<User>{
+    console.log("/user/me/:name");
+      const user = await this.usersService.findOneByName(userName);
+      if (!user) {
+        throw new NotFoundException(`User with id '${userName}' not found`);
+      }
+      return user;
+  }
   }
 

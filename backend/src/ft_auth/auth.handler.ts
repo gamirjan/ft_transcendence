@@ -58,15 +58,15 @@ export async function googleOauthHandler(req: any, res : Response)
 		
         const code  = req.query.code as string
         const {id_token,access_token} = await getGoogleOauthTokens( {code : code})
-        console.log(access_token);
+        //console.log(access_token);
         
         const user = await getGoogleUser(id_token,access_token);
-        console.log(user);
+        //console.log(user);
         
         return res.status(200).send(user)
         
     } catch (error) {
-        console.log("error");
+        //console.log("error");
         
         return res.status(400).send(error);
     }

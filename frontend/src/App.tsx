@@ -23,6 +23,7 @@ function App() {
             <Route path="/thegame" element={<TheGame />} />
             <Route path="/chanels" element={<Chanels />} />
             <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
           </Routes>

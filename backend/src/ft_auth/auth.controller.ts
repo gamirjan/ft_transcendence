@@ -2,14 +2,20 @@ import { Controller,Post, Get, Param, Req, UseGuards,Res } from '@nestjs/common'
 import { Request } from 'express';
 import { GoogleAuthGuard } from './utils/Guards';
 import { googleOauthHandler } from './auth.handler';
+import { UsersService } from '../Users/user.service';
+import { AddUsersService } from '../AddUser/addUser.service';
+import { log } from 'console';
+
 
 @Controller('auth')
 export class Ft_AuthController {
+  constructor(private userService: UsersService, private addUserService: AddUsersService) {}
+
   @Post('42/login')
   async handleLogin(@Req() req:Request, @Res() res:Response) 
   {
       try {
-        console.log(req.body);
+        //console.log(req.body);
         
         // Process your request and create the response object
         const responseObject = {
@@ -18,7 +24,11 @@ export class Ft_AuthController {
         };
 
         // Send the response object back to the client
-        return res.status(200).json(responseObject);
+        console.log("iddddddd",responseObject.data.Param.id);
+        
+        console.log(this.userService.findOneById(responseObject.data.Param.id));
+        
+        return res.status(200).send().json(responseObject);
       } catch (error) {
         // Handle any errors that occur during the processing
         // and send an error response back to the client
@@ -42,7 +52,7 @@ export class Ft_AuthController {
 
   @Get('status')
   user(@Req() request: Request) {
-    console.log(request.user);
+   // console.log(request.user);
     if (request.user) {
       return { msg: 'Authenticated' };
     } else {
