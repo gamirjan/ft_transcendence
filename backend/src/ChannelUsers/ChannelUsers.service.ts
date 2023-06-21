@@ -4,12 +4,19 @@ import { Repository } from 'typeorm';
 import { ChannelUser } from './ChannelUser.entity';
 import { User } from '../Users/user.entity';
 import { ChannelUserModel } from './ChannelUserModel';
+import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
+import { ForbiddenException } from '@nestjs/common/exceptions';
+import { Channel } from '../Channels/Channel.entity';
 
 @Injectable()
 export class ChannelUsersService {
   constructor(
     @InjectRepository(ChannelUser)
-    private channelUsersRepository: Repository<ChannelUser>
+    private channelUsersRepository: Repository<ChannelUser>,
+    @InjectRepository(ChannelAdmin)
+    private channelAdminsRepository: Repository<ChannelAdmin>,
+    @InjectRepository(Channel)
+    private channelsRepository: Repository<Channel>
   ) {}
 
   async getChannelUsers(channelid: number): Promise<ChannelUserModel[]> {
@@ -22,14 +29,27 @@ export class ChannelUsersService {
     }));
   }
 
-  async addUser(channelid: number, userid: number): Promise<ChannelUser> {
+  async addUser(callinguserid: number, channelid: number, userid: number): Promise<ChannelUser> {
+    var ownerid = (await this.channelsRepository.findOne({ relations: ['owner'], where: { id: channelid } })).owner.id
+    var admin = await this.channelAdminsRepository.findOne({ where: { channelid: channelid, adminid: callinguserid } });
+    if (!admin && ownerid != callinguserid)
+    {
+      throw new ForbiddenException('You do not have access to add users in this channel.');
+    }
     const channelUser = new ChannelUser();
     channelUser.channelid = channelid;
     channelUser.userid = userid;
     return this.channelUsersRepository.save(channelUser);
   }
 
-  async removeUser(channeluserid: number): Promise<void> {
+  async removeUser(channeluserid: number, userid: number): Promise<void> {
+    var channel = (await this.channelUsersRepository.findOne({ relations: ['channel'], where: { id: channeluserid } })).channel;
+    var ownerid = (await this.channelsRepository.findOne({ relations: ['owner'], where: { id: channel.id } })).owner.id
+    var admin = await this.channelAdminsRepository.findOne({ where: { channelid: channel.id, adminid: userid } });
+    if (!admin && ownerid != userid)
+    {
+      throw new ForbiddenException('You do not have access to kick users from this channel.');
+    }
     await this.channelUsersRepository.delete({ id: channeluserid });
   }
 }

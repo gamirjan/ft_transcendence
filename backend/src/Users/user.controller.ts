@@ -17,20 +17,18 @@ export class UsersController {
   @Get('/:id')
   async findone(@Param('id') userId: number): Promise<User> {
   console.log("/user/:id requset");
-      const user = await this.usersService.findOneById(userId);
-      if (!user) {
-        throw new NotFoundException(`User with id '${userId}' not found`);
-      }
-      return user;
+    const user = await this.usersService.findOneById(userId);
+    if (!user) {
+      throw new NotFoundException(`User with id '${userId}' not found`);
     }
-  @Get("/me/:name")
-  async findByName(@Param('name') userName:string):Promise<User>{
-    console.log("/user/me/:name");
-      const user = await this.usersService.findOneByName(userName);
-      if (!user) {
-        throw new NotFoundException(`User with id '${userName}' not found`);
-      }
-      return user;
-  }
   }
 
+  @Get('byName/:displayName')
+  async findByDisplayName(@Param('displayName') displayName: string): Promise<User> {
+    const user = await this.usersService.findOneByDisplayName(displayName);
+    if (!user) {
+      throw new NotFoundException(`User with displayName '${displayName}' not found`);
+    }
+    return user;
+  }
+}

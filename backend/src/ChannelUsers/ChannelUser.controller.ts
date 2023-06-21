@@ -14,13 +14,13 @@ export class ChannelUsersController {
   }
 
   @Post()
-  async addUserToChannel(@Body() payload: { channelid: number, userid: number }): Promise<ChannelUser> {
-    const { channelid, userid } = payload;
-    return this.channelUsersService.addUser(channelid, userid);
+  async addUserToChannel(@Body() payload: { callinguserid: number, channelid: number, userid: number }): Promise<ChannelUser> {
+    const { callinguserid, channelid, userid } = payload;
+    return this.channelUsersService.addUser(callinguserid, channelid, userid);
   }
 
-  @Delete(':channeluserid')
-  async removeUserFromChannel(@Param('channeluserid') channeluserid: number): Promise<void> {
-    return this.channelUsersService.removeUser(channeluserid)
+  @Delete('/:channeluserid/:userid')
+  async removeUserFromChannel(@Param('channeluserid') channeluserid: number, @Param('userid') userid: number): Promise<void> {
+    return this.channelUsersService.removeUser(channeluserid, userid)
   }
 }

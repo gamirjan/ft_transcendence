@@ -32,8 +32,19 @@ export class User {
   })
   displayname: string | null;
 
+  @Column("character varying", {
+    name: "email",
+    nullable: true,
+    unique: true,
+    length: 50,
+  })
+  email: string | null;
+
   @Column("text", { name: "avatarurl", nullable: true })
   avatarurl: string | null;
+
+  @Column("boolean", { name: "isverified", nullable: true })
+  isverified: boolean | null;
 
   @Column("boolean", { name: "istwofactorenabled", nullable: true })
   istwofactorenabled: boolean | null;
