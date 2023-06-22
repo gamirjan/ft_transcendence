@@ -62,22 +62,25 @@ const SignIn = () => {
       
         return (
             <>
-              <div className="background">
-                <div className="shape"></div>
-                <div className="shape"></div>
-              </div>
-        
-              <form onSubmit={handleGoogleSignIn}>
-                <h3>Login Here</h3>
-                <div className="social">
-                  <div className="go">
-                  <Link to={getUrl()}> <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="" srcset="" /> </Link>
+            <div className="signin">
+                <div className="background">
+                    <div className="shape"></div>
+                    <div className="shape"></div>
                   </div>
-                  <div className="fb">
-                  <Link to={ft_link}><img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="" srcset="" /> </Link>
-                  </div>
-                </div>
-              </form>
+            
+                  <form onSubmit={handleGoogleSignIn}>
+                    <h3>Login Here</h3>
+                    <div className="social">
+                      <div className="go">
+                      <Link to={getUrl()}> <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="" srcset="" /> </Link>
+                      </div>
+                      <div className="fb">
+                      <Link to={ft_link}><img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg" alt="" srcset="" /> </Link>
+                      </div>
+                    </div>
+                  </form>
+            </div>
+              
             </>
           );
         };

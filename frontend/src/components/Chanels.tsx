@@ -1,5 +1,5 @@
 import React from "react"
-import { Layout } from "./Layout";
+import  Layout  from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useState } from "react"
 import ChatMsg from "./ChatMsg";

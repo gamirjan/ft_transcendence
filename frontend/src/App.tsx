@@ -10,9 +10,14 @@ import SignIn from "./components/SignIn";
 import { Routes, Route, BrowserRouter as Router} from "react-router-dom";
 import Auth from "./components/Auth";
 import Ft_Auth from "./components/Ft_Auth";
+import { Provider, useSelector } from "react-redux";
+import store from "./components/redux";
+import Out from "./components/Out";
 
 
 function App() {
+
+  
   return (
         <Router>
           <Routes>
@@ -26,6 +31,7 @@ function App() {
             {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
+      <Route path="/out" element={<Out/>}/>
           </Routes>
        </Router>
   )

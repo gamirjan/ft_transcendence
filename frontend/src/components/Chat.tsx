@@ -1,10 +1,12 @@
 import React from "react"
-import { Layout } from "./Layout";
+import  Layout  from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useState } from "react"
 import ChatMsg from "./ChatMsg";
 import { IMassage } from "./utils/index";
 import { socket } from "./Socket";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const generateRandomString = (length=6) => Math.random().toString(20).substr(2, length);
 
@@ -22,6 +24,15 @@ window.onload = function () {
 };
 
 const Chat = () => {
+    const user = useSelector((state: AppState) => state.user);
+    const navigate = useNavigate();
+
+    console.log("useerrrr",user);
+    if(user == null)
+    {
+        navigate("/",{replace:true}) 
+        return null
+    }
 
     const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
     const [message, setMessage] = useState("");

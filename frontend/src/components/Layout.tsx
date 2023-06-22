@@ -1,54 +1,41 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-
-export const Layout = ({children}) => {
-    return (
-        <div className="">
-            <div className="">
-              <div>
-                <div style={{background: 'rgb(2,0,36)', opacity: "0.9", backgroundImage: 'linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(8,9,83,1) 35%, rgba(33,58,63,1) 100%)'}} className="grid grid-cols-1 md:grid-cols-6 xs:grid-cols-3 2xs:grid-cols-2 items-center justify-center relative backdrop-blur-md z-[668] min-w-full  sm:text-center container mx-auto pt-5 text-2xl font-bold flex">
-                    <Link
-                        to="/home"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300  rounded-2xl text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        Home
-                    </Link>
-                    <Link
-                        to="/profile"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 rounded-2xl text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        Profile
-                    </Link>
-                    <Link
-                        to="/contacts"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 rounded-2xl  text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        Contacts
-                    </Link>
-                    <Link
-                        to="/chat"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 rounded-2xl  text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        Chat
-                    </Link>
-                    <Link
-                        to="/chanels"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 rounded-2xl  text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        Channels
-                    </Link>
-                    <Link
-                        to="/"
-                        className="hover:bg-gray-200 active:bg-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 rounded-2xl  text-1xl mx-14 font-semibold leading-7 text-black-900"
-                    >
-                        SignOut
-                    </Link>
-                </div>
-              </div>
-            </div>
-            <div>{children}</div>
-        </div>
-    )
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { setUser, store } from './redux';
+import { useDispatch } from 'react-redux';
+const del = ()=>{
 }
+const Layout = ({ children }) => {
+  return (
+    <div className="min-h-screen bg-gray-100 w-full">
+      <div className="bg-white py-3 shadow">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="flex items-center justify-between">
+            <div className="text-2xl font-bold">My App</div>
+            <div className="space-x-4">
+              <NavLink to="/home">Home</NavLink>
+              <NavLink to="/profile">Profile</NavLink>
+              <NavLink to="/contacts">Contacts</NavLink>
+              <NavLink to="/chat">Chat</NavLink>
+              <NavLink to="/channels">Channels</NavLink>
+              <Link to="/out"  className="text-lg font-medium text-gray-800 hover:text-indigo-500 transition duration-150 ease-in-out">
+                    sign out
+                </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="px-4 py-8">{children}</div>
+    </div>
+  );
+};
 
-export type LayoutType = typeof Layout
+const NavLink = ({ to, children }) => (
+  <Link
+    to={to}
+    className="text-lg font-medium text-gray-800 hover:text-indigo-500 transition duration-150 ease-in-out"
+  >
+    {children}
+  </Link>
+);
+
+export default Layout;

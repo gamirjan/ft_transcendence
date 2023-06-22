@@ -24,15 +24,28 @@ export class Ft_AuthController {
         };
 
         // Send the response object back to the client
-        console.log("iddddddd",responseObject.data.Param.id);
+        const is_user = await this.userService.findOneByDisplayName(req.body.params.displayname);
+        await console.log("fiiinddd",is_user);
+        console.log(!is_user,is_user == null);
         
-        console.log(this.userService.findOneById(responseObject.data.Param.id));
+        if(!is_user)
+        {
+          const user = await this.addUserService.create({
+              ID_42:req.body.params.id,
+            displayName: req.body.params.displayname,
+            avatarUrl: req.body.params.image.link,
+          isTwoFactorEnabled: true,
+          wins: 0,
+           losses: 0
+          })
+          return res.status(200).send(user);
+        }
         
-        return res.status(200).send().json(responseObject);
+        return res.status(200).send(is_user);
       } catch (error) {
         // Handle any errors that occur during the processing
         // and send an error response back to the client
-        return res.status(500).json({ error: 'Internal server error' });
+        return res.status(500).json({ error: error });
       }
   }
     //@UseGuards(GoogleAuthGuard)
