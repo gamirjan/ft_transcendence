@@ -5,11 +5,11 @@
   margin: 0;
   box-sizing: border-box;
 }
-body {
+.signin {
   display: grid;
-  background-color: #080710;
+  background-color:rgb(139, 126, 126);
   place-items: center;
-  height: 90vh;
+  height: 100vh;
 }
 .background {
   width: 100px;
@@ -30,7 +30,7 @@ body {
   background: linear-gradient(to right, #ff512f, #f09819);
   left: 35%;
 }
-form {
+.signin > form {
   max-width: 600px;
   background-color: rgba(255, 255, 255, 0.13);
   border-radius: 10px;

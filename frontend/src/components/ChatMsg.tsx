@@ -1,7 +1,15 @@
 import React from "react"
+import { useSelector } from "react-redux";
 
 class ChatMsg extends React.Component<any, any> {
 render() {
+    const user = useSelector((state: AppState) => state.user);
+
+    console.log("useerrrr",user);
+    if(user == null)
+    {
+        return null
+    }
 
     if (this.props.user)
         return(

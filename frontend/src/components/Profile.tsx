@@ -1,9 +1,22 @@
-import React from "react"
-import { Layout } from "./Layout";
+import React, { useEffect } from "react"
+import  Layout  from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { store } from "./redux";
 
 
 const Profile = () => {
+    const user = useSelector((state: AppState) => state.user);
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(user == null)
+        {
+            navigate("/",{replace:true}) 
+            //return null
+        }
+    },[])
+    console.log("useerrrr",store.getState());
     return (
         <Layout>
         <div className="">
@@ -11,9 +24,9 @@ const Profile = () => {
             </div>
 
             <div className="flex flex-col items-center mt-10">
-                <img src={profile} className="w-40 border-4 border-white rounded-full"/>
+                <img src={user.avatarurl} className="w-40 border-4 border-white rounded-full"/>
                 <div className="flex items-center space-x-2 mt-2">
-                    <p className="text-2xl">Mikhayil Arzumanyan</p>
+                    <p className="text-2xl">{user.displayname}</p>
 
                 </div>
                 <p className="text-gray-700">miarzuma</p>

@@ -1,10 +1,24 @@
-import React from "react"
-import { Link } from 'react-router-dom'
+import React, { useEffect } from "react"
+import { Link, useNavigate } from 'react-router-dom'
 import photo from '@SRC_DIR/assets/images/pong.jpg';
-import { Layout } from "./Layout";
+import Layout  from "./Layout";
+import { useSelector } from "react-redux";
+import { Store } from "redux";
+import {store} from "./redux";
 
 
 const Home = () => {
+    const user = useSelector((state: AppState) => state.user);
+    const navigate = useNavigate();
+    useEffect(()=>{
+        if(user == null)
+        {
+            navigate("/",{replace:true}) 
+            //return null
+        }
+    },[])
+    console.log("useerrrr",store.getState());
+   
     return (
     <Layout>
         <div className="mt-8 relative w-full h-screen">
