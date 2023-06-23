@@ -25,18 +25,8 @@ function Ft_Auth() {
 			.then(response => response.json())
 			.then(data => {
 				console.log(data.status);
-				const userObject = {
-					id: 12,
-					id_42: 100216,
-					displayname: 'Arno Baboomian',
-					email: null,
-					avatarurl: 'https://cdn.intra.42.fr/users/0af32ecdbf0b50365b564e68f068f040/arbaboom.jpg',
-					isverified: null,
-					istwofactorenabled: true,
-					wins: 0,
-					losses: 0,
-				  };
-				  dispatch(setUser(userObject));
+				  dispatch(setUser(null));
+				  dispatch(setUser(data));
 				navigate("/home",{replace:true})
 				// Process the response data received from the server
 				console.log(data);

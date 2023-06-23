@@ -5,18 +5,48 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { store } from "./redux";
 
+const get_game_info =async (param:object)=>{
+     let res  = await fetch(`http://localhost:7000/game/user/${param.id}`)
+     console.log(res);
+     
+    return res;
+}
 
 const Profile = () => {
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
+    let games = []
     useEffect(()=>{
         if(user == null)
         {
             navigate("/",{replace:true}) 
             //return null
         }
+        else{
+
+            fetch(`http://localhost:7000/game/user/${user.id}`)
+            .then(response => {
+                if (!response.ok) {
+                  throw new Error('Request failed');
+                }
+                return response.json(); // assuming the server returns JSON data
+              })
+              .then(data => {
+                // Process the response data
+                games = data.data
+                console.log(games,Object.keys(games).length);
+                
+                //console.log(data);
+              })
+              .catch(error => {
+                // Handle any errors
+                console.log(error);
+              });
+        }
+        /*  const  game_info = get_game_info(user);
+        console.log("game info",game_info); */
     },[])
-    console.log("useerrrr",store.getState());
+    console.log("useerrrrprofile",store.getState());
     return (
         <Layout>
         <div className="">
@@ -81,7 +111,7 @@ const Profile = () => {
                     <ul className="mt-2 text-gray-700">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Total:</span>
-                            <span className="text-gray-700">13</span>
+                            <span className="text-gray-700">{Object.keys(games).length}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Wins:</span>
