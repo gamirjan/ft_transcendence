@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body, Put } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Put, Res } from '@nestjs/common';
 import { Gamehistory } from './GameHistory.entity';
 import { CreateGameDto } from './CreateGameDto';
 import { UpdateScoresDto } from './UpdateScoresDto';
@@ -26,7 +26,8 @@ export class GameController {
   }
 
   @Get('user/:userId')
-  async findAllGamesByUserId(@Param('userId') userId: number) {
-    return this.gameService.findAllGamesByUserId(userId);
+  async findAllGamesByUserId(@Param('userId') userId: number,@Res() res: Response) {
+    let th = this;
+    return res.send({data:th.gameService.findAllGamesByUserId(userId)});
 }
 }
