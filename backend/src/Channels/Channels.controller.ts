@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Res } from '@nestjs/common';
 import { Channel } from './Channel.entity';
 import { ChannelsService } from './Channels.service'; 
 import { CreateChannelDto } from './CreateChannelDto';
@@ -14,12 +14,12 @@ export class ChannelsController {
 
   @Get('user/:userId')
   async getUserChannels(@Param('userId') userId: number): Promise<Channel[]> {
-    return this.channelService.getUserChannels(userId);
+    return  this.channelService.getUserChannels(userId);
   }
 
   @Post()
-  async createChannel(@Body() createChannelDto: CreateChannelDto): Promise<Channel> {
-    return this.channelService.createChannel(createChannelDto);
+  async createChannel(@Body() createChannelDto: CreateChannelDto,@Res() res:Response): Promise<Channel> {
+    return res.status(200).send(this.channelService.createChannel(createChannelDto)) ;
   }
 
   @Delete(':id')

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import  Layout  from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useState } from "react"
@@ -7,6 +7,8 @@ import { IMassage } from "./utils/index";
 import { socket } from "./Socket";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+
 
 const generateRandomString = (length=6) => Math.random().toString(20).substr(2, length);
 
@@ -26,13 +28,30 @@ window.onload = function () {
 const Chat = () => {
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
+    const [contacts, setContacts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [selectedUser, setSelectedUser] = useState(null);
 
-    console.log("useerrrr",user);
-    if(user == null)
-    {
-        navigate("/",{replace:true}) 
-        return null
-    }
+    useEffect(() => {
+        if (user == null) 
+            navigate("/", { replace: true });
+        else {
+          fetch(`http://localhost:7000/friends/${user.id}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Request failed");
+              }
+              return response.json(); // assuming the server returns JSON data
+            })
+            .then((data) => {
+              setContacts(data);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+        }
+      }, []);
 
     const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
     const [message, setMessage] = useState("");
@@ -64,11 +83,11 @@ const Chat = () => {
         <Layout>
             <div className="mt-8 container mx-auto shadow-lg rounded-lg">
                 <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
-                <div className="font-semibold text-2xl">Mikhayil Arzumanyan
-                <h6 className="font-semibold text-lg">miarzuma</h6>
+                <div className="font-semibold text-2xl">{user.displayname}
+                <h6 className="font-semibold text-lg">hidden</h6>
                 </div>
                 <div>
-                    <img src={profile} className="w-40 border-4 border-white rounded-full"/>
+                    <img src={user.avatarurl} className="w-40 border-4 border-white rounded-full"/>
                 </div>
                 </div>
 
@@ -84,146 +103,23 @@ const Chat = () => {
                             />
                             </div>
 
-                            <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/_7LbC5J-jw4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Arno Baboomian</div>
-                                <div className="text-gray-500">arbaboom</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/otT2199XwI8/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Arman Kazaryan</div>
-                                <div className="text-gray-500">armanarut</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2 border-l-4 border-blue-400">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Gevorg Amirjanyan</div>
-                                <div className="text-gray-500">gamirjan</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
-                            <div className="flex flex-row py-4 px-2 items-center border-b-2">
-                            <div className="w-1/4">
-                                <img
-                                src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                className="object-cover h-12 w-12 rounded-full"
-                                alt=""
-                                />
-                            </div>
-                            <div className="w-full">
-                                <div className="text-lg font-semibold">Vruyr Sargsyan</div>
-                                <div className="text-gray-500">vrsargsy</div>
-                            </div>
-                            </div>
-
+                               {contacts.map((elem)=>(
+                                   <>
+                                    <div className="flex flex-row py-4 px-2 justify-center items-center border-b-2">
+                                        <div className="w-1/4">
+                                        <img
+                                        src={elem.user.avatarurl}
+                                        className="object-cover h-12 w-12 rounded-full"
+                                        alt=""
+                                        />
+                                    </div>
+                                    <div className="w-full">
+                                        <div className="text-lg font-semibold">{elem.user.displayname}</div>
+                                        <div className="text-gray-500">{elem.user.email}</div>
+                                    </div>
+                                    </div>
+                                 </>
+                               ))}
                         </div>
 
                         <div className="col-span-2 px-5 flex flex-col justify-between">

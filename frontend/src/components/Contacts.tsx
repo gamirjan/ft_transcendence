@@ -31,7 +31,7 @@ const Contacts = () => {
     }
   }, []);
 
-  const handleSearch = (e) => {
+  const handleSearch =  (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
@@ -40,7 +40,7 @@ const Contacts = () => {
       return;
     }
 
-    fetch(`http://localhost:7000/users?q=${query}`)
+     fetch(`http://localhost:7000/users`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
@@ -48,7 +48,13 @@ const Contacts = () => {
         return response.json();
       })
       .then((data) => {
-        setSuggestions(data);
+       console.log(data);
+       
+        const regex = new RegExp('.*' + e.target.value + '.*');
+
+         setSuggestions( data.filter((obj)=>{
+            return regex.test(obj.displayname)
+         }));
       })
       .catch((error) => {
         console.log(error);
