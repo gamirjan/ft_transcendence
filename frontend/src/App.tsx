@@ -13,6 +13,8 @@ import Ft_Auth from "./components/Ft_Auth";
 import { Provider, useSelector } from "react-redux";
 import store from "./components/redux";
 import Out from "./components/Out";
+import ChannelComponent from "./components/Channels";
+import PingPongGame from "./components/Pingpong";
 
 
 function App() {
@@ -26,12 +28,13 @@ function App() {
             <Route path="/chat" element={<Chat />} />
             <Route path="/contacts" element={<Contacts />} />
             <Route path="/thegame" element={<TheGame />} />
-            <Route path="/chanels" element={<Chanels />} />
+            <Route path="/channels" element={<ChannelComponent/>} />
             <Route path="/profile" element={<Profile />} />
             {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
+      <Route path="/ping" element={<PingPongGame/>}/>
           </Routes>
        </Router>
   )
