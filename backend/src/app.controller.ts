@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param,Req } from '@nestjs/common';
 import { AppService } from './app.service';
+import * as requestIp from 'request-ip';
 
 
 
@@ -23,4 +24,22 @@ export class AppController {
   login(): string {
     return this.appService.getHello();
   }
+  @Get("/ip")
+  getCurrentIp(@Req() request: Request): string {
+    const ip = requestIp.getClientIp(request);
+    return ip;
+  }
 }
+/* 
+import { Controller, Get, Req } from '@nestjs/common';
+import { Request } from 'express';
+import * as requestIp from 'request-ip';
+
+@Controller('ip')
+export class IpController {
+  @Get()
+  getCurrentIp(@Req() request: Request): string {
+    const ip = requestIp.getClientIp(request);
+    return ip;
+  }
+} */
