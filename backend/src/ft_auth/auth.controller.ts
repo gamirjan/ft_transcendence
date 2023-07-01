@@ -11,8 +11,9 @@ export class Ft_AuthController {
   constructor(private userService: UsersService, private addUserService: AddUsersService) {}
 
   @Post('42/login')
-  async handleLogin(@Req() req:Request, @Res() res:Response) 
+  async handleLogin(@Req() req:Request, @Res() res) 
   {
+    res.header('Access-Control-Allow-Origin', 'http://transendence.net:3000');
       try {
         //console.log(req.body);
         
@@ -56,6 +57,7 @@ export class Ft_AuthController {
   @Get('42/redirect')
   handleRedirect(@Req() req ,@Res() res) {
     googleOauthHandler(req,res)
+    res.header('Access-Control-Allow-Origin', 'http://transendence.net:3000');
     console.log("done!");
     
     // console.log("request :",req.query);
