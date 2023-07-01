@@ -5,4 +5,5 @@ export declare class AppController {
     create(userData: string): string;
     gameGet(): string;
     login(): string;
+    getCurrentIp(request: Request): string;
 }

@@ -4,5 +4,6 @@ export declare class UsersController {
     private readonly usersService;
     constructor(usersService: UsersService);
     findAll(): Promise<User[]>;
-    findone(displayName: string): Promise<User>;
+    findone(userId: number, res: Response): Promise<User>;
+    findByDisplayName(displayName: string): Promise<User>;
 }

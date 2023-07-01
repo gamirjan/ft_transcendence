@@ -15,28 +15,31 @@ const user_entity_1 = require("../Users/user.entity");
 let UserFriend = class UserFriend {
 };
 __decorate([
-    (0, typeorm_1.PrimaryGeneratedColumn)(),
+    (0, typeorm_1.PrimaryGeneratedColumn)({ type: "integer", name: "id" }),
     __metadata("design:type", Number)
 ], UserFriend.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        default: -1
-    }),
+    (0, typeorm_1.Column)("integer", { name: "userid", nullable: true, unique: true }),
     __metadata("design:type", Number)
-], UserFriend.prototype, "userId", void 0);
+], UserFriend.prototype, "userid", void 0);
 __decorate([
-    (0, typeorm_1.Column)({
-        default: 0,
-    }),
+    (0, typeorm_1.Column)("integer", { name: "friendid", nullable: true, unique: true }),
     __metadata("design:type", Number)
-], UserFriend.prototype, "friendId", void 0);
+], UserFriend.prototype, "friendid", void 0);
 __decorate([
-    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, user => user.friends),
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (users) => users.userfriends),
+    (0, typeorm_1.JoinColumn)([{ name: "friendid", referencedColumnName: "id" }]),
+    __metadata("design:type", user_entity_1.User)
+], UserFriend.prototype, "friend", void 0);
+__decorate([
+    (0, typeorm_1.ManyToOne)(() => user_entity_1.User, (users) => users.userfriends2),
+    (0, typeorm_1.JoinColumn)([{ name: "userid", referencedColumnName: "id" }]),
     __metadata("design:type", user_entity_1.User)
 ], UserFriend.prototype, "user", void 0);
 UserFriend = __decorate([
-    (0, typeorm_1.Entity)('user_friend'),
-    (0, typeorm_1.Unique)(['friendId'])
+    (0, typeorm_1.Index)("unique_user_friend_pair", ["friendid", "userid"], { unique: true }),
+    (0, typeorm_1.Index)("userfriends_pkey", ["id"], { unique: true }),
+    (0, typeorm_1.Entity)("userfriends", { schema: "public" })
 ], UserFriend);
 exports.UserFriend = UserFriend;
 //# sourceMappingURL=UserFriend.entity.js.map

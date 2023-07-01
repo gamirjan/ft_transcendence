@@ -19,7 +19,7 @@ export class ChannelsController {
 
   @Post()
   async createChannel(@Body() createChannelDto: CreateChannelDto,@Res() res:Response): Promise<Channel> {
-    return res.send(this.channelService.createChannel(createChannelDto));
+    return (this.channelService.createChannel(createChannelDto));
   }
 
   @Delete(':id')

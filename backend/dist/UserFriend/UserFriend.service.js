@@ -23,20 +23,22 @@ let UserFriendService = class UserFriendService {
         this.userRepository = userRepository;
         this.friendRepository = friendRepository;
     }
-    async findAll(userId) {
-        const friends = await this.friendRepository
-            .createQueryBuilder('userfriends')
-            .innerJoinAndSelect('userfriends.friend', 'user')
-            .where('userfriends.userId = :userId', { userId })
-            .getMany();
-        return friends.map((friend) => friend.user);
+    async getUserFriends(userId) {
+        const userfriends = await this.friendRepository.find({ relations: ['friend'], where: { userid: userId } });
+        console.log(userfriends);
+        return userfriends.map((uf) => ({
+            id: uf.id,
+            user: uf.friend
+        }));
     }
-    async create(friend) {
-        const newFriend = this.userRepository.create(friend);
-        return this.userRepository.save(newFriend);
+    async addFriend(userid, friendid) {
+        const userFriend = new UserFriend_entity_1.UserFriend();
+        userFriend.userid = userid;
+        userFriend.friendid = friendid;
+        return this.friendRepository.save(userFriend);
     }
-    async remove(userId, friendId) {
-        await this.friendRepository.delete({ user: { Id: userId } });
+    async removeFriend(userFriendId) {
+        await this.friendRepository.delete({ id: userFriendId });
     }
 };
 UserFriendService = __decorate([

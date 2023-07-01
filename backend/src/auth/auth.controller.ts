@@ -1,6 +1,5 @@
 import { Controller,Post, Get, Param, Req, UseGuards,Res } from '@nestjs/common';
 import { Request } from 'express';
-import { GoogleAuthGuard } from './utils/Guards';
 import { googleOauthHandler } from './auth.handler';
 import { UsersService } from '../Users/user.service';
 import { AddUsersService } from '../AddUser/addUser.service';
@@ -21,21 +20,15 @@ export class AuthController {
           data: req.body,
         };
         console.log("iddddddd",req.body.params.given_name);
-        const is_user = await this.userService.findOneByName(req.body.params.given_name);
+        const is_user = true//await this.userService.findOneByName(req.body.params.given_name);
         
-       await console.log("finddd",await this.userService.findOneByName(req.body.params.given_name));
-       if(!is_user)
-          this.addUserService.create({
-            ID_42:"",
-            displayName:"",
-            
-          })
+      // await console.log("finddd",await this.userService.findOneByName(req.body.params.given_name));
         // Send the response object back to the client
-        return res.status(200).json(responseObject);
+        return (responseObject);
       } catch (error) {
         // Handle any errors that occur during the processing
         // and send an error response back to the client
-        return res.status(500).json({ error: 'Internal server error' });
+        return ({ error: 'Internal server error' });
       }
   }
     //@UseGuards(GoogleAuthGuard)

@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const app_service_1 = require("./app.service");
+const requestIp = require("request-ip");
 let AppController = class AppController {
     constructor(appService) {
         this.appService = appService;
@@ -28,6 +29,10 @@ let AppController = class AppController {
     }
     login() {
         return this.appService.getHello();
+    }
+    getCurrentIp(request) {
+        const ip = requestIp.getClientIp(request);
+        return ip;
     }
 };
 __decorate([
@@ -49,6 +54,13 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "login", null);
+__decorate([
+    (0, common_1.Get)("/ip"),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Request]),
+    __metadata("design:returntype", String)
+], AppController.prototype, "getCurrentIp", null);
 AppController = __decorate([
     (0, common_1.Controller)("game"),
     __metadata("design:paramtypes", [app_service_1.AppService])

@@ -28,6 +28,6 @@ export class GameController {
   @Get('user/:userId')
   async findAllGamesByUserId(@Param('userId') userId: number,@Res() res: Response) {
     let th = this;
-    return res.send({data:th.gameService.findAllGamesByUserId(userId)});
+    return ({data:th.gameService.findAllGamesByUserId(userId)});
 }
 }

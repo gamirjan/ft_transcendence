@@ -1,7 +1,6 @@
 import { Controller, Get, NotFoundException, Param, Res } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { User } from './user.entity';
-import { UserFriendService } from 'dist/UserFriend/UserFriend.service';
 
 @Controller('users')
 export class UsersController {
@@ -21,7 +20,7 @@ export class UsersController {
     if (!user) {
       throw new NotFoundException(`User with id '${userId}' not found`);
     }
-    return res.status(200).send(user);
+    return user;
   }
 
   @Get('byName/:displayName')

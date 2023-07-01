@@ -1,6 +1,5 @@
 import { Controller,Post, Get, Param, Req, UseGuards,Res } from '@nestjs/common';
 import { Request } from 'express';
-import { GoogleAuthGuard } from './utils/Guards';
 import { googleOauthHandler } from './auth.handler';
 import { UsersService } from '../Users/user.service';
 import { AddUsersService } from '../AddUser/addUser.service';
@@ -38,16 +37,16 @@ export class Ft_AuthController {
           wins: 0,
            losses: 0
           })
-          return res.status(200).send(user);
+          return (user);
         }
 
    
         
-        return res.status(200).send(is_user);
+        return (is_user);
       } catch (error) {
         // Handle any errors that occur during the processing
         // and send an error response back to the client
-        return res.status(500).json({ error: error });
+        return ({ error: error });
       }
   }
     //@UseGuards(GoogleAuthGuard)

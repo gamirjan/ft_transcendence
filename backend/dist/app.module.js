@@ -19,7 +19,11 @@ const typeorm_1 = require("@nestjs/typeorm");
 const ormconfig_1 = require("./ormconfig");
 const user_controller_1 = require("./Users/user.controller");
 const user_service_1 = require("./Users/user.service");
+const chat_server_1 = require("./chat.server");
+const Channel_module_1 = require("./Channels/Channel.module");
 const users_module_1 = require("./Users/users.module");
+const ChannelUsers_module_1 = require("./ChannelUsers/ChannelUsers.module");
+const ChannelAdmins_module_1 = require("./ChannelAdmins/ChannelAdmins.module");
 const user_repository_1 = require("./Users/user.repository");
 const user_entity_1 = require("./Users/user.entity");
 const addUser_service_1 = require("./AddUser/addUser.service");
@@ -28,10 +32,23 @@ const UserFriend_controller_1 = require("./UserFriend/UserFriend.controller");
 const UserFriend_service_1 = require("./UserFriend/UserFriend.service");
 const UserFriend_entity_1 = require("./UserFriend/UserFriend.entity");
 const auth_controller_1 = require("./auth/auth.controller");
+const Channels_controller_1 = require("./Channels/Channels.controller");
 const auth_service_1 = require("./auth/auth.service");
+const google_controller_1 = require("./GoogleAuth/google.controller");
+const google_service_1 = require("./GoogleAuth/google.service");
+const auth_controller_2 = require("./ft_auth/auth.controller");
+const auth_service_2 = require("./ft_auth/auth.service");
+const ChannelUser_controller_1 = require("./ChannelUsers/ChannelUser.controller");
+const ChannelMessage_module_1 = require("./ChannelMessages/ChannelMessage.module");
+const ChannelMessages_controller_1 = require("./ChannelMessages/ChannelMessages.controller");
+const GameHistory_module_1 = require("./GameHistory/GameHistory.module");
+const GameHistory_controller_1 = require("./GameHistory/GameHistory.controller");
 let AppModule = class AppModule {
     constructor() {
         console.log("app module called");
+        console.log("============================");
+        console.log(ormconfig_1.default);
+        console.log("============================");
     }
 };
 AppModule = __decorate([
@@ -39,11 +56,17 @@ AppModule = __decorate([
         imports: [
             config_1.ConfigModule.forRoot({ isGlobal: true }),
             typeorm_1.TypeOrmModule.forRoot(ormconfig_1.default),
+            ChannelUsers_module_1.ChannelUsersModule,
+            ChannelAdmins_module_1.ChannelAdminsModule,
+            Channel_module_1.ChannelsModule,
+            ChannelMessage_module_1.ChannelMessagesModule,
+            GameHistory_module_1.GameModule,
             users_module_1.UsersModule,
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_repository_1.UserRepository, UserFriend_entity_1.UserFriend]),
         ],
-        controllers: [app_controller_1.AppController, user_controller_1.UsersController, addUsers_controller_1.AddUsersController, UserFriend_controller_1.FriendController, auth_controller_1.AuthController],
-        providers: [app_service_1.AppService, signal_service_1.ShutdownService, user_service_1.UsersService, addUser_service_1.AddUsersService, UserFriend_service_1.UserFriendService, auth_service_1.AuthService],
+        controllers: [app_controller_1.AppController, user_controller_1.UsersController, addUsers_controller_1.AddUsersController, UserFriend_controller_1.FriendController, auth_controller_1.AuthController, Channels_controller_1.ChannelsController,
+            ChannelUser_controller_1.ChannelUsersController, google_controller_1.GoogleController, auth_controller_2.Ft_AuthController, ChannelMessages_controller_1.ChannelMessagesController, GameHistory_controller_1.GameController],
+        providers: [app_service_1.AppService, signal_service_1.ShutdownService, user_service_1.UsersService, addUser_service_1.AddUsersService, UserFriend_service_1.UserFriendService, auth_service_1.AuthService, chat_server_1.ChatServer, google_service_1.GoogleService, auth_service_2.Ft_AuthService],
     }),
     __metadata("design:paramtypes", [])
 ], AppModule);

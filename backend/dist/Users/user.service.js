@@ -24,8 +24,11 @@ let UsersService = class UsersService {
     async findAll() {
         return this.userRepository.find();
     }
+    async findOneById(userId) {
+        return this.userRepository.findOne({ where: { id: userId } });
+    }
     async findOneByDisplayName(displayName) {
-        return this.userRepository.findOne({ where: { DisplayName: displayName } });
+        return this.userRepository.findOne({ where: { displayname: displayName } });
     }
 };
 UsersService = __decorate([
