@@ -24,7 +24,7 @@ function Ft_Auth() {
 				'Content-Type': 'application/json',
 			},
 			})
-			.then(response => console.log(response.json()))
+			.then(response => response.json())
 			.then(data => {
 				console.log(data.status);
 				  dispatch(setUser(null));
