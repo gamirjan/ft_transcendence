@@ -37,7 +37,6 @@ import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.con
 import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
 import { GameModule } from './GameHistory/GameHistory.module';
 import { GameController } from './GameHistory/GameHistory.controller';
-import { config } from 'dotenv';
 
 
 

@@ -23,8 +23,15 @@ let UsersController = class UsersController {
         console.log("/user request");
         return this.usersService.findAll();
     }
-    async findone(displayName) {
-        console.log("/user/:is requset");
+    async findone(userId, res) {
+        console.log("/user/:id requset");
+        const user = await this.usersService.findOneById(userId);
+        if (!user) {
+            throw new common_1.NotFoundException(`User with id '${userId}' not found`);
+        }
+        return user;
+    }
+    async findByDisplayName(displayName) {
         const user = await this.usersService.findOneByDisplayName(displayName);
         if (!user) {
             throw new common_1.NotFoundException(`User with displayName '${displayName}' not found`);
@@ -41,10 +48,18 @@ __decorate([
 __decorate([
     (0, common_1.Get)('/:id'),
     __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Res)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, Response]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "findone", null);
+__decorate([
+    (0, common_1.Get)('byName/:displayName'),
+    __param(0, (0, common_1.Param)('displayName')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "findone", null);
+], UsersController.prototype, "findByDisplayName", null);
 UsersController = __decorate([
     (0, common_1.Controller)('users'),
     __metadata("design:paramtypes", [user_service_1.UsersService])

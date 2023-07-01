@@ -23,12 +23,12 @@ let AddUsersService = class AddUsersService {
     }
     async create(createUserDto) {
         const user = new user_entity_1.User();
-        user.ID_42 = createUserDto.ID_42;
-        user.DisplayName = createUserDto.displayName;
-        user.AvatarUrl = createUserDto.avatarUrl;
-        user.IsTwoFactorEnabled = createUserDto.isTwoFactorEnabled;
-        user.Wins = createUserDto.wins;
-        user.Losses = createUserDto.losses;
+        user.id_42 = createUserDto.ID_42;
+        user.displayname = createUserDto.displayName;
+        user.avatarurl = createUserDto.avatarUrl;
+        user.istwofactorenabled = createUserDto.isTwoFactorEnabled;
+        user.wins = createUserDto.wins;
+        user.losses = createUserDto.losses;
         return this.userRepository.save(user);
     }
 };

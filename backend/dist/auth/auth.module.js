@@ -12,8 +12,6 @@ const typeorm_1 = require("@nestjs/typeorm");
 const User_1 = require("../entities/User");
 const auth_controller_1 = require("./auth.controller");
 const auth_service_1 = require("./auth.service");
-const GoogleStrategy_1 = require("./utils/GoogleStrategy");
-const Serializer_1 = require("./utils/Serializer");
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
@@ -21,8 +19,6 @@ AuthModule = __decorate([
         imports: [typeorm_1.TypeOrmModule.forFeature([User_1.User])],
         controllers: [auth_controller_1.AuthController],
         providers: [
-            GoogleStrategy_1.GoogleStrategy,
-            Serializer_1.SessionSerializer,
             {
                 provide: 'AUTH_SERVICE',
                 useClass: auth_service_1.AuthService,

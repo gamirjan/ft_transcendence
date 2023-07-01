@@ -14,20 +14,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FriendController = void 0;
 const common_1 = require("@nestjs/common");
-const user_entity_1 = require("../Users/user.entity");
 const UserFriend_service_1 = require("./UserFriend.service");
 let FriendController = class FriendController {
     constructor(friendService) {
         this.friendService = friendService;
     }
     async findAll(userId) {
-        return this.friendService.findAll(userId);
+        return await this.friendService.getUserFriends(userId);
     }
-    async create(friend) {
-        return this.friendService.create(friend);
+    async addFriend(payload) {
+        const { userid, friendid } = payload;
+        return this.friendService.addFriend(userid, friendid);
     }
-    async remove(userId, friendId) {
-        return this.friendService.remove(userId, friendId);
+    async remove(userFriendId) {
+        return this.friendService.removeFriend(userFriendId);
     }
 };
 __decorate([
@@ -41,15 +41,14 @@ __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [user_entity_1.User]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
-], FriendController.prototype, "create", null);
+], FriendController.prototype, "addFriend", null);
 __decorate([
-    (0, common_1.Delete)(':userId/:friendId'),
-    __param(0, (0, common_1.Param)('userId')),
-    __param(1, (0, common_1.Param)('friendId')),
+    (0, common_1.Delete)(':userFriendId'),
+    __param(0, (0, common_1.Param)('userFriendId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Number]),
+    __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], FriendController.prototype, "remove", null);
 FriendController = __decorate([
