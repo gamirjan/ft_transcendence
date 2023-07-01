@@ -1,15 +1,14 @@
-import React from "react"
+import React, { Component } from "react"
 import { useSelector } from "react-redux";
 
+//const user = useSelector((state: AppState) => state.user);
 class ChatMsg extends React.Component<any, any> {
-render() {
-    const user = useSelector((state: AppState) => state.user);
-
-    console.log("useerrrr",user);
+    render() {
+   /*  console.log("useerrrr",user);
     if(user == null)
     {
         return null
-    }
+    } */
 
     if (this.props.user)
         return(
@@ -20,7 +19,7 @@ render() {
                 {this.props.massage}
                 </div>
                 <img
-                src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
+                src={this.props.user.avatarurl}
                 className="object-cover h-8 w-8 rounded-full"
                 alt=""
                 />

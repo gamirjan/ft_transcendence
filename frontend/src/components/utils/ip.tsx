@@ -1,0 +1,1 @@
+export const ip =  process.env.IP ?? "http://localhost";

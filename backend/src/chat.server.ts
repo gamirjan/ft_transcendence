@@ -16,7 +16,6 @@ let sockets = [];
     origin: ['http://localhost:3000','*']
     }
 })
-
 export class ChatServer implements OnGatewayInit, OnGatewayConnection{
     @WebSocketServer()
     server: Server;
@@ -40,7 +39,11 @@ export class ChatServer implements OnGatewayInit, OnGatewayConnection{
         @MessageBody() userid: any,
         @ConnectedSocket() client: Socket,
         ) {
+            console.log("-----------------------------------------")
+            console.log("ONLINE", userid)
+            console.log("-----------------------------------------")
         sockets[userid] = client.id;
+        client.emit("online", userid)
     }
 
     @SubscribeMessage('chat')
@@ -48,7 +51,9 @@ export class ChatServer implements OnGatewayInit, OnGatewayConnection{
         @MessageBody() data: any,
         @ConnectedSocket() client: Socket,
         ) {
-        console.log(data.userid + ': ' + data.msg);     
+            console.log("-----------------------------------------")            
+        console.log(data.data.id + ': ' + data.msg);     
+        console.log("-----------------------------------------")
         // socket.broadcast.emit('message', msg); // to all, but the sender
         // this.server.emit('message',data); // to all, including the sender
         this.server/*to(sockets[data.userid])*/.emit('chat',data); // to all, including the sender

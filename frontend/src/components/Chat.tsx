@@ -7,6 +7,7 @@ import { IMassage } from "./utils/index";
 import { socket } from "./Socket";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ip } from "./utils/ip";
 
 
 
@@ -21,9 +22,9 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const chatid = urlParams.get('id');
 
-window.onload = function () {
-    socket.emit(`online`, chatid);
-};
+// window.onload = function () {
+//     socket.emit(`online`, chatid);
+// };
 
 const Chat = () => {
     const user = useSelector((state: AppState) => state.user);
@@ -34,10 +35,38 @@ const Chat = () => {
     const [selectedUser, setSelectedUser] = useState(null);
 
     useEffect(() => {
+        const onConnect = () => {
+            console.log("CONNECTED")
+        }
+
+        const onOnline = (p) => {
+            console.log("ONLINE", p)
+        }
+
+        socket.on("connect", onConnect);        
+        socket.on("online", onOnline);
+
+        socket.emit("online", { msg: "Hello, world!!!" })
+        socket.on('chat', function (obj) {
+            if (obj.msg !== '') {
+                setTextMessages([...(textMessages || []), 
+                    {msg: obj.displayname + ": " + obj.msg, username: obj.username}])
+            }
+            console.log(obj.username + ": " + obj.msg);
+        });
+
+        return () => {
+            socket.off("connect", onConnect);
+            socket.off("online", onOnline);
+            socket.off('chat');
+        }
+    }, []);
+
+    useEffect(() => {
         if (user == null) 
             navigate("/", { replace: true });
         else {
-          fetch(`http://localhost:7000/friends/${user.id}`)
+          fetch(`${ip}:7000/friends/${user.id}`)
             .then((response) => {
               if (!response.ok) {
                 throw new Error("Request failed");
@@ -61,19 +90,15 @@ const Chat = () => {
 
             let msg = message;
             msg =  msg.replace(/(<([^>]+)>)/gi, "");
+            console.log("msgggggg",msg);
+            
             console.log("sending msg: " + msg + " from " + username);
-            socket.emit('chat', {"msg" : msg, "userid" : chatid, "username" : username});
+            socket.emit('chat', {data:user,"msg" : msg, "userid" : chatid, "username" : username});
 
         setMessage("");
     }
 
-    socket.on('chat', function (obj) {
-        if (obj.msg !== '') {
-            setTextMessages([...(textMessages || []), 
-                {msg: obj.username + ": " + obj.msg, username: obj.username}])
-        }
-        console.log(obj.username + ": " + obj.msg);
-    });
+   
 
     socket.on('participants', function(count) {
         console.log("online :" + count);
@@ -127,107 +152,9 @@ const Chat = () => {
                                 {textMessages && textMessages.map((buff) => (
                                     <ChatMsg
                                         massage = {buff.msg}
-                                        user = {buff.username == username}
+                                        user = {user}
                                     />
                                 ))}
-                                {/* {textMessages.map((text) => (
-                                <div className="flex justify-end mb-4">
-                                    <div
-                                    className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
-                                    >
-                                    {text}
-                                    </div>
-                                    <img
-                                    src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                </div>
-                                ))} */}
-                            
-                                {/* <div className="flex justify-end mb-4">
-                                    <div
-                                    className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black"
-                                    >
-                                    Welcome to game everyone !
-                                    </div>
-                                    <img
-                                    src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                </div>
-                                <div className="flex justify-start mb-4">
-                                    <img
-                                    src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                    <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                    Many new games can boast beautiful graphics in recent times. But some of them deserve a special attention.
-                                    </div>
-                                </div>
-                                <div className="flex justify-end mb-4">
-                                    <div>
-                                    <div className="mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black">
-                                        According to experts, it is the integration of ray tracing that makes this game especially beautiful.
-                                    </div>
-
-                                    <div className="mt-4 mr-2 py-3 px-4 bg-gray-200 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-black">
-                                        Realistic graphics, well-detailed models, quality facial animation - all this makes the game's visuals really impressive.
-                                    </div>
-                                    </div>
-                                    <img
-                                    src="https://source.unsplash.com/L2cxSuKWbpo/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                </div>
-
-                                <div className="flex justify-start mb-4">
-                                    <img
-                                    src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                    <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                    happy holiday guys!
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-start mb-4">
-                                    <img
-                                    src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                    <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                    happy holiday guys!
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-start mb-4">
-                                    <img
-                                    src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                    <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                    happy holiday guys!
-                                    </div>
-                                </div>
-
-                                <div className="flex justify-start mb-4">
-                                    <img
-                                    src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
-                                    className="object-cover h-8 w-8 rounded-full"
-                                    alt=""
-                                    />
-                                    <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                    happy holiday guys!
-                                    </div>
-                                </div> */}
-
                             </div>
                             <div className="py-5">
                                 <form onSubmit={(event) => sendMessage(event)}>

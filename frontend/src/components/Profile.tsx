@@ -4,9 +4,10 @@ import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { store } from "./redux";
+import { ip } from "./utils/ip";
 
 const get_game_info =async (param:object)=>{
-     let res  = await fetch(`http://localhost:7000/game/user/${param.id}`)
+     let res  = await fetch(`${ip}:7000/game/user/${param.id}`)
      console.log(res);
      
     return res;
@@ -24,7 +25,7 @@ const Profile = () => {
         }
         else{
 
-            fetch(`http://localhost:7000/game/user/${user.id}`)
+            fetch(`${ip}:7000/game/user/${user.id}`)
             .then(response => {
                 if (!response.ok) {
                   throw new Error('Request failed');

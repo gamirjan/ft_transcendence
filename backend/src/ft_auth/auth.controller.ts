@@ -40,6 +40,8 @@ export class Ft_AuthController {
           })
           return res.status(200).send(user);
         }
+
+   
         
         return res.status(200).send(is_user);
       } catch (error) {
