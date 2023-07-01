@@ -4,8 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from './redux';
 import env from "react-dotenv"
-
-const ip =  process.env.IP ?? "http://localhost"
+import { ip } from './utils/ip';
 
 function Ft_Auth() {
 	console.log("ft_auttthhththt");
@@ -24,7 +23,7 @@ function Ft_Auth() {
 				'Content-Type': 'application/json',
 			},
 			})
-			.then(response => response.json())
+			.then(response => console.log(response.json()))
 			.then(data => {
 				console.log(data.status);
 				  dispatch(setUser(null));
