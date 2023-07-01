@@ -11,7 +11,6 @@ import { ChannelAdmin } from "../ChannelAdmins/ChannelAdmin.entity";
 import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
 import { User } from "../Users/user.entity";
 import { ChannelUser} from "../ChannelUsers/ChannelUser.entity";
-import { Mutelist } from "../Mutelist/Mutelist.entity";
 
 @Index("channels_channelname_key", ["channelname"], { unique: true })
 @Index("channels_pkey", ["id"], { unique: true })
