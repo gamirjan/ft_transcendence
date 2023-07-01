@@ -18,6 +18,7 @@ function Ft_Auth() {
 		{
 					fetch(`${ip}:7000/auth/42/login`, {
 			method: 'POST',
+			mode:'no-cors',
 			body: JSON.stringify({params}),
 			headers: {
 				'Content-Type': 'application/json',
