@@ -38,7 +38,7 @@ export class Ft_AuthController {
           wins: 0,
            losses: 0
           })
-          return (user);
+          return (res.send(user));
         }
 
    
