@@ -9,6 +9,7 @@ function Auth() {
 	{
 				fetch(`${ip}:7000/auth/google/login`, {
 		method: 'POST',
+		mode:'no-cors',
 		body: JSON.stringify({params}),
 		headers: {
 			'Content-Type': 'application/json',
