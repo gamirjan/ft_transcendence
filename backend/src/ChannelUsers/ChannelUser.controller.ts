@@ -8,6 +8,10 @@ import { ChannelUserModel } from './ChannelUserModel';
 export class ChannelUsersController {
   constructor(private readonly channelUsersService: ChannelUsersService) {}
 
+  // todo: join channel by click
+
+  // todo: join channel by password
+
   @Get(':id')
   async getChannelUsers(@Param('id') id: number): Promise<ChannelUserModel[]> {
     return this.channelUsersService.getChannelUsers(id);

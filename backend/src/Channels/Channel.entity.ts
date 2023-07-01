@@ -34,6 +34,14 @@ export class Channel {
   })
   channelname: string | null;
 
+  @Column("character varying", {
+    name: "password",
+    nullable: true,
+    unique: false,
+    length: 255,
+  })
+  password: string | null;
+
   @OneToMany(() => ChannelAdmin, (channeladmins) => channeladmins.channel)
   channeladmins: ChannelAdmin[];
 

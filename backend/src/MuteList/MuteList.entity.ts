@@ -17,9 +17,12 @@ import {
   
     @Column("timestamp without time zone", { name: "muteddate", nullable: true })
     muteddate: Date | null;
+
+    @Column("integer", { name: "channelid", nullable: true, unique: true })
+    channelid: number | null;
   
-    @Column("integer", { name: "expiretime", nullable: true })
-    expiretime: number | null;
+    @Column("integer", { name: "userid", nullable: true, unique: true })
+    userid: number | null;
   
     // @ManyToOne(() => Channel, (channels) => channels.mutelists)
     // @JoinColumn([{ name: "channelid", referencedColumnName: "id" }])
