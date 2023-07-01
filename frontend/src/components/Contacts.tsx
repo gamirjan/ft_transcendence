@@ -3,6 +3,7 @@ import Layout from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ip } from "./utils/ip";
 
 const Contacts = () => {
   const user = useSelector((state: AppState) => state.user);
@@ -15,7 +16,7 @@ const Contacts = () => {
   useEffect(() => {
     if (user == null) navigate("/", { replace: true });
     else {
-      fetch(`http://localhost:7000/friends/${user.id}`)
+      fetch(`${ip}:7000/friends/${user.id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");
@@ -40,7 +41,7 @@ const Contacts = () => {
       return;
     }
 
-     fetch(`http://localhost:7000/users`)
+     fetch(`${ip}:7000/users`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
@@ -75,7 +76,7 @@ const Contacts = () => {
         body: JSON.stringify({userid:user.id,friendid:selectedUser.id}),
       };
 
-      fetch("http://localhost:7000/friends", requestOptions)
+      fetch(`${ip}:7000/friends`, requestOptions)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");

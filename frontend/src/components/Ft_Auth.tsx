@@ -3,7 +3,9 @@ import queryString from 'query-string'
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from './redux';
+import env from "react-dotenv"
 
+const ip =  process.env.IP ?? "http://localhost"
 
 function Ft_Auth() {
 	console.log("ft_auttthhththt");
@@ -15,7 +17,7 @@ function Ft_Auth() {
 	{
 		if(!user)
 		{
-					fetch('http://localhost:7000/auth/42/login', {
+					fetch(`${ip}:7000/auth/42/login`, {
 			method: 'POST',
 			body: JSON.stringify({params}),
 			headers: {
@@ -51,7 +53,9 @@ function Ft_Auth() {
 		const params = new URLSearchParams(queryParams).toString();
 	
 		// Append the URL-encoded parameters to the server endpoint
-		const url = `http://localhost:7000/auth/42/redirect?${params}`;
+		console.log(ip);
+	
+		const url = `${ip}:7000/auth/42/redirect?${params}`;
 		//console.log("qqqqqqqqqqqqqq",queryParams);
 		
 		// Send the GET request using fetch()

@@ -16,6 +16,7 @@ import Out from "./components/Out";
 import ChannelComponent from "./components/Channels";
 import PingPongGame from "./components/Pingpong";
 import PingPong from "./components/Pingpong";
+import ChatComponent from "./components/ChatComponent";
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
       <Route path="/thegame" element={<PingPong/>}/>
+      <Route path="/chat1" element={<ChatComponent/>}/>
           </Routes>
        </Router>
   )

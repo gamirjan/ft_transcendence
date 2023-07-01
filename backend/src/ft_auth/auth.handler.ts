@@ -91,12 +91,18 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
     */
     const values = {
         code,
-        client_id: "u-s4t2ud-ba3aea4480c6fd2f33eb1c38078b70eb56bfc32316df9eed3ce24c731b6b48c1",
-        client_secret: "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",
-        redirect_uri: 'http://localhost:3000/ft_auth',
+        client_id: process.env.CLIENT_ID,
+        client_secret: process.env.SECRET_KEY,
+        redirect_uri:process.env.REDIRECT_URI,
         grant_type: 'authorization_code',
         // code:code,
     };
+    console.log("+++++++++++++++++++++++++++++++++++++++++");
+    console.log(values);
+    console.log("+++++++++++++++++++++++++++++++++++++++++");
+
+    
+    
     const client_id = "u-s4t2ud-ba3aea4480c6fd2f33eb1c38078b70eb56bfc32316df9eed3ce24c731b6b48c1" as string
     const secret_key = "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" as string
     const url = 'https://api.intra.42.fr/oauth/token';

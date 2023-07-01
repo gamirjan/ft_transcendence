@@ -37,6 +37,8 @@ import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.con
 import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
 import { GameModule } from './GameHistory/GameHistory.module';
 import { GameController } from './GameHistory/GameHistory.controller';
+import { config } from 'dotenv';
+
 
 
 
@@ -60,6 +62,9 @@ import { GameController } from './GameHistory/GameHistory.controller';
   export class AppModule {
     constructor(){
       console.log("app module called");
+      console.log("============================");
+      console.log(config);
+      console.log("============================");
     /*   // createPostgreSQLConnection();
      let  UID = "Your application uid"
      let SECRET = "Your secret token"

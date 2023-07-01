@@ -1,13 +1,13 @@
 import React, { useEffect } from 'react'
 import queryString from 'query-string'
 import { useNavigate } from 'react-router-dom';
-
+import { ip } from './utils/ip';
 
 function Auth() {
 	const navigate = useNavigate();
 	async function login(params:object) 
 	{
-				fetch('http://localhost:7000/auth/google/login', {
+				fetch(`${ip}:7000/auth/google/login`, {
 		method: 'POST',
 		body: JSON.stringify({params}),
 		headers: {
@@ -36,7 +36,7 @@ function Auth() {
 		const params = new URLSearchParams(queryParams).toString();
 	
 		// Append the URL-encoded parameters to the server endpoint
-		const url = `http://localhost:7000/auth/google/redirect?${params}`;
+		const url = `${ip}:7000/auth/google/redirect?${params}`;
 		//console.log("qqqqqqqqqqqqqq",queryParams);
 		
 		// Send the GET request using fetch()

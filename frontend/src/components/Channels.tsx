@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import Layout from './Layout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { ip } from './utils/ip';
 
 const ChannelComponent = () => {
   const [selectedChannel, setSelectedChannel] = useState(null);
@@ -22,7 +23,7 @@ const ChannelComponent = () => {
       if (user == null) 
           navigate("/", { replace: true });
       else {
-        fetch(`http://localhost:7000/channels/user/${user.id}`)
+        fetch(`${ip}:7000/channels/user/${user.id}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Request failed");
@@ -93,7 +94,7 @@ const ChannelComponent = () => {
               owner: user }),
         };
   
-        fetch("http://localhost:7000/channels", requestOptions)
+        fetch(`${ip}:7000/channels`, requestOptions)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Request failed");
