@@ -97,9 +97,6 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
         grant_type: 'authorization_code',
         // code:code,
     };
-    console.log("+++++++++++++++++++++++++++++++++++++++++");
-    console.log(values);
-    console.log("+++++++++++++++++++++++++++++++++++++++++");
 
     
     
@@ -110,6 +107,8 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
 
     try {
       const response = await axios.post(url, values);
+      //console.log(response.data);
+      
       return response.data;
     } catch (error) {
       // Handle error appropriately

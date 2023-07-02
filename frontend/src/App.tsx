@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import Home from './components/Home';
-import Chat from './components/Chat';
 import Profile from "./components/Profile";
 import Contacts from "./components/Contacts";
 import TheGame from "./components/TheGame";
@@ -17,6 +16,7 @@ import ChannelComponent from "./components/Channels";
 import PingPongGame from "./components/Pingpong";
 import PingPong from "./components/Pingpong";
 import ChatComponent from "./components/ChatComponent";
+import Chat from "./components/Chat/Chat";
 
 
 function App() {

@@ -14,11 +14,12 @@ function Ft_Auth() {
 	  const dispatch = useDispatch();
 	async function login(params:object) 
 	{
+		console.log("loggginnn",ip);
+		
 		if(!user)
 		{
 					fetch(`${ip}:7000/auth/42/login`, {
 			method: 'POST',
-			mode:'no-cors',
 			body: JSON.stringify({params}),
 			headers: {
 				'Content-Type': 'application/json',
@@ -26,7 +27,7 @@ function Ft_Auth() {
 			})
 			.then(response => response.json())
 			.then(data => {
-				console.log(data.status);
+				console.log("ddddddddd",data);
 				  dispatch(setUser(null));
 				  dispatch(setUser(data));
 				navigate("/home",{replace:true})

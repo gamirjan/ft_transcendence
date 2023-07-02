@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+ import React, { useEffect } from "react"
 import  Layout  from "./Layout";
 import profile from '@SRC_DIR/assets/images/profile.svg';
 import { useState } from "react"
@@ -8,6 +8,7 @@ import { socket } from "./Socket";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ip } from "./utils/ip";
+import { Box, Button, Card, CardBody, CardFooter, Center, Flex, Grid, GridItem, Heading, Image, Square, Stack, Text } from "@chakra-ui/react";
 
 
 
@@ -105,8 +106,50 @@ const Chat = () => {
     });
 
     return (
-        <Layout>
-            <div className="mt-8 container mx-auto shadow-lg rounded-lg">
+        <Grid
+                templateAreas={`"header header"
+                                "nav main"
+                                "nav footer"`}
+                gridTemplateRows={'50px 1fr 30px'}
+                gridTemplateColumns={'150px 1fr'}
+                h='200px'
+                gap='1'
+                color='blackAlpha.700'
+                fontWeight='bold'
+                >
+            <GridItem pl='2' bg='orange.300' area={'header'}>
+                <Layout></Layout>
+            </GridItem>
+            <GridItem pl='2' bg='pink.300' area={'nav'}>
+
+                <Flex color='white' flexDirection="column" width="200px">
+                        {contacts.map((elem)=>(
+                            <Card>
+                                    <Center w='100px' bg='green.500'>
+                                      <Image width="64px" height="64px" borderRadius="32px" src={elem.user.avatarurl}></Image>
+                                    </Center>
+                                    <Square bg='blue.500' size='20px'>
+                                      <Text color="black">{elem.user.displayname}</Text>
+                                    </Square>
+                            </Card>
+                               ))}
+                               </Flex>
+                </GridItem>
+                <GridItem pl='2' bg='green.300' area={'main'}>
+                 Main
+                 </GridItem>
+                <GridItem pl='2' bg='blue.300' area={'footer'}>
+                 Footer
+                 </GridItem>
+        </Grid>
+
+
+        )
+    }
+
+export default Chat;
+
+ {/*  <div className="mt-8 container mx-auto shadow-lg rounded-lg">
                 <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
                 <div className="font-semibold text-2xl">{user.displayname}
                 <h6 className="font-semibold text-lg">hidden</h6>
@@ -195,9 +238,6 @@ const Chat = () => {
                         </div>
                         </div>
                     </div>
-                </div>
-        </Layout>
-        )
-    }
+                </div> */}
 
-export default Chat;
+
