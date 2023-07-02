@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { ip } from './ip';
 
 export const instance = axios.create({
-    baseURL: 'http://localhost:7000',
+    baseURL: `${ip}:7000`,
     timeout: 1000,
     headers: {'X-Custom-Header': 'foobar'}
   });
