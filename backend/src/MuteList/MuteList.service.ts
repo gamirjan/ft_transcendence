@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Mutelist } from './Mutelist.entity';
+import { Mutelist } from './MuteList.entity';
 import { Channel } from '../Channels/Channel.entity';
 import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
