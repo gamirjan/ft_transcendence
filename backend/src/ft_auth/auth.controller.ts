@@ -13,7 +13,7 @@ export class Ft_AuthController {
   @Post('42/login')
   async handleLogin(@Req() req:Request, @Res() res) 
   {
-    res.header('Access-Control-Allow-Origin', 'http://transendence.net:3000');
+    res.header('Access-Control-Allow-Origin', '*');
       try {
         //console.log(req.body);
         
@@ -38,12 +38,12 @@ export class Ft_AuthController {
           wins: 0,
            losses: 0
           })
-          return (res.send().json(user));
+          return res.status(208).send(user);
         }
 
    
         
-        return (is_user);
+        return res.send(is_user);
       } catch (error) {
         // Handle any errors that occur during the processing
         // and send an error response back to the client
@@ -57,12 +57,12 @@ export class Ft_AuthController {
   @Get('42/redirect')
   handleRedirect(@Req() req ,@Res() res) {
     googleOauthHandler(req,res)
-    res.header('Access-Control-Allow-Origin', 'http://transendence.net:3000');
+    res.header('Access-Control-Allow-Origin', '*');
     console.log("done!");
     
     // console.log("request :",req.query);
     
-    return { msg: 'OK' };
+    return { data: 'OK' };
     //@UseGuards(GoogleAuthGuard)
   }
 
