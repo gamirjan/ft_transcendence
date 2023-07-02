@@ -9,7 +9,7 @@ import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { MuteListService } from './MuteList.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, MuteList, ChannelAdmin, ChannelUser])],
+  imports: [TypeOrmModule.forFeature([User, Channel, Mutelist, ChannelAdmin, ChannelUser])],
   controllers: [MuteListController],
   providers: [MuteListService],
   exports: [MuteListService]
