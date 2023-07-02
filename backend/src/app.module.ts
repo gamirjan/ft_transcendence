@@ -37,7 +37,6 @@ import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.con
 import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
 import { GameModule } from './GameHistory/GameHistory.module';
 import { GameController } from './GameHistory/GameHistory.controller';
-import { CorsMiddlewarr } from '@nestjs/platform-express';
 
 
 
@@ -74,8 +73,5 @@ import { CorsMiddlewarr } from '@nestjs/platform-express';
     //   Get an access token
      let token = client.client_credentials.get_token */
       
-    }
-    configure(consumer: MiddlewareConsumer) {
-      consumer.apply(CorsMiddlewarr).forRoutes('*');
     }
   }
