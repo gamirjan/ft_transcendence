@@ -37,6 +37,9 @@ import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.con
 import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
 import { GameModule } from './GameHistory/GameHistory.module';
 import { GameController } from './GameHistory/GameHistory.controller';
+import { DirectMessagesModule } from './DirectMessages/DirectMessage.module';
+import { DirectMessagesController } from './DirectMessages/DirectMessages.controller';
+import { MuteListModule } from './MuteList/MuteList.module';
 
 
 
@@ -50,13 +53,15 @@ import { GameController } from './GameHistory/GameHistory.controller';
       ChannelAdminsModule,
       ChannelsModule,
       ChannelMessagesModule,
+      DirectMessagesModule,
+      MuteListModule,
       GameModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
-      ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController],
+      ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController],
     providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService],
   })
   export class AppModule {

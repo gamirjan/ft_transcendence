@@ -12,6 +12,7 @@ import { ChannelUser } from "../ChannelUsers/ChannelUser.entity";
 import { Gamehistory } from "../GameHistory/GameHistory.entity";
 import { Mutelist } from "../MuteList/MuteList.entity";
 import { UserFriend } from "../UserFriend/UserFriend.entity";
+import { Directmessage } from "../DirectMessages/DirectMessage.entity";
 
 @Index("users_displayname_key", ["displayname"], { unique: true })
 @Index("users_pkey", ["id"], { unique: true })
@@ -60,6 +61,9 @@ export class User {
 
   @OneToMany(() => Channelmessage, (channelmessages) => channelmessages.user)
   channelmessages: Channelmessage[];
+
+  @OneToMany(() => Directmessage, (directmessages) => directmessages.user1)
+  directmessages: Directmessage[];
 
   @OneToMany(() => Channel, (channels) => channels.owner)
   channels: Channel[];
