@@ -36,7 +36,8 @@ export class DirectMessagesService {
   async getChatMessages(user1id: number, user2id: number): Promise<DirectMessageDto[]> {
     return (await this.directMessagesRepository.find({ where: [ { user1id: user1id, user2id: user2id }, { user1id: user2id, user2id: user1id } ], order: { id: 'ASC' } })).map(dm => ({
       senderid: dm.user1id,
-      message: dm.message
+      message: dm.message,
+      publishdate: dm.publishdate
     }));
   }
 }
