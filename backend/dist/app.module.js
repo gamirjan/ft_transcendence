@@ -43,6 +43,9 @@ const ChannelMessage_module_1 = require("./ChannelMessages/ChannelMessage.module
 const ChannelMessages_controller_1 = require("./ChannelMessages/ChannelMessages.controller");
 const GameHistory_module_1 = require("./GameHistory/GameHistory.module");
 const GameHistory_controller_1 = require("./GameHistory/GameHistory.controller");
+const DirectMessage_module_1 = require("./DirectMessages/DirectMessage.module");
+const DirectMessages_controller_1 = require("./DirectMessages/DirectMessages.controller");
+const MuteList_module_1 = require("./MuteList/MuteList.module");
 let AppModule = class AppModule {
     constructor() {
         console.log("app module called");
@@ -60,12 +63,14 @@ AppModule = __decorate([
             ChannelAdmins_module_1.ChannelAdminsModule,
             Channel_module_1.ChannelsModule,
             ChannelMessage_module_1.ChannelMessagesModule,
+            DirectMessage_module_1.DirectMessagesModule,
+            MuteList_module_1.MuteListModule,
             GameHistory_module_1.GameModule,
             users_module_1.UsersModule,
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_repository_1.UserRepository, UserFriend_entity_1.UserFriend]),
         ],
         controllers: [app_controller_1.AppController, user_controller_1.UsersController, addUsers_controller_1.AddUsersController, UserFriend_controller_1.FriendController, auth_controller_1.AuthController, Channels_controller_1.ChannelsController,
-            ChannelUser_controller_1.ChannelUsersController, google_controller_1.GoogleController, auth_controller_2.Ft_AuthController, ChannelMessages_controller_1.ChannelMessagesController, GameHistory_controller_1.GameController],
+            ChannelUser_controller_1.ChannelUsersController, google_controller_1.GoogleController, auth_controller_2.Ft_AuthController, ChannelMessages_controller_1.ChannelMessagesController, GameHistory_controller_1.GameController, DirectMessages_controller_1.DirectMessagesController],
         providers: [app_service_1.AppService, signal_service_1.ShutdownService, user_service_1.UsersService, addUser_service_1.AddUsersService, UserFriend_service_1.UserFriendService, auth_service_1.AuthService, chat_server_1.ChatServer, google_service_1.GoogleService, auth_service_2.Ft_AuthService],
     }),
     __metadata("design:paramtypes", [])
