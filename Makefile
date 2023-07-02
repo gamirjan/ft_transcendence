@@ -32,6 +32,6 @@ prune: down
 fclean: down
 	docker system prune -f -a
 
-re: prune all
+re: prune all 
 
-.PHONY: all build up down start stop logs prune re fclean
+.PHONY: all build up down start stop logs prune re fclean   
