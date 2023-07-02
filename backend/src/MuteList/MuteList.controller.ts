@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
-import { Mutelist } from './Mutelist.entity';
+import { Mutelist } from './MuteList.entity';
 import { MuteListService } from './MuteList.service';
 import { User } from '../Users/user.entity';
 
