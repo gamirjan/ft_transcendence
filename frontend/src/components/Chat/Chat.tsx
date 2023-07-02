@@ -6,13 +6,21 @@ import { socket } from '../Socket';
 import { ip } from '../utils/ip';
 import { IMassage } from '../utils';
 function Chat() {
+
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
-    const [selectedUser, setSelectedUser] = useState({});
+    const [selectedUser, setSelectedUser] = useState({user:{}});
+    const [selectedUserName, setSelectedUserName] = useState("");
+    const [messages, setMessages] = useState([]);
+  
 
+    const handleSelectUser = (e) => {
+      setSelectedUser(e);
+      setSelectedUserName(selectedUser.displayname);
+    }
     useEffect(() => {
         const onConnect = () => {
             console.log("CONNECTED")
@@ -20,6 +28,10 @@ function Chat() {
 
         const onOnline = (p) => {
             console.log("ONLINE", p)
+            // fetchMessages();
+            
+            // console.log();
+            
         }
 
         socket.on("connect", onConnect);        
@@ -40,7 +52,27 @@ function Chat() {
             socket.off('chat');
         }
     }, []);
-
+    const fetchMessages = () => {
+      if (user == null) 
+          navigate("/", { replace: true });
+      else {
+        fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            // console.log(data);
+            
+            setMessages(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    };
     useEffect(() => {
         if (user == null) 
             navigate("/", { replace: true });
@@ -58,8 +90,24 @@ function Chat() {
             .catch((error) => {
               console.log(error);
             });
+            // console.log(selectedUser);
+            
+            if (Object.keys(selectedUser).length)
+            {
+              fetchMessages();
+              // console.log(messages);
+
+            }
+            
         }
-      }, []);
+      }, [selectedUserName]);
+     
+      // const selectedChat = (e)=>{
+      //   setSelectedUser((e)=>{e.user})
+      //   let user_ = e.user
+      //    setSelectedUser(user_);
+      //   //console.log(selectedUser);
+      // }
 
     const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
     const [message, setMessage] = useState("");
@@ -84,47 +132,150 @@ function Chat() {
     });
 
   return (
-    <div className='layout'>
-        <div className='left'>
-            <div className='search_bar'>
-                <input type='text' placeholder='search'></input>
-            </div>
-            <div className='content_box'>
-                {contacts.map((elem)=>(
-                    <div className='content' onClick={()=>setSelectedUser(elem.user)}>
-                        <img src={elem.user.avatarurl} alt="" srcset="" />
-                        <div className='content_name'>{elem.user.displayname}</div>
-                    </div>
-
-                ))}
-            </div>
+    <div className="container mx-auto shadow-lg rounded-lg">
+            {/* <!-- headaer --> */}
+        <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">
+          <div className="font-semibold text-2xl">Chat</div>
+          <div className="w-1/2">
+            <div className="flex justify-center mb-4">
+                <img
+                  src={selectedUser.avatarurl ?? ""}
+                  className="object-cover h-10 w-10 rounded-full"
+                  alt=""
+                  />
+                  <div
+                    className="ml-2 py-3 px-4 bg-black rounded-xl text-white"
+                  >
+                    {selectedUser.displayname ?? "Saved Messege"}
+                  </div>
+              </div>
+          </div>
+          <div
+            className="h-12 w-12 p-2 bg-black rounded-full text-white font-semibold flex items-center justify-center"
+          >
+            RA
+          </div>
         </div>
-        <div className='right'>
-            <div className="top_bar">
-                <div className="user">
-                    <img src={selectedUser.avatarurl ?? ""} alt="nnn" srcset="" />
-                    <div>{selectedUser.displayname ?? "Saved Messege"}</div>
-                </div>
+        {/* <!-- end header --> */}
+        {/* <!-- Chatting --> */}
+        <div className="flex flex-row justify-between bg-white">
+          {/* <!-- chat list --> */}
+          <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+            {/* <!-- search compt --> */}
+            <div className="border-b-2 py-4 px-2">
+              <input
+                type="text"
+                placeholder="search chatting"
+                className="py-2 px-2 border-2 border-gray-200 rounded-2xl w-full"
+              />
             </div>
-            <div className="messeges">
-                <div className="messege_you">
-                    <div className="msg">hello</div>
+            {/* <!-- end search compt -->
+            <!-- user list --> */}
+            {contacts.map((elem)=>(
+                <div
+                className="flex flex-row py-4 px-2 justify-center items-center border-b-2 hover:cursor-pointer hover:bg-gray-400"
+                onClick={()=>handleSelectUser(elem.user)}
+              >
+                <div className="w-1/4">
+                  <img
+                    src={elem.user.avatarurl} alt="" srcSet=""
+                    className="object-cover h-12 w-12 rounded-full"
+                  />
                 </div>
-                <div className="messege_other">
-                   <div className="msg">wasup!?</div> 
+                <div className="w-full">
+                  <div className="text-lg font-semibold">{elem.user.displayname}</div>
                 </div>
+              </div>
+            ))}
+            
+            {/* <!-- end user list --> */}
+          </div>
+          {/* <!-- end chat list --> */}
+          {/* <!-- message --> */}
+          <div className="w-full px-5 flex flex-col justify-between">
+            <div className="flex flex-col mt-5">
+              {/* {console.log("messages: ", messages) }
+              {console.log("user: ", user) } */}
+              {messages.map((msg)=>(
+                user.id == msg.senderid ? 
+              <div className="flex justify-start mb-4">
+                <img
+                  src={user.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+                <div
+                  className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
+                >
+                 {msg.message}
+                </div>
+              </div>
+              :
+              <div className="flex justify-end mb-4">
+                <div
+                  className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+                >
+                  {msg.message}
+                </div>
+                <img
+                  src={selectedUser.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+              </div>
+          
+              ))}
+              {/* <div className="flex justify-end mb-4">
+                <div>
+                  <div
+                    className="mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+                  >
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Magnam, repudiandae.
+                  </div>
+    
+                  <div
+                    className="mt-4 mr-2 py-3 px-4 bg-blue-400 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+                  >
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Debitis, reiciendis!
+                  </div>
+                </div>
+                <img
+                  src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+              </div> */}
+              {/* <div className="flex justify-start mb-4">
+                <img
+                  src="https://source.unsplash.com/vpOeXr5wmR4/600x600"
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+                <div
+                  className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
+                >
+                  happy holiday guys!
+                </div>
+              </div> */}
             </div>
-            <div className="input">
-                <div className="mess">
-                    <input type="text" name="" id="" placeholder='Message'/>
-                <div className="but">
-
-                    <button type="submit">Send</button>
-                </div>
-                </div>
+            { (selectedUser.user && Object.keys(selectedUser.user).length) ? <div className="py-5">
+              <input
+                className="w-full bg-gray-300 py-5 px-3 rounded-xl"
+                type="text"
+                placeholder="type your message here..."
+              />
             </div>
+            :
+            <></>
+}
+          </div>
+          {/* <!-- end message --> */}
+         
+          </div>
         </div>
-    </div>
+    // </div>
   )
 }
 
