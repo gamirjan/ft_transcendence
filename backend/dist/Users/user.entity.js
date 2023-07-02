@@ -18,6 +18,7 @@ const ChannelUser_entity_1 = require("../ChannelUsers/ChannelUser.entity");
 const GameHistory_entity_1 = require("../GameHistory/GameHistory.entity");
 const MuteList_entity_1 = require("../MuteList/MuteList.entity");
 const UserFriend_entity_1 = require("../UserFriend/UserFriend.entity");
+const DirectMessage_entity_1 = require("../DirectMessages/DirectMessage.entity");
 let User = class User {
 };
 __decorate([
@@ -74,6 +75,10 @@ __decorate([
     (0, typeorm_1.OneToMany)(() => ChannelMessage_entity_1.Channelmessage, (channelmessages) => channelmessages.user),
     __metadata("design:type", Array)
 ], User.prototype, "channelmessages", void 0);
+__decorate([
+    (0, typeorm_1.OneToMany)(() => DirectMessage_entity_1.Directmessage, (directmessages) => directmessages.user1),
+    __metadata("design:type", Array)
+], User.prototype, "directmessages", void 0);
 __decorate([
     (0, typeorm_1.OneToMany)(() => Channel_entity_1.Channel, (channels) => channels.owner),
     __metadata("design:type", Array)

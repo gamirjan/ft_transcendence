@@ -5,6 +5,7 @@ import { ChannelUser } from "../ChannelUsers/ChannelUser.entity";
 import { Gamehistory } from "../GameHistory/GameHistory.entity";
 import { Mutelist } from "../MuteList/MuteList.entity";
 import { UserFriend } from "../UserFriend/UserFriend.entity";
+import { Directmessage } from "../DirectMessages/DirectMessage.entity";
 export declare class User {
     id: number;
     id_42: number | null;
@@ -17,6 +18,7 @@ export declare class User {
     losses: number | null;
     channeladmins: ChannelAdmin[];
     channelmessages: Channelmessage[];
+    directmessages: Directmessage[];
     channels: Channel[];
     channelusers: ChannelUser[];
     gamehistories: Gamehistory[];
