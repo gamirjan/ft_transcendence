@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Mutelist } from './MuteList.entity';
+import { MuteList } from './MuteList.entity';
 import { User } from '../Users/user.entity';
 import { MuteListController } from './MuteList.controller';
 import { Channel } from '../Channels/Channel.entity';
@@ -9,7 +9,7 @@ import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { MuteListService } from './MuteList.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Mutelist, ChannelAdmin, ChannelUser])],
+  imports: [TypeOrmModule.forFeature([User, Channel, MuteList, ChannelAdmin, ChannelUser])],
   controllers: [MuteListController],
   providers: [MuteListService],
   exports: [MuteListService]
