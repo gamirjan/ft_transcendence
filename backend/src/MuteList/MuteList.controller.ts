@@ -18,7 +18,7 @@ export class MuteListController {
     return this.muteListService.MuteUserInChannel(callinguserid, channelid, userid);
   }
 
-  @Get('unmute')
+  @Post('unmute')
   async UnMuteUserInChannel(@Body() payload: { callinguserid: number, channelid: number, userid: number }): Promise<Mutelist> {
     const { callinguserid, channelid, userid } = payload;
     return this.muteListService.UnMuteUserInChannel(callinguserid, channelid, userid);
