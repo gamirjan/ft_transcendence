@@ -6,7 +6,8 @@ import { AddChannelMessageDto } from './AddChannelMessageDto';
 import { Channel } from '../Channels/Channel.entity';
 import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
-import { ForbiddenException } from '@nestjs/common/exceptions';
+import { BadRequestException, ForbiddenException } from '@nestjs/common/exceptions';
+import { Mutelist } from '../MuteList/MuteList.entity';
 
 @Injectable()
 export class ChannelMessagesService {
@@ -18,7 +19,9 @@ export class ChannelMessagesService {
     @InjectRepository(ChannelAdmin)
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(ChannelUser)
-    private channelUsersRepository: Repository<ChannelUser>
+    private channelUsersRepository: Repository<ChannelUser>,
+    @InjectRepository(Mutelist)
+    private muteListRepository: Repository<Mutelist>
   ) {}
 
   async getChannelMessages(id: number): Promise<Channelmessage[]> {
@@ -32,6 +35,10 @@ export class ChannelMessagesService {
     if (!owner && !admin && !user)
     {
         throw new ForbiddenException('You do not have access to write message to this channel.');
+    }
+    if (await this.muteListRepository.findOne({ where: { channelid: addMessageToChannelDto.channel.id, userid: addMessageToChannelDto.user.id } }))
+    {
+       throw new ForbiddenException('You are muted, you are not allowed to write messages in this channel');
     }
     const channelmessage = new Channelmessage();
     channelmessage.message = addMessageToChannelDto.message;
