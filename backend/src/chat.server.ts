@@ -13,7 +13,7 @@ import { Socket } from "socket.io";
 let sockets = [];
 @WebSocketGateway(4000, { 
     cors: {
-    origin: ['http://localhost:3000','*']
+    origin:"*"
     }
 })
 export class ChatServer implements OnGatewayInit, OnGatewayConnection{
