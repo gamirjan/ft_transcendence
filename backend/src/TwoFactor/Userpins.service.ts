@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UserPin } from './userpins.entity';
+import { UserPin } from './Userpins.entity';
 import { BadRequestException } from '@nestjs/common/exceptions';
 import * as bcrypt from 'bcrypt';
 
