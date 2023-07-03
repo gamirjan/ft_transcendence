@@ -7,28 +7,28 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  findAll(): Promise<User[]> {
+  async findAll(@Res() res): Promise<User[]> {
     console.log("/user request");
     
-    return this.usersService.findAll();
+    return res.send(await this.usersService.findAll());
   }
 
   @Get('/:id')
-  async findone(@Param('id') userId: number,@Res() res:Response): Promise<User> {
+  async findone(@Param('id') userId: number, @Res() res): Promise<User> {
   console.log("/user/:id requset");
     const user = await this.usersService.findOneById(userId);
     if (!user) {
       throw new NotFoundException(`User with id '${userId}' not found`);
     }
-    return user;
+    return res.send(user);
   }
 
   @Get('byName/:displayName')
-  async findByDisplayName(@Param('displayName') displayName: string): Promise<User> {
+  async findByDisplayName(@Param('displayName') displayName: string, @Res() res): Promise<User> {
     const user = await this.usersService.findOneByDisplayName(displayName);
     if (!user) {
       throw new NotFoundException(`User with displayName '${displayName}' not found`);
     }
-    return user;
+    return res.send(user);
   }
 }

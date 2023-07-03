@@ -46,6 +46,7 @@ const GameHistory_controller_1 = require("./GameHistory/GameHistory.controller")
 const DirectMessage_module_1 = require("./DirectMessages/DirectMessage.module");
 const DirectMessages_controller_1 = require("./DirectMessages/DirectMessages.controller");
 const MuteList_module_1 = require("./MuteList/MuteList.module");
+const Userpins_module_1 = require("./TwoFactor/Userpins.module");
 let AppModule = class AppModule {
     constructor() {
         console.log("app module called");
@@ -65,6 +66,7 @@ AppModule = __decorate([
             ChannelMessage_module_1.ChannelMessagesModule,
             DirectMessage_module_1.DirectMessagesModule,
             MuteList_module_1.MuteListModule,
+            Userpins_module_1.UserPinsModule,
             GameHistory_module_1.GameModule,
             users_module_1.UsersModule,
             typeorm_1.TypeOrmModule.forFeature([user_entity_1.User, user_repository_1.UserRepository, UserFriend_entity_1.UserFriend]),
