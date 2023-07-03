@@ -12,6 +12,11 @@ export class MuteListController {
     return this.muteListService.GetMutedUsers(channelid);
   }
 
+  @Get(':channelid/:userid')
+  async CheckIfUserIsMuted(@Param('channelid') channelid: number, @Param('userid') userid: number): Promise<boolean> {
+    return this.muteListService.CheckIfUserIsMuted(channelid, userid);
+  }
+
   @Post('mute')
   async MuteUserInChannel(@Body() payload: { callinguserid: number, channelid: number, userid: number }): Promise<Mutelist> {
     const { callinguserid, channelid, userid } = payload;
