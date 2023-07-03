@@ -17,9 +17,12 @@ jobs:
       run: |
         sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'cd ft_transendence && git pull && docker compose up --build -d'
         
-    - name: Check wc -l output
+    - name: Sleep for 15 seconds
+      run: sleep 15
+      
+    - name: Is backend down?
       run: | 
-         output=$(sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'sleep 10 && docker ps | wc -l')
-         if [ "$output" != "2" ]; then
+         output=$(sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'docker ps | wc -l')
+         if [ "$output" != "3" ]; then
            sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'docker logs ft_transendence-backend-1'
          fi
