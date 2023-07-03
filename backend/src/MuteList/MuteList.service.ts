@@ -25,8 +25,8 @@ export class MuteListService {
     return (await this.muteListRepository.find({ where: { channelid: channelid }, relations: ['user'] })).map(m => m.user);
   }
 
-  async CheckIfUserIsMuted(channelid: number, userid: number): Promise<boolean> {
-    return await this.muteListRepository.exist({ where: { channelid: channelid, userid: userid } });
+  async CheckIfUserIsMuted(channelid: number, userid: number): Promise<object> {
+    return { muted: await this.muteListRepository.exist({ where: { channelid: channelid, userid: userid } }) };
   }
 
   async MuteUserInChannel(callinguserid: number, channelid: number, userid: number): Promise<Mutelist> {

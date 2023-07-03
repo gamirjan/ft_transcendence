@@ -12,52 +12,52 @@ export class ChannelsController {
   constructor(private readonly channelService: ChannelsService) {}
 
   @Get('get/:id')
-  async getChannelById(@Param('id') id: number): Promise<Channel> {
-    return this.channelService.getChannelById(id);
+  async getChannelById(@Param('id') id: number, @Res() res): Promise<Channel> {
+    return res.send(await this.channelService.getChannelById(id));
   }
 
   @Get('all')
-  async getAllChannels(): Promise<Channel[]> {
-    return this.channelService.getAllChannels();
+  async getAllChannels(@Res() res): Promise<Channel[]> {
+    return res.send(await this.channelService.getAllChannels());
   }
-
+  
   @Get('owner/:id')
-  async getChannelOwner(@Param('id') id: number): Promise<User> {
-    return this.channelService.getChannelOwner(id);
+  async getChannelOwner(@Param('id') id: number, @Res() res): Promise<User> {
+    return res.send(await this.channelService.getChannelOwner(id));
   }
-
+  
   @Get('admins/:id')
-  async getChannelAdmins(@Param('id') id: number): Promise<User[]> {
-    return this.channelService.getChannelAdmins(id);
+  async getChannelAdmins(@Param('id') id: number, @Res() res): Promise<User[]> {
+    return res.send(await this.channelService.getChannelAdmins(id));
   }
-
+  
   @Get('users/:id')
-  async getChannelUsersById(@Param('id') id: number): Promise<User[]> {
-    return this.channelService.getChannelUsers(id);
+  async getChannelUsersById(@Param('id') id: number, @Res() res): Promise<User[]> {
+    return res.send(await this.channelService.getChannelUsers(id));
   }
-
+  
   @Get('user/:userId')
-  async getUserChannels(@Param('userId') userId: number): Promise<Channel[]> {
-    return  this.channelService.getUserChannels(userId);
+  async getUserChannels(@Param('userId') userId: number, @Res() res): Promise<Channel[]> {
+    return res.send(await this.channelService.getUserChannels(userId));
   }
-
+  
   @Post()
-  async createChannel(@Body() createChannelDto: CreateChannelDto): Promise<Channel> {
-    return this.channelService.createChannel(createChannelDto);
+  async createChannel(@Body() createChannelDto: CreateChannelDto, @Res() res): Promise<Channel> {
+    return res.send(await this.channelService.createChannel(createChannelDto));
   }
-
+  
   @Post('join/public')
-  async joinPublicChannel(@Body() joinPublicChannelDto: JoinPublicChannelDto): Promise<ChannelUser> {
-    return this.channelService.joinUserToPublicChannel(joinPublicChannelDto);
+  async joinPublicChannel(@Body() joinPublicChannelDto: JoinPublicChannelDto, @Res() res): Promise<ChannelUser> {
+    return res.send(await this.channelService.joinUserToPublicChannel(joinPublicChannelDto));
   }
-
+  
   @Post('join/password')
-  async joinProtectedChannel(@Body() joinProtectedChannelDto: JoinProtectedChannelDto): Promise<ChannelUser> {
-    return this.channelService.joinUserToProtectedChannel(joinProtectedChannelDto);
+  async joinProtectedChannel(@Body() joinProtectedChannelDto: JoinProtectedChannelDto, @Res() res): Promise<ChannelUser> {
+    return res.send(await this.channelService.joinUserToProtectedChannel(joinProtectedChannelDto));
   }
-
+  
   @Delete(':id')
-  async deleteChannel(@Param('id') id: number): Promise<void> {
-    return this.channelService.deleteChannel(id);
-  }
+  async deleteChannel(@Param('id') id: number, @Res() res): Promise<void> {
+    return res.send(await this.channelService.deleteChannel(id));
+  }  
 }
