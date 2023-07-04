@@ -15,40 +15,44 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FriendController = void 0;
 const common_1 = require("@nestjs/common");
 const UserFriend_service_1 = require("./UserFriend.service");
+const common_2 = require("@nestjs/common");
 let FriendController = class FriendController {
     constructor(friendService) {
         this.friendService = friendService;
     }
-    async findAll(userId) {
-        return await this.friendService.getUserFriends(userId);
+    async findAll(userId, res) {
+        return res.send(await this.friendService.getUserFriends(userId));
     }
-    async addFriend(payload) {
+    async addFriend(payload, res) {
         const { userid, friendid } = payload;
-        return this.friendService.addFriend(userid, friendid);
+        return res.send(await this.friendService.addFriend(userid, friendid));
     }
-    async remove(userFriendId) {
-        return this.friendService.removeFriend(userFriendId);
+    async remove(userFriendId, res) {
+        return res.send(await this.friendService.removeFriend(userFriendId));
     }
 };
 __decorate([
     (0, common_1.Get)(':userId'),
     __param(0, (0, common_1.Param)('userId')),
+    __param(1, (0, common_2.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], FriendController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_2.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], FriendController.prototype, "addFriend", null);
 __decorate([
     (0, common_1.Delete)(':userFriendId'),
     __param(0, (0, common_1.Param)('userFriendId')),
+    __param(1, (0, common_2.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], FriendController.prototype, "remove", null);
 FriendController = __decorate([
