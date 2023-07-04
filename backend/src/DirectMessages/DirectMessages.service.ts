@@ -18,6 +18,8 @@ export class DirectMessagesService {
     directmessage.message = addDirectMessageDto.message;
     directmessage.user1 = addDirectMessageDto.user1;
     directmessage.user2 = addDirectMessageDto.user2;
+    directmessage.user1id = addDirectMessageDto.id1;
+    directmessage.user2id = addDirectMessageDto.id2;
     directmessage.publishdate = new Date();
     return this.directMessagesRepository.save(directmessage);
   }
