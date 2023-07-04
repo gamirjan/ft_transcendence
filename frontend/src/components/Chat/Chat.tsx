@@ -1,18 +1,41 @@
 import React, { useEffect, useState } from 'react'
-import './Chat.css'
+// import './Chat.css'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../Socket';
 import { ip } from '../utils/ip';
 import { IMassage } from '../utils';
+import CollapsibleMenu from './CollapsibleMenu';
 function Chat() {
+
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [selectedUser, setSelectedUser] = useState({});
+    const [selectedUserName, setSelectedUserName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [dmMessage, setDMMessage] = useState("");
+    const [sended, setSended] = useState(false)
+    const [openSidebar, setOpenSidebar] = useState(false)
+  
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleMenu = () => {
+    // console.log("ooooo");
+    
+    Object.keys(selectedUser).length != 0 && setIsOpen(!isOpen);
+  };
+  const toggleSidebar = () => {
+    Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
+  }
+
+
+    const handleSelectUser = (e) => {
+      setSelectedUser(e);
+      setSelectedUserName(selectedUser.displayname);
+    }
     useEffect(() => {
         const onConnect = () => {
             console.log("CONNECTED")
@@ -20,6 +43,10 @@ function Chat() {
 
         const onOnline = (p) => {
             console.log("ONLINE", p)
+            // fetchMessages();
+            
+            // console.log();
+            
         }
 
         socket.on("connect", onConnect);        
@@ -40,7 +67,27 @@ function Chat() {
             socket.off('chat');
         }
     }, []);
-
+    const fetchMessages = () => {
+      if (user == null) 
+          navigate("/", { replace: true });
+      else {
+        fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+             console.log(data);
+            
+            setMessages(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    };
     useEffect(() => {
         if (user == null) 
             navigate("/", { replace: true });
@@ -58,8 +105,24 @@ function Chat() {
             .catch((error) => {
               console.log(error);
             });
+            // console.log(selectedUser);
+            
+            if (Object.keys(selectedUser).length)
+            {
+              fetchMessages();
+              // console.log(messages);
+
+            }
+            
         }
-      }, []);
+      }, [selectedUserName, sended, isOpen]);
+     
+      // const selectedChat = (e)=>{
+      //   setSelectedUser((e)=>{e.user})
+      //   let user_ = e.user
+      //    setSelectedUser(user_);
+      //   //console.log(selectedUser);
+      // }
 
     const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(undefined);
     const [message, setMessage] = useState("");
@@ -76,55 +139,300 @@ function Chat() {
 
         setMessage("");
     }
+    const handleKeyDown = (e) => {
+      if (e.key == 'Enter')
+        sendDMMessage();
+
+    }
+    const sendDMMessage = () =>{
+        if (!dmMessage.length)
+            return;
+        // console.log(user, selectedUser);
+        // console.log(dmMessage);
+        // console.log(typeof(user.id));
+        
+        const values = {
+          user1:user || {},
+          user2:selectedUser,
+          id1:user.id,
+          id2:selectedUser.id,
+          message:dmMessage
+        }
+        /* method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({   
+               channelType: "1",
+              channelName: newChannelName,
+              owner: user }), */
+        fetch(`${ip}:7000/directmessages`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            setSended(!sended)
+            // console.log(data);
+            
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      
+    }
 
    
 
-    socket.on('participants', function(count) {
+    socket.on('participants', (count)=> {
         console.log("online :" + count);
     });
 
   return (
-    <div className='layout'>
-        <div className='left'>
-            <div className='search_bar'>
-                <input type='text' placeholder='search'></input>
+    <div className='bg-[#181818] max-h-screen'  >
+    <div className="container mx-auto  text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg">
+            {/* <!-- headaer --> */}
+        
+        {/* <!-- end header --> */}
+        {/* <!-- Chatting --> */}
+        <div className="flex flex-row justify-between bg-[#212121]">
+          {/* <!-- chat list --> */}
+          <div className="flex flex-col h-screen w-2/5 overflow-y-auto border-r-2 border-[#0f0f0f]">
+            <div className='sticky top-0 bg-[#212121] p-2 z-[4]'>
+          <div className=" flex justify-center font-semibold text-2xl  px-2">Chat</div>
+
+            {/* <!-- search compt --> */}
+            <div className="py-4 px-2">
+              <input
+                type="text"
+                placeholder="search chatting"
+                className="py-4 px-4 text-[#707579] outline-none border-2 bg-[#181818] border-[#2f2f2f] rounded-2xl w-full hover:border-[#707579]"
+              />
             </div>
-            <div className='content_box'>
-                {contacts.map((elem)=>(
-                    <div className='content' onClick={()=>setSelectedUser(elem.user)}>
-                        <img src={elem.user.avatarurl} alt="" srcset="" />
-                        <div className='content_name'>{elem.user.displayname}</div>
+
+            </div>
+            {/* <!-- end search compt -->
+            <!-- user list --> */}
+            {contacts && contacts.map((elem, key)=>(
+                              
+                <div
+                className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                onClick={()=>handleSelectUser(elem.user)}
+              >
+                <div className="w-1/4">
+                  <img
+                    src={elem.user.avatarurl} alt="" srcSet=""
+                    className="object-cover h-12 w-12 rounded-full"
+                  />
+                </div>
+                <div className="w-full">
+                  <div className="ml-3 text-lg font-semibold relative">
+                    {elem.user.displayname}
+                    <div 
+                      className='absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]'
+                      
+                    >
+                      <svg 
+                        xmlns="http://www.w3.org/2000/svg" 
+                        width="24" 
+                        height="24" 
+                        viewBox="0 0 24 24" 
+                        fill="none" 
+                        stroke="#aaaaaa" 
+                        stroke-width="2" 
+                        stroke-linecap="round" 
+                        stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="1">
+                            </circle>
+                          <circle cx="12" cy="5" r="1">
+                            </circle>
+                            <circle cx="12" cy="19" r="1">
+                              </circle>
+                      </svg>
                     </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {/* <!-- end user list --> */}
+          </div>
+          {/* <!-- end chat list --> */}
+          {/* <!-- message --> */}
+          <div className="w-full flex flex-col justify-between bg-[#181818]">
+          <div 
+            className="px-4 flex justify-between items-center z-[1] bg-[#212121] border-b-2 border-[#0f0f0f]"
+          >
+          <div 
+            className={`w-full ${(Object.keys(selectedUser).length != 0) && "hover:cursor-pointer"}`}
+            onClick={toggleSidebar}
+            >
+            <div className="flex px-4 pt-3 rounded-xl justify-start">
+              <div 
+                className='flex flex-col'
+              >
+                <img
+                  src={selectedUser.avatarurl ?? ""}
+                  className="object-cover h-10 self-center w-10 rounded-full"
+                  alt=""
+                  />
 
-                ))}
-            </div>
-        </div>
-        <div className='right'>
-            <div className="top_bar">
-                <div className="user">
-                    <img src={selectedUser.avatarurl ?? ""} alt="nnn" srcset="" />
-                    <div>{selectedUser.displayname ?? "Saved Messege"}</div>
-                </div>
-            </div>
-            <div className="messeges">
-                <div className="messege_you">
-                    <div className="msg">hello</div>
-                </div>
-                <div className="messege_other">
-                   <div className="msg">wasup!?</div> 
-                </div>
-            </div>
-            <div className="input">
-                <div className="mess">
-                    <input type="text" name="" id="" placeholder='Message'/>
-                <div className="but">
+              </div>
+              <div className='flex flex-col'>
+                  <div
+                    className="ml-2  py-3 px-4 justify-center rounded-xl text-white"
+                  >
+                    {selectedUser.displayname ?? user.displayname ?? "Saved Message"}
+                  </div>
 
-                    <button type="submit">Send</button>
-                </div>
-                </div>
+              </div>
+              </div>
+          </div>
+          {/* <CollapsibleMenu className = 
+          /> */}
+           <div className={`p-2 rounded-full text-white font-semibold relative ${(Object.keys(selectedUser).length != 0) && "hover:bg-[#181818] hover:cursor-pointer"}`}
+           onClick={toggleMenu}
+            onFocusOut={()=>setIsOpen(false)}
+           >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="24" 
+              height="24" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="#aaaaaa" 
+              stroke-width="2" 
+              stroke-linecap="round" 
+              stroke-linejoin="round">
+                <circle cx="12" cy="12" r="1">
+                  </circle>
+                <circle cx="12" cy="5" r="1">
+                  </circle>
+                  <circle cx="12" cy="19" r="1">
+                    </circle>
+            </svg>
+            {/* <img
+                    src={selectedUser.avatarurl ?? ""}
+                    className="object-cover h-10 w-10 rounded-full"
+                    alt=""
+                  /> */}
+          {(isOpen && Object.keys(selectedUser).length != 0) && (
+            <div 
+            className="absolute top-14 right-5 w-[12rem] p-2 bg-[#212121]  rounded-xl shadow-lg flex flex-col"
+              onBlur={toggleMenu}
+            >
+              {/* Menu content */}
+             
+              <ul className="z-[1] ">
+                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Block</li>
+                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Mute</li>
+                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Info</li>
+              </ul>
             </div>
+          )}
         </div>
-    </div>
+        </div>
+        <div className='relative '>
+          <div className='absolute bottom-0 left-0 w-full'
+          >
+        <div
+          className=' overflow-y-scroll flex justify-center'
+        >
+            <div className="w-1/2 max-h-[75vh] flex flex-col">
+              {/* {console.log("messages: ", messages) }
+              {console.log("user: ", user) } */}
+              {messages && messages.map((msg)=>(
+                user.id != msg.senderid ? 
+              <div className="flex justify-start mb-4">
+                <img
+                  src={selectedUser.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+                <div
+                  className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#212121] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
+                >
+                 {msg.message}
+                </div>
+              </div>
+              :
+              <div className="flex justify-end mb-4">
+                <div
+                  className="mr-2 py-3 px-4 bg-[#707579] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+                >
+                  {msg.message}
+                </div>
+                <img
+                  src={user.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+              </div>
+          
+              ))}
+            </div>
+            </div>
+            { <div className="flex py-5 justify-around">
+              <input
+                disabled={!(selectedUser && Object.keys(selectedUser).length)}
+                className={`w-1/2 bg-[#212121] py-5  wrap px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
+                ${(selectedUser && Object.keys(selectedUser).length) && "hover:border-[#707579] focus:border-[#707579]"}`}
+                type="text"
+                onChange={(e)=>setDMMessage(e.target.value)}
+                placeholder="type your message here..."
+                onKeyDown={handleKeyDown}
+              />
+            </div>
+            // :
+            // <></>
+}
+</div>
+          </div>
+        </div>
+        {openSidebar && <div className={`flex flex-col bg-[#212121] h-screen border-2 border-[#0f0f0f]`}>
+          <div className="flex flex-row justify-start py-5 w-[20vw] px-5">
+              <div className='flex flex-row'>
+
+              <div className='flex justify-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-full p-2 w-10 h-10' onClick={toggleSidebar}>X</div>
+                  <div className=" flex justify-end font-semibold text-2xl px-10">Profile</div>
+              </div>
+            
+            </div>
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+                <div className='flex flex-row relative'>
+                <img 
+                  src={selectedUser.avatarurl} 
+                  alt="" 
+                  className='object-cover h-50 w-full'
+                  />
+                  <div className='absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]'>
+                      {selectedUser.displayname}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+              <div className='flex p-5 flex-col'>
+                  <div className='rounded-xl hover:bg-[#181818] p-5 text-white'>
+                    <pre>
+
+                      {"Email: " + (selectedUser.email ?? "Hidden")}
+                    </pre>
+                  </div>
+              </div>
+            
+        </div>}
+          {/* <!-- end message --> */}
+         
+          </div>
+        </div>
+        </div>
+    // </div>
   )
 }
 

@@ -17,6 +17,7 @@ import PingPongGame from "./components/Pingpong";
 import PingPong from "./components/Pingpong";
 import ChatComponent from "./components/ChatComponent";
 import Chat from "./components/Chat/Chat";
+import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
 
 
 function App() {
@@ -37,6 +38,7 @@ function App() {
       <Route path="/out" element={<Out/>}/>
       <Route path="/thegame" element={<PingPong/>}/>
       <Route path="/chat1" element={<ChatComponent/>}/>
+      <Route path="/test" element={<CollapsibleMenu/>}/>
           </Routes>
        </Router>
   )

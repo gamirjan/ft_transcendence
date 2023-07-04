@@ -11,6 +11,8 @@ export class DirectMessagesController {
 
   @Post()
   async addDirectMessage(@Body() addDirectMessageDto: AddDirectMessageDto): Promise<Directmessage> {
+    console.log(addDirectMessageDto);
+    
     return this.directMessagesService.addDirectMessage(addDirectMessageDto);
   }
 
