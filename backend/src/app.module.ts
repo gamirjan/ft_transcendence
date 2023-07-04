@@ -40,7 +40,11 @@ import { GameController } from './GameHistory/GameHistory.controller';
 import { DirectMessagesModule } from './DirectMessages/DirectMessage.module';
 import { DirectMessagesController } from './DirectMessages/DirectMessages.controller';
 import { MuteListModule } from './MuteList/MuteList.module';
+
+import { AppGateway } from './app.getway';
+
 import { UserPinsModule } from './TwoFactor/Userpins.module';
+
 
 
 
@@ -64,7 +68,7 @@ import { UserPinsModule } from './TwoFactor/Userpins.module';
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
       ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService,AppGateway],
   })
   export class AppModule {
     constructor(){

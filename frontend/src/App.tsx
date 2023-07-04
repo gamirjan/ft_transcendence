@@ -14,9 +14,13 @@ import store from "./components/redux";
 import Out from "./components/Out";
 import ChannelComponent from "./components/Channels";
 import PingPongGame from "./components/Pingpong";
-import PingPong from "./components/Pingpong";
 import ChatComponent from "./components/ChatComponent";
 import Chat from "./components/Chat/Chat";
+import GameComponent from "./components/game/Game";
+import GameOne from "./components/game/OneVOne";
+import Pong from "./components/game/OneVOne";
+import PingPong from "./components/game/OneVOne";
+import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
 
 
 function App() {
@@ -35,7 +39,7 @@ function App() {
 			<Route path="/auth" element={<Auth/>}/>
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
-      <Route path="/thegame" element={<PingPong/>}/>
+      {/* <Route path="/thegame" element={<PingPong/>}/> */}
       <Route path="/chat1" element={<ChatComponent/>}/>
           </Routes>
        </Router>

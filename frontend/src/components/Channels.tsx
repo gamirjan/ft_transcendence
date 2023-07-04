@@ -18,6 +18,7 @@ const ChannelComponent = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
   const [newChannelName, setNewChannelName] = useState('');
+  const [isNewChannel,setIsNewChannel] = useState("")
 
   useEffect(() => {
       if (user == null) 
@@ -52,7 +53,7 @@ const ChannelComponent = () => {
             console.log(error);
           }); */
       }
-    }, []);
+    }, [isNewChannel]);
    
   
     const handleChannelSelect = (channel) => {
@@ -99,10 +100,12 @@ const ChannelComponent = () => {
             if (!response.ok) {
               throw new Error("Request failed");
             }
+            else
+              setIsNewChannel(newChannelName);
             // Handle success response
             console.log(response,response.body);
-            window.location.reload();
-
+            //window.location.reload();
+          
             
             
           })
