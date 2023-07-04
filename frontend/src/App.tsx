@@ -20,6 +20,7 @@ import GameComponent from "./components/game/Game";
 import GameOne from "./components/game/OneVOne";
 import Pong from "./components/game/OneVOne";
 import PingPong from "./components/game/OneVOne";
+import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
 
 
 function App() {
@@ -40,10 +41,6 @@ function App() {
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
       <Route path="/chat1" element={<ChatComponent/>}/>
-      <Route path="/chanel" element={<Chanels/>}/>
-      <Route path="/game" element={<GameComponent/>}/>
-      <Route path="/mainGame" element={<PingPong width={800} height={300}/>}/>
-
           </Routes>
        </Router>
   )
