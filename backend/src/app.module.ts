@@ -40,7 +40,11 @@ import { GameController } from './GameHistory/GameHistory.controller';
 import { DirectMessagesModule } from './DirectMessages/DirectMessage.module';
 import { DirectMessagesController } from './DirectMessages/DirectMessages.controller';
 import { MuteListModule } from './MuteList/MuteList.module';
+
 import { AppGateway } from './app.getway';
+
+import { UserPinsModule } from './TwoFactor/Userpins.module';
+
 
 
 
@@ -56,6 +60,7 @@ import { AppGateway } from './app.getway';
       ChannelMessagesModule,
       DirectMessagesModule,
       MuteListModule,
+      UserPinsModule,
       GameModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
