@@ -1,5 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { IoAdapter } from '@nestjs/platform-socket.io';
 // import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -7,6 +8,7 @@ async function bootstrap() {
   app.enableCors({
     origin : "*"
   })
+  app.useWebSocketAdapter(new IoAdapter(app));
 
   //const configService = app.get(ConfigService);
   // const port = configService.get('port');
