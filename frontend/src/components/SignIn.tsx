@@ -38,7 +38,7 @@ function getUrl()
   
     const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
     const option = {
-        redirect_uri: `${ip}:3000/auth` as string,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI  as string,
         client_id : process.env.CLIENT_ID as string,
         access_type: "offline",
         response_type: "code",
