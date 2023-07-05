@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 // import './Chat.css'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { socket } from '../Socket';
 import { ip } from '../utils/ip';
+import Modal from './Modal';
+// import { Button, Modal } from 'antd';
 import { IMassage } from '../utils';
 import CollapsibleMenu from './CollapsibleMenu';
+import Layout from '../Layout';
 function Chat() {
 
     const user = useSelector((state: AppState) => state.user);
+    const menuRef = useRef(null)
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -22,6 +26,12 @@ function Chat() {
   
   const [isOpen, setIsOpen] = useState(false);
 
+  const openMenu = () =>{
+    setIsOpen(true);
+  }
+  const closeMenu = () =>{
+    setIsOpen(false);
+  }
   const toggleMenu = () => {
     // console.log("ooooo");
     
@@ -88,6 +98,19 @@ function Chat() {
           });
       }
     };
+    useEffect(() => { 
+      const handleOutsideClick = (event) => { 
+        if (menuRef.current && !menuRef.current.contains(event.target)) { 
+          closeMenu(); 
+        } 
+      }; 
+   
+      document.addEventListener('mousedown', handleOutsideClick); 
+   
+      return () => { 
+        document.removeEventListener('mousedown', handleOutsideClick); 
+      }; 
+    }, []); 
     useEffect(() => {
         if (user == null) 
             navigate("/", { replace: true });
@@ -193,6 +216,7 @@ function Chat() {
     });
 
   return (
+    <Layout>
     <div className='bg-[#181818] max-h-screen'  >
     <div className="container mx-auto  text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg">
             {/* <!-- headaer --> */}
@@ -201,7 +225,7 @@ function Chat() {
         {/* <!-- Chatting --> */}
         <div className="flex flex-row justify-between bg-[#212121]">
           {/* <!-- chat list --> */}
-          <div className="flex flex-col h-screen w-2/5 overflow-y-auto border-r-2 border-[#0f0f0f]">
+          <div className="flex flex-col h-screen w-2/5 overflow-y-scroll border-r-2 border-[#0f0f0f]">
             <div className='sticky top-0 bg-[#212121] p-2 z-[4]'>
           <div className=" flex justify-center font-semibold text-2xl  px-2">Chat</div>
 
@@ -232,28 +256,13 @@ function Chat() {
                 <div className="w-full">
                   <div className="ml-3 text-lg font-semibold relative">
                     {elem.user.displayname}
-                    <div 
-                      className='absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]'
-                      
-                    >
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        width="24" 
-                        height="24" 
-                        viewBox="0 0 24 24" 
-                        fill="none" 
-                        stroke="#aaaaaa" 
-                        stroke-width="2" 
-                        stroke-linecap="round" 
-                        stroke-linejoin="round">
-                          <circle cx="12" cy="12" r="1">
-                            </circle>
-                          <circle cx="12" cy="5" r="1">
-                            </circle>
-                            <circle cx="12" cy="19" r="1">
-                              </circle>
-                      </svg>
-                    </div>
+                    <Modal
+                      itemClassName={"hover:bg-[#181818]"}
+                      isSelectedUser={true}
+                      mainClassName={"absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]"}
+                      className={"absolute top-10 right-0 w-[12rem] p-2 bg-[#181818] z-[4] rounded-xl shadow-lg flex flex-col"}
+                    />
+                   
                   </div>
                 </div>
               </div>
@@ -294,47 +303,13 @@ function Chat() {
           </div>
           {/* <CollapsibleMenu className = 
           /> */}
-           <div className={`p-2 rounded-full text-white font-semibold relative ${(Object.keys(selectedUser).length != 0) && "hover:bg-[#181818] hover:cursor-pointer"}`}
-           onClick={toggleMenu}
-            onFocusOut={()=>setIsOpen(false)}
-           >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              width="24" 
-              height="24" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="#aaaaaa" 
-              stroke-width="2" 
-              stroke-linecap="round" 
-              stroke-linejoin="round">
-                <circle cx="12" cy="12" r="1">
-                  </circle>
-                <circle cx="12" cy="5" r="1">
-                  </circle>
-                  <circle cx="12" cy="19" r="1">
-                    </circle>
-            </svg>
-            {/* <img
-                    src={selectedUser.avatarurl ?? ""}
-                    className="object-cover h-10 w-10 rounded-full"
-                    alt=""
-                  /> */}
-          {(isOpen && Object.keys(selectedUser).length != 0) && (
-            <div 
-            className="absolute top-14 right-5 w-[12rem] p-2 bg-[#212121]  rounded-xl shadow-lg flex flex-col"
-              onBlur={toggleMenu}
-            >
-              {/* Menu content */}
-             
-              <ul className="z-[1] ">
-                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Block</li>
-                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Mute</li>
-                <li className="px-4 py-2 hover:bg-[#181818] rounded-xl">Info</li>
-              </ul>
-            </div>
-          )}
-        </div>
+          
+           <Modal 
+              itemClassName={"hover:bg-[#181818]"}
+              mainClassName={"p-2 rounded-full text-white font-semibold relative"}
+              className={"absolute top-14 right-5 w-[12rem] p-2 bg-[#212121]  rounded-xl shadow-lg flex flex-col"}
+              isSelectedUser={(Object.keys(selectedUser).length != 0)}
+              />
         </div>
         <div className='relative '>
           <div className='absolute bottom-0 left-0 w-full'
@@ -432,6 +407,7 @@ function Chat() {
           </div>
         </div>
         </div>
+        </Layout>
     // </div>
   )
 }
