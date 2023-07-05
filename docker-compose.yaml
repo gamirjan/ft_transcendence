@@ -6,6 +6,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "7000:7000"
+      - "4000:4000"
+      - "5500:5500"
   frontend:
     build:
       context: frontend/
