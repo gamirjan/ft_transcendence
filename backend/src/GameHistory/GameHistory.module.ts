@@ -10,4 +10,4 @@ import { GameService } from './GameHistory.service';
   providers: [GameService],
   exports: [GameService]
 })
-export class GameModule {}
+export class GameHistoryModule {}

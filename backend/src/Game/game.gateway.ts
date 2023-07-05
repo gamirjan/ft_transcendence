@@ -1,0 +1,106 @@
+import {
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
+  } from '@nestjs/websockets';
+  import { Socket } from 'socket.io';
+  import { Input } from './interfaces/input.interface';
+  import { RoomService } from './services/room.service';
+  import { Player } from './interfaces/player.interface';
+  import { Room } from './interfaces/room.interface';
+  import { UsersService } from '../Users/user.service';
+  import { Status } from '../enums/status.enum';
+  
+  @WebSocketGateway({
+    cors: {
+      origin: process.env.FRONT_URL,
+    },
+    namespace: 'pong',
+  })
+  export class GameGateway {
+    constructor(
+      private readonly userService: UsersService,
+      private readonly roomService: RoomService,
+    ) {}
+    @WebSocketServer()
+    server: any;
+  
+    async handleConnection(client: Socket, userid: number): Promise<any> {
+      try {
+        const user = await this.userService.findOneById(userid);
+        if (!user) return client.disconnect();
+  
+        // await this.userService.setStatus(user.id, Status.GAME);
+  
+        client.data.user = user;
+        client.emit('info', { user });
+      } catch {}
+    }
+  
+    async handleDisconnect(client: Socket): Promise<any> {
+      try {
+        if (!client.data.user) return;
+  
+        await this.roomService.removeSocket(client);
+        // await this.userService.setStatus(client.data.user.id, Status.ONLINE);
+      } catch {}
+    }
+  
+    @SubscribeMessage('queue')
+    joinQueue(client: Socket): void {
+      try {
+        if (!client.data.user) return;
+        this.roomService.addQueue(client);
+      } catch {}
+    }
+  
+    @SubscribeMessage('room')
+    joinRoom(client: Socket, code?: string): void {
+      try {
+        if (!client.data.user) return;
+  
+        let room: Room = this.roomService.getRoom(code);
+        if (!room) room = this.roomService.createRoom(code);
+  
+        this.roomService.joinRoom(client, room);
+      } catch {}
+    }
+  
+    @SubscribeMessage('ready')
+    onReady(client: Socket, input: Input): void {
+      try {
+        if (!client.data.user) return;
+  
+        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        if (!player) return;
+  
+        this.roomService.ready(player, input);
+      } catch {}
+    }
+  
+    @SubscribeMessage('start')
+    onStart(client: Socket): void {
+      try {
+        if (!client.data.user) return;
+  
+        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        if (!player || !player.room) return;
+  
+        this.roomService.startCalc(player.room);
+      } catch {}
+    }
+  
+    @SubscribeMessage('tray')
+    updateTray(client: Socket, tray: number): void {
+      try {
+        if (!client.data.user) return;
+  
+        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        if (!player) return;
+  
+        player.tray = tray * player.room.options.display.height;
+        RoomService.emit(player.room, 'tray', player.socket.data.user.id, tray);
+      } catch {}
+    }
+  }
+  
