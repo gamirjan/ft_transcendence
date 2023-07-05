@@ -19,9 +19,9 @@ export class AddUsersService {
     user.displayname = createUserDto.displayName;
     user.avatarurl = createUserDto.avatarUrl;
     user.istwofactorenabled = createUserDto.isTwoFactorEnabled;
+    user.email = createUserDto.email;
     user.wins = createUserDto.wins;
     user.losses = createUserDto.losses;
-
     return this.userRepository.save(user);
   }
 }

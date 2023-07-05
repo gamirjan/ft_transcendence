@@ -51,7 +51,9 @@ const persistConfig = {
 };
 
 export function setUser(user: AppState['user']): SetUserAction {
+  console.log("payload",user);
   return {
+    
     type: SET_USER,
     payload: user,
   };

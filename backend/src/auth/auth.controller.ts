@@ -34,8 +34,9 @@ export class AuthController {
         {
           const user = await this.addUserService.create({
               ID_42:body.id,
-            displayName: body.given_name,
+            displayName: body.name,
             avatarUrl: body.picture,
+            email:body.email,
           isTwoFactorEnabled: false,
             wins: 0,
            losses: 0

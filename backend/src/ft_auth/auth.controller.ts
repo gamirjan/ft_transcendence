@@ -13,6 +13,8 @@ export class Ft_AuthController {
   @Post('42/login')
   async handleLogin(@Req() req:Request, @Res() res) 
   {
+    console.log("mtavvvvv");
+    
     res.header('Access-Control-Allow-Origin', '*');
       try {
         //console.log(req.body);
@@ -24,6 +26,11 @@ export class Ft_AuthController {
         };
 
         // Send the response object back to the client
+        console.log("------------------------------------------");
+        
+        console.log(req.body.params.email);
+        console.log("------------------------------------------");
+        
         const is_user = await this.userService.findOneByDisplayName(req.body.params.displayname);
         await console.log("fiiinddd",is_user);
         console.log(!is_user,is_user == null);
@@ -34,7 +41,8 @@ export class Ft_AuthController {
               ID_42:req.body.params.id,
             displayName: req.body.params.displayname,
             avatarUrl: req.body.params.image.link,
-          isTwoFactorEnabled: true,
+            email:req.body.params.email,
+          isTwoFactorEnabled: false,
           wins: 0,
            losses: 0
           })

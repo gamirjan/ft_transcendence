@@ -14,6 +14,8 @@ function Ft_Auth() {
 	  const dispatch = useDispatch();
 	async function login(params:object) 
 	{
+		console.log("email =>",params.email);
+		
 		console.log("loggginnn",ip);
 		
 		if(!user)
@@ -26,12 +28,12 @@ function Ft_Auth() {
 			},
 			})
 			.then(response => {
-				console.log( response.json());
+				//console.log( response.json());
 				
 				return response.json()})
 			.then(data => {
 				console.log("ddddddddd",data);
-				  dispatch(setUser(null));
+				//   dispatch(setUser(null));
 				  dispatch(setUser(data));
 				navigate("/home",{replace:true})
 				// Process the response data received from the server
@@ -77,7 +79,7 @@ function Ft_Auth() {
 		  .then(data => {
 			// Process the response data
 			login(data);
-			//console.log(data);
+			console.log(data);
 		  })
 		  .catch(error => {
 			// Handle any errors
