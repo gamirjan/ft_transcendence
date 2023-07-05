@@ -55,6 +55,8 @@ export async function googleOauthHandler(req: any, res : Response)
         const code  = req.query.code as string
         const {id_token,access_token} = await getGoogleOauthTokens( {code : code})
         const user = await getGoogleUser(id_token,access_token);
+        console.log(user);
+        
         return res.send(user)
         
     } catch (error) {
@@ -70,9 +72,9 @@ export async function getGoogleOauthTokens({code}:{code : string}):Promise<Googl
     
     const values = {
         code,
-        client_id: '472681490682-cofucv7fr3j0v654ti873v4flktohgdq.apps.googleusercontent.com',
-        client_secret: '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',
-        redirect_uri: 'http://localhost:3000/auth',
+        client_id:process.env.GOOGLE_CLIENT_ID,
+        client_secret: process.env.GOOGLE_SECRET,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI,
         grant_type: 'authorization_code',
         // code:code,
     };

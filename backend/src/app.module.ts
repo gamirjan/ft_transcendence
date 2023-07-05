@@ -44,6 +44,7 @@ import { MuteListModule } from './MuteList/MuteList.module';
 
 
 import { UserPinsModule } from './TwoFactor/Userpins.module';
+import { GameServer } from './Game/Game.server';
 
 
 
@@ -68,7 +69,7 @@ import { UserPinsModule } from './TwoFactor/Userpins.module';
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
       ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService,GameServer],
   })
   export class AppModule {
     constructor(){

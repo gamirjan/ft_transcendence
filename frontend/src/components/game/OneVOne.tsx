@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { io } from 'socket.io-client';
 
 type PaddlePosition = 'left' | 'right';
 
@@ -8,8 +9,42 @@ interface PingPongProps {
 }
 
 const PingPong: React.FC<PingPongProps> = ({ width, height }) => {
+  const [onlineStatus,setOnlineStatus] = useState(false);
     console.log("ffff");
-    
+    useEffect(() => {
+      const socket = io('ws://localhost:5500'); // Replace with your server URL
+  
+      socket.onopen = () => {
+        console.log('WebSocket connection establishedddddddddddddddd');
+        // Implement any necessary logic for handling the connection
+      };
+      socket.once('online',()=>{
+
+        socket.emit('online',{data:"ddddd"})
+        
+      })
+      socket.on('online',(e)=>{
+        setOnlineStatus(true);
+        console.log("eeeeeee",e);
+        
+      })
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        console.log("dataaaa",data);
+        
+        // Implement any necessary logic for handling received messages
+      };
+      socket.onclose = () => {
+        console.log('WebSocket connection closed');
+        setOnlineStatus(false)
+        // Implement any necessary logic for handling the connection closure
+      };
+  
+      // Clean up on unmount
+      return () => {
+        socket.close();
+      };
+    }, []);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   let animationFrameId: number;
   let paddleSpeed = 8;

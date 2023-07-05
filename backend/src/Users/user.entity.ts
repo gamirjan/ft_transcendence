@@ -22,7 +22,7 @@ export class User {
   @PrimaryGeneratedColumn({ type: "integer", name: "id" })
   id: number;
 
-  @Column("integer", { name: "id_42", nullable: true, unique: true })
+  @Column("numeric", { name: "id_42", nullable: true, unique: true })
   id_42: number | null;
 
   @Column("character varying", {
