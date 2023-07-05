@@ -315,7 +315,7 @@ function Chat() {
           <div className='absolute bottom-0 left-0 w-full'
           >
         <div
-          className=' overflow-y-scroll flex justify-center'
+          className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-100 flex justify-center"
         >
             <div className="w-1/2 max-h-[75vh] flex flex-col">
               {/* {console.log("messages: ", messages) }

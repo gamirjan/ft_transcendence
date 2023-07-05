@@ -2,6 +2,7 @@ import React from "react"
 import photo from '@SRC_DIR/assets/images/pong.jpg';
 import { Link } from 'react-router-dom'
 import './styles/signin.css'; // Import the CSS file for styling
+import { ip } from "./utils/ip";
 
 /*import React from 'react';
 
@@ -33,10 +34,12 @@ export default LoginPage;
 
 function getUrl() 
 {
+  console.log("havayiiiiii",process.env.CLIENT_ID);
+  
     const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
     const option = {
-        redirect_uri: "http://localhost:3000/auth" as string,
-        client_id : "472681490682-cofucv7fr3j0v654ti873v4flktohgdq.apps.googleusercontent.com" as string,
+        redirect_uri: process.env.GOOGLE_REDIRECT_URI  as string,
+        client_id : process.env.CLIENT_ID as string,
         access_type: "offline",
         response_type: "code",
         prompt: "consent",

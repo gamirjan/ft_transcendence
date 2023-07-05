@@ -16,19 +16,21 @@ exports.AddUsersController = void 0;
 const common_1 = require("@nestjs/common");
 const addUser_dto_1 = require("./addUser.dto");
 const addUser_service_1 = require("./addUser.service");
+const decorators_1 = require("@nestjs/common/decorators");
 let AddUsersController = class AddUsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    async create(createUserDto) {
-        return this.usersService.create(createUserDto);
+    async create(createUserDto, res) {
+        return res.send(await this.usersService.create(createUserDto));
     }
 };
 __decorate([
     (0, common_1.Post)(),
     __param(0, (0, common_1.Body)()),
+    __param(1, (0, decorators_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [addUser_dto_1.CreateUserDto]),
+    __metadata("design:paramtypes", [addUser_dto_1.CreateUserDto, Object]),
     __metadata("design:returntype", Promise)
 ], AddUsersController.prototype, "create", null);
 AddUsersController = __decorate([

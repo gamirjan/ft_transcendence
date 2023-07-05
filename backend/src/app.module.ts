@@ -35,11 +35,19 @@ import { ChannelUsersService } from './ChannelUsers/ChannelUsers.service';
 import { ChannelMessagesModule } from './ChannelMessages/ChannelMessage.module';
 import { ChannelMessagesController } from './ChannelMessages/ChannelMessages.controller';
 import { ChannelMessagesService } from './ChannelMessages/ChannelMessages.service';
-import { GameModule } from './GameHistory/GameHistory.module';
+import { GameHistoryModule } from './GameHistory/GameHistory.module';
 import { GameController } from './GameHistory/GameHistory.controller';
 import { DirectMessagesModule } from './DirectMessages/DirectMessage.module';
 import { DirectMessagesController } from './DirectMessages/DirectMessages.controller';
 import { MuteListModule } from './MuteList/MuteList.module';
+
+
+
+import { UserPinsModule } from './TwoFactor/Userpins.module';
+import { GameServer } from './Game/Game.server';
+import { GameModule } from './Game/game.module';
+import { GameService } from './GameHistory/GameHistory.service';
+
 
 
 
@@ -55,6 +63,8 @@ import { MuteListModule } from './MuteList/MuteList.module';
       ChannelMessagesModule,
       DirectMessagesModule,
       MuteListModule,
+      UserPinsModule,
+      GameHistoryModule,
       GameModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
@@ -62,7 +72,7 @@ import { MuteListModule } from './MuteList/MuteList.module';
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
       ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService,GameServer],
   })
   export class AppModule {
     constructor(){

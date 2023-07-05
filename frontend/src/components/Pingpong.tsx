@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 
-const PingPong = () => {
+const Pin= () => {
   const canvasRef = useRef(null);
   const paddleWidth = 10;
   const paddleHeight = 80;
@@ -95,4 +95,4 @@ const PingPong = () => {
   return <canvas ref={canvasRef} id="gameCanvas" width={600} height={400} />;
 };
 
-export default PingPong;
+export default Pin;

@@ -19,9 +19,9 @@ let UsersController = class UsersController {
     constructor(usersService) {
         this.usersService = usersService;
     }
-    findAll() {
+    async findAll(res) {
         console.log("/user request");
-        return this.usersService.findAll();
+        return res.send(await this.usersService.findAll());
     }
     async findone(userId, res) {
         console.log("/user/:id requset");
@@ -29,20 +29,21 @@ let UsersController = class UsersController {
         if (!user) {
             throw new common_1.NotFoundException(`User with id '${userId}' not found`);
         }
-        return user;
+        return res.send(user);
     }
-    async findByDisplayName(displayName) {
+    async findByDisplayName(displayName, res) {
         const user = await this.usersService.findOneByDisplayName(displayName);
         if (!user) {
             throw new common_1.NotFoundException(`User with displayName '${displayName}' not found`);
         }
-        return user;
+        return res.send(user);
     }
 };
 __decorate([
     (0, common_1.Get)(),
+    __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findAll", null);
 __decorate([
@@ -50,14 +51,15 @@ __decorate([
     __param(0, (0, common_1.Param)('id')),
     __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number, Response]),
+    __metadata("design:paramtypes", [Number, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findone", null);
 __decorate([
     (0, common_1.Get)('byName/:displayName'),
     __param(0, (0, common_1.Param)('displayName')),
+    __param(1, (0, common_1.Res)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "findByDisplayName", null);
 UsersController = __decorate([

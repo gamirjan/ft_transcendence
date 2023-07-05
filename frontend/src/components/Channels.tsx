@@ -11,6 +11,7 @@ import { IMassage } from './utils';
 import Layout from './Layout';
 const ChannelComponent = () =>{
 
+
     const user = useSelector((state: AppState) => state.user);
     const menuRef = useRef(null)
     const navigate = useNavigate();
@@ -27,6 +28,7 @@ const ChannelComponent = () =>{
     const [channels, setChannels] = useState([]);
     const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
     const [newChannelName, setNewChannelName] = useState('');
+
   
     useEffect(() => {
         if (user == null) 
@@ -167,28 +169,11 @@ const ChannelComponent = () =>{
                 setTextMessages([...(textMessages || []), 
                     {msg: obj.displayname + ": " + obj.msg, username: obj.username}])
             }
-            console.log(obj.username + ": " + obj.msg);
-        });
-
-        return () => {
-            socket.off("connect", onConnect);
-            socket.off("online", onOnline);
-            socket.off('chat');
-        }
-    }, []);
-    // const fetchMessages = () => {
-    //   if (user == null) 
-    //       navigate("/", { replace: true });
-    //   else {
-    //     fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
-    //       .then((response) => {
-    //         if (!response.ok) {
-    //           throw new Error("Request failed");
-    //         }
-    //         return response.json(); // assuming the server returns JSON data
-    //       })
-    //       .then((data) => {
-    //          console.log(data);
+            else
+              setIsNewChannel(newChannelName);
+            // Handle success response
+            console.log(response,response.body);
+            //window.location.reload();
             
     //         setMessages(data);
     //       })

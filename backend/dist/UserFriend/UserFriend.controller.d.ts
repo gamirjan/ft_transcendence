@@ -4,10 +4,10 @@ import { UserFriendModel } from './UserFriendModel';
 export declare class FriendController {
     private friendService;
     constructor(friendService: UserFriendService);
-    findAll(userId: number): Promise<UserFriendModel[]>;
+    findAll(userId: number, res: any): Promise<UserFriendModel[]>;
     addFriend(payload: {
         userid: number;
         friendid: number;
-    }): Promise<UserFriend>;
-    remove(userFriendId: number): Promise<void>;
+    }, res: any): Promise<UserFriend>;
+    remove(userFriendId: number, res: any): Promise<void>;
 }

@@ -10,5 +10,6 @@ import { UserFriend } from '../UserFriend/UserFriend.entity';
   imports: [TypeOrmModule.forFeature([User, UserRepository, UserFriend])],
   controllers: [UsersController],
   providers: [UsersService, UserRepository],
+  exports: [UsersService]
 })
 export class UsersModule {}
