@@ -60,7 +60,7 @@ export async function googleOauthHandler(req: any, res : Response)
         return res.send(user)
         
     } catch (error) {
-        return res.send(error);
+        return res.status(500).send(error);
     }
 
 

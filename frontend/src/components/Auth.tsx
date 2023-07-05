@@ -69,6 +69,8 @@ function Auth() {
 		fetch(url)
 		  .then(response => {
 			if (!response.ok) {
+				console.log("faillllllll response");
+				
 			  throw new Error('Request failed');
 			}
 			console.log("RESPONE", response)
