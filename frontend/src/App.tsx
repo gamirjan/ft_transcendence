@@ -41,6 +41,7 @@ function App() {
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
       <Route path="/chat1" element={<ChatComponent/>}/>
+      <Route path="/main" element={<PingPong width={800} height={300}/>}/>
           </Routes>
        </Router>
   )

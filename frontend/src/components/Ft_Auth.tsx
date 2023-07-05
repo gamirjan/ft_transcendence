@@ -63,7 +63,9 @@ function Ft_Auth() {
 		fetch(url)
 		  .then(response => {
 			if (!response.ok) {
+				console.log("nottt okkkk");
 			  throw new Error('Request failed');
+			  
 			}
 			return response.json(); // assuming the server returns JSON data
 		  })

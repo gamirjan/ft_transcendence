@@ -1,48 +1,74 @@
-import { Controller,Post, Get, Param, Req, UseGuards,Res } from '@nestjs/common';
+import { Controller,Post, Get, Param, Req, UseGuards,Res,Body } from '@nestjs/common';
 import { Request } from 'express';
 import { googleOauthHandler } from './auth.handler';
 import { UsersService } from '../Users/user.service';
 import { AddUsersService } from '../AddUser/addUser.service';
+import { use } from 'passport';
 
 @Controller('auth')
 export class AuthController {
   constructor(private userService: UsersService, private addUserService: AddUsersService) {}
 
   @Post('google/login')
-  async handleLogin(@Req() req:Request, @Res() res:Response) 
-  {
-      try {
-        console.log(req.body);
+  async handleLogin(@Req() req:Request, @Res() res,@Body() body:any) 
+  { 
+    console.clear()
+    console.log("BODY:", body)
+    res.header('Access-Control-Allow-Origin', '*');
+    // 
+      // try {
+        //console.log(req.body);
         
         // Process your request and create the response object
-        const responseObject = {
-          message: 'Login successful',
-          data: req.body,
-        };
-        console.log("iddddddd",req.body.params.given_name);
-        const is_user = true//await this.userService.findOneByName(req.body.params.given_name);
-        
-      // await console.log("finddd",await this.userService.findOneByName(req.body.params.given_name));
+        // const responseObject = {
+        //   message: 'Login successful',
+        //   data: req.body,
+        // };
+
         // Send the response object back to the client
-        return (responseObject);
-      } catch (error) {
-        // Handle any errors that occur during the processing
-        // and send an error response back to the client
-        return ({ error: 'Internal server error' });
-      }
+        const is_user = await this.userService.findOneByDisplayName(body.given_name);
+       await console.log("fiiinddd",is_user);
+       console.log(!is_user,is_user == null);
+        
+        if(!is_user)
+        {
+          const user = await this.addUserService.create({
+              ID_42:body.id,
+            displayName: body.given_name,
+            avatarUrl: body.picture,
+          isTwoFactorEnabled: false,
+            wins: 0,
+           losses: 0
+          })
+          return res.status(208).send(user);
+        }
+
+        return res.status(201).send(is_user)
+   
+        
+      //  // return res.send(is_user);
+      // } catch (error) {
+      //   // Handle any errors that occur during the processing
+      //   // and send an error response back to the client
+      //   console.log(error);
+        
+      //   return res.status(500).send(error);
+      // }
   }
     //@UseGuards(GoogleAuthGuard)
   
 
   // api/auth/google/redirect
   @Get('google/redirect')
-  handleRedirect(@Req() req ,@Res() res) {
-    googleOauthHandler(req,res)
+  async handleRedirect(@Req() req ,@Res() res) {
+    res.header('Access-Control-Allow-Origin', '*');
+    const user  = await googleOauthHandler(req,res)
     console.log("done!");
-    
+    console.log(user);
+    return res.status(200).send(user)
     // console.log("request :",req.query);
     
-    return { msg: 'OK' };
+    //return { msg: 'OK' };
     //@UseGuards(GoogleAuthGuard)
   }
 
