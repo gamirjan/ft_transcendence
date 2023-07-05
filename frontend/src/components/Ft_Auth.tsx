@@ -25,7 +25,10 @@ function Ft_Auth() {
 				'Content-Type': 'application/json',
 			},
 			})
-			.then(response => response.json())
+			.then(response => {
+				console.log( response.json());
+				
+				return response.json()})
 			.then(data => {
 				console.log("ddddddddd",data);
 				  dispatch(setUser(null));
@@ -35,9 +38,11 @@ function Ft_Auth() {
 				console.log(data);
 			})
 			.catch(error => {
+				console.log("errorrr",error);
+				
 				navigate("/",{replace:true})
 				// Handle any errors that occur during the request
-				console.error(error);
+				console.log(error);
 			});
 		}
 		else
@@ -80,7 +85,7 @@ function Ft_Auth() {
 		  });
 	  }, []);
   return (
-	<div>Auth</div>
+	<div>Auth 42</div>
   )
 }
 
