@@ -15,11 +15,14 @@ export class UserPinsService {
     private usersRepository: Repository<User>
   ) {}
 
-  async EnableTF(userid: number): Promise<void> {
+  async EnableTF(userid: number, email: string): Promise<void> {
+    if (!email)
+      throw new BadRequestException("email field is required");
     var user = await this.usersRepository.findOne({ where: { id: userid } });
     if (!user || user.istwofactorenabled === true)
       throw new BadRequestException();
     user.istwofactorenabled = true;
+    user.twofactoremail = email;
     if (!await this.usersRepository.save(user))
         throw new InternalServerErrorException();
   }
