@@ -12,7 +12,6 @@ import Layout from '../Layout';
 function Chat() {
 
     const user = useSelector((state: AppState) => state.user);
-    const menuRef = useRef(null)
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
@@ -24,19 +23,6 @@ function Chat() {
     const [sended, setSended] = useState(false)
     const [openSidebar, setOpenSidebar] = useState(false)
   
-  const [isOpen, setIsOpen] = useState(false);
-
-  const openMenu = () =>{
-    setIsOpen(true);
-  }
-  const closeMenu = () =>{
-    setIsOpen(false);
-  }
-  const toggleMenu = () => {
-    // console.log("ooooo");
-    
-    Object.keys(selectedUser).length != 0 && setIsOpen(!isOpen);
-  };
   const toggleSidebar = () => {
     Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
   }
@@ -98,19 +84,7 @@ function Chat() {
           });
       }
     };
-    useEffect(() => { 
-      const handleOutsideClick = (event) => { 
-        if (menuRef.current && !menuRef.current.contains(event.target)) { 
-          closeMenu(); 
-        } 
-      }; 
-   
-      document.addEventListener('mousedown', handleOutsideClick); 
-   
-      return () => { 
-        document.removeEventListener('mousedown', handleOutsideClick); 
-      }; 
-    }, []); 
+  
     useEffect(() => {
         if (user == null) 
             navigate("/", { replace: true });
@@ -138,8 +112,25 @@ function Chat() {
             }
             
         }
-      }, [selectedUserName, sended, isOpen]);
-     
+      }, [selectedUserName, sended]);
+      const handleSearch =  (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+    
+        if (query === "") {
+          setSuggestions([]);
+          return;
+        }
+    
+    
+        
+        const regex = new RegExp('.*' + e.target.value + '.*');
+
+          setSuggestions( contacts.filter((obj)=>{
+            return regex.test(obj.user.displayname)
+          }));
+       
+      };
       // const selectedChat = (e)=>{
       //   setSelectedUser((e)=>{e.user})
       //   let user_ = e.user
@@ -164,7 +155,10 @@ function Chat() {
     }
     const handleKeyDown = (e) => {
       if (e.key == 'Enter')
+      {
         sendDMMessage();
+        setDMMessage("");
+      }
 
     }
     const sendDMMessage = () =>{
@@ -225,7 +219,7 @@ function Chat() {
         {/* <!-- Chatting --> */}
         <div className="flex flex-row justify-between bg-[#212121]">
           {/* <!-- chat list --> */}
-          <div className="flex flex-col h-screen w-2/5 overflow-y-scroll border-r-2 border-[#0f0f0f]">
+          <div className="flex flex-col h-screen w-2/5  border-r-2 border-[#0f0f0f]">
             <div className='sticky top-0 bg-[#212121] p-2 z-[4]'>
           <div className=" flex justify-center font-semibold text-2xl  px-2">Chat</div>
 
@@ -235,42 +229,92 @@ function Chat() {
                 type="text"
                 placeholder="search chatting"
                 className="py-4 px-4 text-[#707579] outline-none border-2 bg-[#181818] border-[#2f2f2f] rounded-2xl w-full hover:border-[#707579]"
+                value={searchQuery}
+                onChange={handleSearch}
               />
             </div>
 
             </div>
-            {/* <!-- end search compt -->
-            <!-- user list --> */}
-            {contacts && contacts.map((elem, key)=>(
+            {(searchQuery && searchQuery.length != 0) && (
+              <div className='flex flex-col overflow-y-scroll px-4'>
+              {suggestions && suggestions.map((elem, key)=>(
                               
                 <div
                 className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
-                onClick={()=>handleSelectUser(elem.user)}
               >
+                <div
+                  className='flex w-full  justify-start'
+                  onClick={()=>{
+                    handleSelectUser(elem.user)
+                    setSearchQuery("");
+                    console.log("okkkkkk");
+                    
+                  }}
+                >
                 <div className="w-1/4">
                   <img
                     src={elem.user.avatarurl} alt="" srcSet=""
                     className="object-cover h-12 w-12 rounded-full"
                   />
                 </div>
-                <div className="w-full">
-                  <div className="ml-3 text-lg font-semibold relative">
+                <div className="flex flex-row">
+                  <div className="ml-3 text-lg font-semibold">
                     {elem.user.displayname}
-                    <Modal
-                      contentClassName={"bg-[#212121]"}
-                      centered={true}
-                      selectChat={null}
-                      selectedUser={elem.user}
-                      itemClassName={"hover:bg-[#181818]"}
-                      isSelectedUser={true}
-                      mainClassName={"absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]"}
-                      className={"absolute top-10 right-0 w-[12rem] p-2 bg-[#181818] z-[4] rounded-xl shadow-lg flex flex-col"}
-                    />
-                   
-                  </div>
+                    </div>
+                </div>
+
                 </div>
               </div>
+             
             ))}
+              </div>
+              
+            )}
+            <div className='flex flex-col px-4 overflow-y-scroll'>
+            {/* <!-- end search compt -->
+            <!-- user list --> */}
+            {(!(searchQuery && searchQuery.length != 0)) && contacts && contacts.map((elem, key)=>(
+                              
+                <div
+                className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+              >
+                <div
+                  className='flex w-full  justify-start'
+                  onClick={()=>{
+                    handleSelectUser(elem.user)
+                    console.log("okkkkkk");
+                    
+                  }}
+                >
+                <div className="w-1/4">
+                  <img
+                    src={elem.user.avatarurl} alt="" srcSet=""
+                    className="object-cover h-12 w-12 rounded-full"
+                  />
+                </div>
+                <div className="flex flex-row">
+                  <div className="ml-3 text-lg font-semibold">
+                    {elem.user.displayname}
+                    </div>
+                </div>
+
+                </div>
+                    <div className='flex justify-end'>
+                    <Modal
+                      contentClassName={"bg-[#212121]"}
+                      selectChat={()=>{
+                        const isOpen = (!selectedUser || Object.keys(selectedUser).length == 0 || selectedUser.id != elem.user.id) ? true : !openSidebar;
+                        handleSelectUser(elem.user)
+                        setOpenSidebar(isOpen);
+                      }}
+                      isSelectedUser={true}
+                      className={" p-2 rounded-lg hover:bg-[#212121]"}
+                    />
+
+                    </div>
+              </div>
+            ))}
+            </div>
             
             {/* <!-- end user list --> */}
           </div>
@@ -289,7 +333,7 @@ function Chat() {
                 className='flex flex-col'
               >
                 <img
-                  src={selectedUser.avatarurl ?? ""}
+                  src={selectedUser.avatarurl ?? user.avatarurl}
                   className="object-cover h-10 self-center w-10 rounded-full"
                   alt=""
                   />
@@ -309,12 +353,8 @@ function Chat() {
           /> */}
           
            <Modal 
-              centered={false}
               selectChat={toggleSidebar}
-              selectedUser={null}
-              itemClassName={"hover:bg-[#181818]"}
-              mainClassName={"p-2 rounded-full text-white font-semibold relative"}
-              className={"flex justify-center h-[500rem]"}
+              className={"p-2 rounded-full text-white font-semibold relative"}
               isSelectedUser={(Object.keys(selectedUser).length != 0)}
               />
         </div>
@@ -364,10 +404,12 @@ function Chat() {
                 className={`w-1/2 bg-[#212121] py-5  wrap px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
                 ${(selectedUser && Object.keys(selectedUser).length) && "hover:border-[#707579] focus:border-[#707579]"}`}
                 type="text"
+                value={dmMessage}
                 onChange={(e)=>setDMMessage(e.target.value)}
                 placeholder="type your message here..."
                 onKeyDown={handleKeyDown}
               />
+          
             </div>
             // :
             // <></>
@@ -386,7 +428,7 @@ function Chat() {
             </div>
             <div className='flex flex-col'>
               <div className='flex flex-row'>
-                <div className='flex flex-row relative'>
+                <div className='flex flex-row h-auto w-full relative'>
                 <img 
                   src={selectedUser.avatarurl} 
                   alt="" 
