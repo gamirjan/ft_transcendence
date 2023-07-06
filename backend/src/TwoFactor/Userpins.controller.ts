@@ -5,22 +5,16 @@ import { UserPinsService } from './Userpins.service';
 export class UserPinsController {
   constructor(private readonly userPinsService: UserPinsService) {}
 
-  @Post('set')
-  async SetUserPin(@Body() payload: { userid: number, pin: string }, @Res() res): Promise<void> {
-    const { userid, pin } = payload;
-    return res.send(await this.userPinsService.SetPin(userid, pin));
+  @Post('enable')
+  async EnableTF(@Body() payload: { userid: number }, @Res() res): Promise<void> {
+    const { userid } = payload;
+    return res.send(await this.userPinsService.EnableTF(userid));
   }
 
-  @Post('change')
-  async ChangeUserPin(@Body() payload: { userid: number, oldpin: string, newpin: string }, @Res() res): Promise<void> {
-    const { userid, oldpin, newpin } = payload;
-    return res.send(await this.userPinsService.ChangePin(userid, oldpin, newpin));
-  }
-
-  @Post('remove')
-  async DeleteUserPin(@Body() payload: { userid: number, pin: string }, @Res() res): Promise<void> {
-    const { userid, pin } = payload;
-    return res.send(await this.userPinsService.DeletePin(userid, pin));
+  @Post('disable')
+  async DisableTF(@Body() payload: { userid: number }, @Res() res): Promise<void> {
+    const { userid } = payload;
+    return res.send(await this.userPinsService.DisableTF(userid));
   }
 
   @Post('check')
