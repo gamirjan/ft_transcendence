@@ -26,7 +26,7 @@ export class AuthController {
         // };
 
         // Send the response object back to the client
-        const is_user = await this.userService.findOneByDisplayName(body.given_name);
+        const is_user = await this.userService.findOneByDisplayName(body.id);
        await console.log("fiiinddd",is_user);
        console.log(!is_user,is_user == null);
         

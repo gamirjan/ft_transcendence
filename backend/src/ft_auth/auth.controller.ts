@@ -31,7 +31,7 @@ export class Ft_AuthController {
         console.log(req.body.params.email);
         console.log("------------------------------------------");
         
-        const is_user = await this.userService.findOneByDisplayName(req.body.params.displayname);
+        const is_user = await this.userService.findOneByDisplayName(req.body.params.id);
         await console.log("fiiinddd",is_user);
         console.log(!is_user,is_user == null);
         
