@@ -15,6 +15,10 @@ export class CreateUserDto {
   @IsString()
   readonly avatarUrl?: string;
 
+  @IsOptional()
+  @IsString()
+  readonly email?: string;
+
   @IsBoolean()
   readonly isTwoFactorEnabled: boolean;
 

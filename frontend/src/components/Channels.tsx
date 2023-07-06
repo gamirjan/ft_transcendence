@@ -1,209 +1,360 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
+// import './Chat.css'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import Layout from './Layout';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faEllipsisVertical } from '@fortawesome/free-solid-svg-icons';
+import { socket } from './Socket';
 import { ip } from './utils/ip';
+import Modal from './Chat/Modal';
+// import { Button, Modal } from 'antd';
+import { IMassage } from './utils';
+// import CollapsibleMenu from './CollapsibleMenu';
+import Layout from './Layout';
+const ChannelComponent = () =>{
 
-const ChannelComponent = () => {
-  const [selectedChannel, setSelectedChannel] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
-  const user = useSelector((state: AppState) => state.user);
-  const navigate = useNavigate();
-  const [contacts, setContacts] = useState([]);
-  const [channels, setChannels] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
-  const [newChannelName, setNewChannelName] = useState('');
-  const [isNewChannel,setIsNewChannel] = useState("")
 
-  useEffect(() => {
-      if (user == null) 
-          navigate("/", { replace: true });
-      else {
-        fetch(`${ip}:7000/channels/user/${user.id}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Request failed");
-            }
-            return response.json(); // assuming the server returns JSON data
-          })
-          .then((data) => {
-            setChannels(data);
-            console.log("dddddd",data);
-            
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-       /*  fetch(`http://localhost:7000/friends/${user.id}`)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Request failed");
-            }
-            return response.json(); // assuming the server returns JSON data
-          })
-          .then((data) => {
-            setContacts(data);
-          })
-          .catch((error) => {
-            console.log(error);
-          }); */
-      }
-    }, [isNewChannel]);
+    const user = useSelector((state: AppState) => state.user);
+    const menuRef = useRef(null)
+    const navigate = useNavigate();
+    const [contacts, setContacts] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [selectedChannel, setSelectedChannel] = useState({});
+    const [selectedChannelName, setSelectedChannelName] = useState("");
+    const [messages, setMessages] = useState([]);
+    const [dmMessage, setDMMessage] = useState("");
+    const [sended, setSended] = useState(false)
+    const [openSidebar, setOpenSidebar] = useState(false)
+    const [showSettings, setShowSettings] = useState(false);
+    const [channels, setChannels] = useState([]);
+    const [showCreateChannelModal, setShowCreateChannelModal] = useState(false);
+    const [newChannelName, setNewChannelName] = useState('');
+
+  
+    useEffect(() => {
+        if (user == null) 
+            navigate("/", { replace: true });
+        else {
+          fetch(`${ip}:7000/channels/user/${user.id}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Request failed");
+              }
+              return response.json(); // assuming the server returns JSON data
+            })
+            .then((data) => {
+              setChannels(data);
+              console.log("dddddd",data);
+              
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+         /*  fetch(`http://localhost:7000/friends/${user.id}`)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Request failed");
+              }
+              return response.json(); // assuming the server returns JSON data
+            })
+            .then((data) => {
+              setContacts(data);
+            })
+            .catch((error) => {
+              console.log(error);
+            }); */
+        }
+      }, [selectedChannelName]);
+     
+    
+      const handleChannelSelect = (channel) => {
+        setSelectedChannel(channel);
+      };
+    
+      const handleSettingsToggle = () => {
+        setShowSettings(!showSettings);
+      };
+    
+      const handleCreateChannel = () => {
+        setShowCreateChannelModal(true);
+      };
+    
+      const handleModalClose = () => {
+        setShowCreateChannelModal(false);
+        setNewChannelName('');
+      };
+    
+      const handleChannelNameChange = (e) => {
+        setNewChannelName(e.target.value);
+      };
+    
+      const handleAddChannel = () => {
+        // Add logic to create a new channel with the newChannelName
+        // You can use the newChannelName state value to create a new channel
+        // and update the channel list accordingly
+        /*
+         channelType: "1" | "2" | "3";
+      channelName: string;
+      owner: User; 
+      */
+        const requestOptions = {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({   
+                 channelType: "1",
+                channelName: newChannelName,
+                owner: user }),
+          };
+    
+          fetch(`${ip}:7000/channels`, requestOptions)
+            .then((response) => {
+              if (!response.ok) {
+                throw new Error("Request failed");
+              }
+              // Handle success response
+              console.log(response,response.body);
+              window.location.reload();
+  
+              
+              
+            })
+            .catch((error) => {
+              console.log(error);
+              alert(" the user is already in your friend list just refresh the page")
+            });
+        console.log(`Creating channel: ${newChannelName}`);
+        handleModalClose();
+      };
+  
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openMenu = () =>{
+    setIsOpen(true);
+  }
+  const closeMenu = () =>{
+    setIsOpen(false);
+  }
+  // const toggleMenu = () => {
+    // console.log("ooooo");
+    
+  //   Object.keys(selectedUser).length != 0 && setIsOpen(!isOpen);
+  // };
+  const toggleSidebar = () => {
+    Object.keys(selectedChannel).length != 0 && setOpenSidebar(!openSidebar);
+  }
+
+
    
-  
-    const handleChannelSelect = (channel) => {
-      setSelectedChannel(channel);
-    };
-  
-    const handleSettingsToggle = () => {
-      setShowSettings(!showSettings);
-    };
-  
-    const handleCreateChannel = () => {
-      setShowCreateChannelModal(true);
-    };
-  
-    const handleModalClose = () => {
-      setShowCreateChannelModal(false);
-      setNewChannelName('');
-    };
-  
-    const handleChannelNameChange = (e) => {
-      setNewChannelName(e.target.value);
-    };
-  
-    const handleAddChannel = () => {
-      // Add logic to create a new channel with the newChannelName
-      // You can use the newChannelName state value to create a new channel
-      // and update the channel list accordingly
-      /*
-       channelType: "1" | "2" | "3";
-    channelName: string;
-    owner: User; 
-    */
-      const requestOptions = {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({   
-               channelType: "1",
-              channelName: newChannelName,
-              owner: user }),
-        };
-  
-        fetch(`${ip}:7000/channels`, requestOptions)
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error("Request failed");
-            }
-            else
-              setIsNewChannel(newChannelName);
-            // Handle success response
-            console.log(response,response.body);
-            //window.location.reload();
-          
-            
-            
-          })
-          .catch((error) => {
-            console.log(error);
-            alert(" the user is already in your friend list just refresh the page")
-          });
-      console.log(`Creating channel: ${newChannelName}`);
-      handleModalClose();
-    };
-  
-    return (
-        <Layout>
-      <div className="flex h-screen">
-        <div className="channel-list bg-gray-800 text-white p-4 w-1/3">
-          <ul>
-            {channels.map((elem)=>(
-                <li
-                    className={`py-2 cursor-pointer hover:bg-gray-700 ${
-                        selectedChannel === elem.channelname ? 'bg-gray-700' : ''
-                    }`}
-                    onClick={() => handleChannelSelect(elem.channelname)}
-                    >
-                        {elem.channelname}
-                </li>
 
-            ))}
-          </ul>
-          <div className="fixed bottom-4 left-4">
-            <button
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-              onClick={handleCreateChannel}
+   
+
+    socket.on('participants', (count)=> {
+        console.log("online :" + count);
+    });
+
+  return (
+    <Layout>
+    <div className='bg-[#181818] max-h-screen'  >
+    <div className="container mx-auto  text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg">
+            {/* <!-- headaer --> */}
+        
+        {/* <!-- end header --> */}
+        {/* <!-- Chatting --> */}
+        <div className="flex flex-row justify-between bg-[#212121]">
+          {/* <!-- chat list --> */}
+          <div className="flex flex-col h-screen w-2/5 overflow-y-scroll border-r-2 border-[#0f0f0f]">
+            <div className='sticky top-0 bg-[#212121] p-2 z-[4]'>
+          <div className=" flex justify-center font-semibold text-2xl  px-2">Chat</div>
+
+            {/* <!-- search compt --> */}
+            <div className="py-4 px-2">
+              <input
+                type="text"
+                placeholder="search chatting"
+                className="py-4 px-4 text-[#707579] outline-none border-2 bg-[#181818] border-[#2f2f2f] rounded-2xl w-full hover:border-[#707579]"
+              />
+            </div>
+
+            </div>
+            {/* <!-- end search compt -->
+            <!-- user list --> */}
+            {
+              (channels && channels.find((channel)=>channel.channeltype == "1")) && (
+                <>
+                <div className='flex justify-center'>Public</div>
+                <div className='flex flex-col h-[200px] overflow-y-scroll'>
+                {channels && channels.map((elem, key)=>(
+                        (elem.channeltype === "1") && (
+                          <div
+                          className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                          // onClick={()=>handleSelectChannel(elem.user)}
+                        >
+                          <div className="w-1/4">
+                            <img
+                              className="object-cover h-12 w-12 rounded-full"
+                            />
+                          </div>
+                          <div className="w-full">
+                            <div className="ml-3 text-lg font-semibold relative">
+                              {elem.channelname}
+                              <Modal 
+                                selectChat={toggleSidebar}
+                                itemClassName={"hover:bg-[#181818]"}
+                                isSelectedUser={true}
+                                mainClassName={"absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]"}
+                                className={"absolute top-10 right-0 w-[12rem] p-2 bg-[#181818] z-[4] rounded-xl shadow-lg flex flex-col"}
+                              />
+                            
+                            </div>
+                          </div>
+                        </div>
+
+                      )))}
+                </div>
+                </>
+              )
+            }
+            {/* <!-- end user list --> */}
+          </div>
+          {/* <!-- end chat list --> */}
+          {/* <!-- message --> */}
+          <div className="w-full flex flex-col justify-between bg-[#181818]">
+          <div 
+            className="px-4 flex justify-between items-center z-[1] bg-[#212121] border-b-2 border-[#0f0f0f]"
+          >
+          <div 
+            className={`w-full ${(Object.keys(setSelectedChannel).length != 0) && "hover:cursor-pointer"}`}
+            // onClick={toggleSidebar}
             >
-              Create Channel
-            </button>
+            {/* <div className="flex px-4 pt-3 rounded-xl justify-start">
+              <div 
+                className='flex flex-col'
+              >
+                <img
+                  src={selectedUser.avatarurl ?? ""}
+                  className="object-cover h-10 self-center w-10 rounded-full"
+                  alt=""
+                  />
+
+              </div>
+              <div className='flex flex-col'>
+                  <div
+                    className="ml-2  py-3 px-4 justify-center rounded-xl text-white"
+                  >
+                    {selectedUser.displayname ?? user.displayname ?? "Saved Message"}
+                  </div>
+
+              </div>
+              </div>
+          </div> */}
+          {/* <CollapsibleMenu className = 
+          /> */}
+          
+           {/* <Modal 
+              itemClassName={"hover:bg-[#181818]"}
+              mainClassName={"p-2 rounded-full text-white font-semibold relative"}
+              className={"absolute top-14 right-5 w-[12rem] p-2 bg-[#212121]  rounded-xl shadow-lg flex flex-col"}
+              isSelectedUser={(Object.keys(selectedUser).length != 0)}
+              /> */}
+        </div>
+        <div className='relative '>
+          <div className='absolute bottom-0 left-0 w-full'
+          >
+        <div
+          className=' overflow-y-scroll flex justify-center'
+        >
+            <div className="w-1/2 max-h-[75vh] flex flex-col">
+              {/* {console.log("messages: ", messages) }
+              {console.log("user: ", user) } */}
+              {messages && messages.map((msg)=>(
+                user.id != msg.user.id ? 
+              <div className="flex justify-start mb-4">
+                <img
+                  // src={selectedUser.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+                <div
+                  className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#212121] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white"
+                >
+                 {/* {msg.message} */}
+                </div>
+              </div>
+              :
+              <div className="flex justify-end mb-4">
+                <div
+                  className="mr-2 py-3 px-4 bg-[#707579] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white"
+                >
+                  {/* {msg.message} */}
+                </div>
+                <img
+                  src={user.avatarurl}
+                  className="object-cover h-8 w-8 rounded-full"
+                  alt=""
+                />
+              </div>
+          
+              ))}
+            </div>
+            </div>
+            { <div className="flex py-5 justify-around">
+              <input
+                disabled={!(selectedChannel && Object.keys(selectedChannel).length)}
+                className={`w-1/2 bg-[#212121] py-5  wrap px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
+                ${(selectedChannel && Object.keys(selectedChannel).length) && "hover:border-[#707579] focus:border-[#707579]"}`}
+                type="text"
+                onChange={(e)=>setDMMessage(e.target.value)}
+                placeholder="type your message here..."
+                // onKeyDown={handleKeyDown}
+              />
+            </div>
+            // :
+            // <></>
+}
+</div>
           </div>
         </div>
-        <div className="chat-container bg-gray-100 p-4 w-2/3 relative">
-          <div
-            className="absolute top-0 right-0 m-4 cursor-pointer"
-            onClick={handleSettingsToggle}
-          >
-            <div
-              className={`hamburger-menu ${showSettings ? 'open' : ''}`}
-            >
-                
-                <FontAwesomeIcon icon={faEllipsisVertical} />
+        {openSidebar && <div className={`flex flex-col bg-[#212121] h-screen border-2 border-[#0f0f0f]`}>
+          <div className="flex flex-row justify-start py-5 w-[20vw] px-5">
+              <div className='flex flex-row'>
+
+              <div className='flex justify-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-full p-2 w-10 h-10' onClick={toggleSidebar}>X</div>
+                  <div className=" flex justify-end font-semibold text-2xl px-10">Profile</div>
+              </div>
+            
             </div>
-          </div>
-          <h2 className="text-2xl font-bold">Chat</h2>
-          <div className="bg-white rounded-lg p-4 mt-4">
-            {selectedChannel ? (
-              <p>Chat for {selectedChannel}</p>
-            ) : (
-              <p>Please select a channel</p>
-            )}
-          </div>
-          {showSettings && (
-            <div className="settings-menu absolute top-0 right-0 mt-12 mr-4 bg-white rounded-lg p-4">
-              <ul>
-                <li className="py-2">Invite Member</li>
-                <li className="py-2">Remove Member</li>
-                <li className="py-2">Show Members</li>
-              </ul>
-            </div>
-          )}
-          {showCreateChannelModal && (
-            <div className="modal-overlay fixed top-0 left-0 h-screen w-screen flex justify-center items-center">
-              <div className="modal bg-white p-8 rounded-lg">
-                <h2 className="text-2xl font-bold mb-4">Create Channel</h2>
-                <input
-                  type="text"
-                  placeholder="Enter channel name"
-                  value={newChannelName}
-                  onChange={handleChannelNameChange}
-                  className="border border-gray-300 p-2 rounded mb-4"
-                />
-                <div className="flex justify-end">
-                  <button
-                    className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded mr-2"
-                    onClick={handleModalClose}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-                    onClick={handleAddChannel}
-                  >
-                    Add
-                  </button>
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+                <div className='flex flex-row relative'>
+                <img 
+                  alt="" 
+                  className='object-cover h-50 w-full'
+                  />
+                  <div className='absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]'>
+                      {selectedChannel.channelname}
+                  </div>
+
                 </div>
               </div>
             </div>
-          )}
+              <div className='flex p-5 flex-col'>
+                  <div className='rounded-xl hover:bg-[#181818] p-5 text-white'>
+                    <pre>
+
+                      {"Name: " + (selectedChannel.channelname ?? "Hidden")}
+                    </pre>
+                  </div>
+              </div>
+            
+        </div>}
+          {/* <!-- end message --> */}
+         
+          </div>
         </div>
-      </div>
-      </Layout>
-    );
-  };
-  
-  export default ChannelComponent;
+        </div>
+        </div>  
+        </Layout>
+    // </div>
+  )
+}
+
+export default ChannelComponent
