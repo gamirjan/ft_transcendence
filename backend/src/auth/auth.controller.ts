@@ -26,7 +26,13 @@ export class AuthController {
         // };
 
         // Send the response object back to the client
-        const is_user = await this.userService.findOneByDisplayName(body.given_name);
+        console.log("========================");
+        
+        console.log(body.id);
+        console.log("========================");
+
+        
+        const is_user = await this.userService.findOneById(body.id);
        await console.log("fiiinddd",is_user);
        console.log(!is_user,is_user == null);
         
@@ -34,8 +40,9 @@ export class AuthController {
         {
           const user = await this.addUserService.create({
               ID_42:body.id,
-            displayName: body.given_name,
+            displayName: body.name,
             avatarUrl: body.picture,
+            email:body.email,
           isTwoFactorEnabled: false,
             wins: 0,
            losses: 0
