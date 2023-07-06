@@ -40,6 +40,7 @@ import { GameController } from './GameHistory/GameHistory.controller';
 import { DirectMessagesModule } from './DirectMessages/DirectMessage.module';
 import { DirectMessagesController } from './DirectMessages/DirectMessages.controller';
 import { MuteListModule } from './MuteList/MuteList.module';
+import { MailModule } from './EmailService/mailer.module';
 
 
 
@@ -66,6 +67,7 @@ import { GameService } from './GameHistory/GameHistory.service';
       UserPinsModule,
       GameHistoryModule,
       GameModule,
+      MailModule,
       UsersModule,
       TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
     ],
