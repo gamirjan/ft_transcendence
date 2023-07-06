@@ -20,7 +20,7 @@ export class OtpService {
 
   async GenerateOtpAndSend(userid: number): Promise<SentMessageInfo> {
     const user = await this.usersRepository.findOne({ where: { id: userid } });
-    if (!user || user.istwofactorenabled === false)
+    if (!user || user.istwofactorenabled === false || !user.twofactoremail)
       throw new BadRequestException();
 
     const min = 100000;
@@ -29,7 +29,7 @@ export class OtpService {
     const otp = randomNumber.toString()
 
     var response = await this.mailService.sendMail({
-        to: user.email,
+        to: user.twofactoremail,
         from:"grigoryana149@gmail.com",
         subject: 'OTP for Two Factor Verification',
         text: `Your OTP to login: ${otp}`, 
