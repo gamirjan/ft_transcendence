@@ -257,6 +257,10 @@ function Chat() {
                   <div className="ml-3 text-lg font-semibold relative">
                     {elem.user.displayname}
                     <Modal
+                      contentClassName={"bg-[#212121]"}
+                      centered={true}
+                      selectChat={null}
+                      selectedUser={elem.user}
                       itemClassName={"hover:bg-[#181818]"}
                       isSelectedUser={true}
                       mainClassName={"absolute top-0 right-0 p-2 rounded-lg hover:bg-[#212121]"}
@@ -305,9 +309,12 @@ function Chat() {
           /> */}
           
            <Modal 
+              centered={false}
+              selectChat={toggleSidebar}
+              selectedUser={null}
               itemClassName={"hover:bg-[#181818]"}
               mainClassName={"p-2 rounded-full text-white font-semibold relative"}
-              className={"absolute top-14 right-5 w-[12rem] p-2 bg-[#212121]  rounded-xl shadow-lg flex flex-col"}
+              className={"flex justify-center h-[500rem]"}
               isSelectedUser={(Object.keys(selectedUser).length != 0)}
               />
         </div>

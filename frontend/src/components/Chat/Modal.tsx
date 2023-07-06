@@ -110,19 +110,16 @@ import { useState } from 'react';
 
 const Modal = (props) => {
   const [modalOpen, setModalOpen] = useState(false);
-  const [isClose, setIsClose] = useState(false)
 
   const openModal = () => {
     if (!modalOpen)
       setModalOpen(true);
   };
 
-  const handleClose = () => {
-      setModalOpen(false)
-  }
+
 
   const closeModal = () => {
-    if (isClose)
+    // if (isClose)
       setModalOpen(false);
   };
 
@@ -135,9 +132,9 @@ const Modal = (props) => {
 
     document.addEventListener('mousedown', handleOutsideClick);
 
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
+    // return () => {
+    //   document.removeEventListener('mousedown', handleOutsideClick);
+    // };
   }, [modalOpen]);
 
   return (
@@ -161,21 +158,58 @@ const Modal = (props) => {
         <circle cx="12" cy="19" r="1"></circle>
       </svg>
 
-      {props.isSelectedUser && (
+      {(props.isSelectedUser && modalOpen)  && (
         <ModalBox
           open={modalOpen}
-          onClose={handleClose}
-          className={props.className}
-          bodyStyle={{ padding: 0 }}
+          onClose={closeModal}
+          bodyStyle={{ className: `${props.className}` }}
+          contentClassName={props.contentClassName}
+          centered={props.centered}
+          // className={props.className}
+          // bodyStyle={{ padding: 0 }}
           footer={null}
           closable={false}
         >
-          <ul className="z-[1]">
+          <div className={`flex flex-col bg-[#212121] h-screen border-2 border-[#0f0f0f]`}>
+          <div className="flex flex-row justify-start py-5 w-[20vw] px-5">
+              <div className='flex flex-row'>
+
+              <div className='flex justify-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-full p-2 w-10 h-10' onClick={props.selectChat ?? closeModal}>X</div>
+                  <div className=" flex justify-end font-semibold text-2xl px-10">Profile</div>
+              </div>
+            
+            </div>
+            <div className='flex flex-col'>
+              <div className='flex flex-row'>
+                <div className='flex flex-row relative'>
+                <img 
+                  src={props.selectedUser.avatarurl} 
+                  alt="" 
+                  className='object-cover h-50 w-full'
+                  />
+                  <div className='absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]'>
+                      {props.selectedUser.displayname}
+                  </div>
+
+                </div>
+              </div>
+            </div>
+              <div className='flex p-5 flex-col'>
+                  <div className='rounded-xl hover:bg-[#181818] p-5 text-white'>
+                    <pre>
+
+                      {"Email: " + (props.selectedUser.email ?? "Hidden")}
+                    </pre>
+                  </div>
+              </div>
+            
+        </div>
+          {/* <ul className="z-[1]">
             <li
               className={`px-4 py-2 ${props.itemClassName} rounded-xl`}
               onClick={() => {
                 //selectChat();
-                setIsClose(true)
+                // setIsClose(true)
                 console.log("isClose");
                 
                 closeModal();
@@ -183,7 +217,7 @@ const Modal = (props) => {
             >
               Info
             </li>
-          </ul>
+          </ul> */}
         </ModalBox>
       )}
     </div>
