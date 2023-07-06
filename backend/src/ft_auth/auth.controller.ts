@@ -28,15 +28,16 @@ export class Ft_AuthController {
         // Send the response object back to the client
         console.log("------------------------------------------");
         
-        console.log(req.body.params.email);
+        console.log(req.body.params.id);
         console.log("------------------------------------------");
         
-        const is_user = await this.userService.findOneByDisplayName(req.body.params.id);
+        const is_user = await this.userService.findOneById(req.body.params.id);
         await console.log("fiiinddd",is_user);
         console.log(!is_user,is_user == null);
         
         if(!is_user)
         {
+          
           const user = await this.addUserService.create({
               ID_42:req.body.params.id,
             displayName: req.body.params.displayname,
@@ -46,10 +47,13 @@ export class Ft_AuthController {
           wins: 0,
            losses: 0
           })
+          console.log("ussssserrr",user);
+          
           return res.status(208).send(user);
         }
 
    
+        console.log("ssssss",is_user);
         
         return res.send(is_user);
       } catch (error) {
