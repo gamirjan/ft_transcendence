@@ -104,46 +104,43 @@
 
 // export default {Modal};
 import React from 'react';
-import {Modal as ModalBox} from 'antd'
+// import {Modal as ModalBox} from 'antd'
 import { useEffect } from 'react';
 import { useState } from 'react';
 
 const Modal = (props) => {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [isClose, setIsClose] = useState(false)
+  // const [modalOpen, setModalOpen] = useState(false);
 
-  const openModal = () => {
-    if (!modalOpen)
-      setModalOpen(true);
-  };
+  // const openModal = () => {
+  //   if (!modalOpen)
+  //     setModalOpen(true);
+  // };
 
-  const handleClose = () => {
-      setModalOpen(false)
-  }
 
-  const closeModal = () => {
-    if (isClose)
-      setModalOpen(false);
-  };
 
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (modalOpen && !event.target.closest('.ant-modal')) {
-        closeModal();
-      }
-    };
+  // const closeModal = () => {
+  //   // if (isClose)
+  //     setModalOpen(false);
+  // };
 
-    document.addEventListener('mousedown', handleOutsideClick);
+  // useEffect(() => {
+  //   const handleOutsideClick = (event) => {
+  //     if (modalOpen && !event.target.closest('.ant-modal')) {
+  //       closeModal();
+  //     }
+  //   };
 
-    return () => {
-      document.removeEventListener('mousedown', handleOutsideClick);
-    };
-  }, [modalOpen]);
+  //   document.addEventListener('mousedown', handleOutsideClick);
+
+  //   // return () => {
+  //   //   document.removeEventListener('mousedown', handleOutsideClick);
+  //   // };
+  // }, [modalOpen]);
 
   return (
     <div
-      className={`${props.mainClassName} ${props.isSelectedUser && 'hover:bg-[#181818] hover:cursor-pointer'}`}
-      onClick={openModal}
+      className={`${props.className} ${props.isSelectedUser && 'hover:bg-[#181818] hover:cursor-pointer'}`}
+      onClick={props.selectChat}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -161,31 +158,7 @@ const Modal = (props) => {
         <circle cx="12" cy="19" r="1"></circle>
       </svg>
 
-      {props.isSelectedUser && (
-        <ModalBox
-          open={modalOpen}
-          onClose={handleClose}
-          className={props.className}
-          bodyStyle={{ padding: 0 }}
-          footer={null}
-          closable={false}
-        >
-          <ul className="z-[1]">
-            <li
-              className={`px-4 py-2 ${props.itemClassName} rounded-xl`}
-              onClick={() => {
-                //selectChat();
-                setIsClose(true)
-                console.log("isClose");
-                
-                closeModal();
-              }}
-            >
-              Info
-            </li>
-          </ul>
-        </ModalBox>
-      )}
+      
     </div>
   );
 };
