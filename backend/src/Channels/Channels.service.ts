@@ -12,6 +12,7 @@ import { JoinProtectedChannelDto } from './JoinProtectedChannelDto';
 import { NotFoundException } from '@nestjs/common';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common/exceptions';
 import * as bcrypt from 'bcrypt';
+import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
 
 @Injectable()
 export class ChannelsService {
@@ -49,6 +50,25 @@ export class ChannelsService {
 
   async getUserChannels(userId: number): Promise<Channel[]> {
     return this.channelRepository.find({ where: { owner: { id: userId } } });
+  }
+
+  async getUserJoinedChannels(userId: number): Promise<UserJoinedChannelDto[]> {
+    var ownedChannels = (await this.channelRepository.find({ where: { owner: { id: userId } } }))
+                                                     .map(c => ({
+                                                      role: ChannelRole.OWNER,
+                                                      channel: c
+                                                    }));
+    var adminedChannels = (await this.channelAdminsRepository.find({ where: { adminid: userId }, relations: ['channel'] }))
+                                                             .map(ca => ({
+                                                              role: ChannelRole.ADMIN,
+                                                              channel: ca.channel
+                                                             }));
+    var regularChannels = (await this.channelUsersRepository.find({ where: { userid: userId }, relations: ['channel'] }))
+                                                            .map(cu => ({
+                                                              role: ChannelRole.USER,
+                                                              channel: cu.channel
+                                                            }));
+    return ownedChannels.concat(adminedChannels, regularChannels);
   }
 
   async createChannel(createChannelDto: CreateChannelDto): Promise<Channel> {
