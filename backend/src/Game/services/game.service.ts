@@ -17,6 +17,10 @@ export class PongService {
     room.ball.position.y = y;
     room.ball.velocity = PongService.velocity((room.speed *= 1.01), radian);
     RoomService.emit(room, 'ball', room.ball.position);
+    console.log("''''''''''''''''''''''''''poss'''''''''''''''''''''''''''");
+    console.log(room.ball.position.x,room.ball.position.y);
+    
+    
   }
 
   resetBall(room: Room, left?: boolean): void {
@@ -34,6 +38,8 @@ export class PongService {
   }
 
   update(room: Room): any {
+    console.log("::::::::::::::::::::update:::::::::::::::::::::::::::::::::::::");
+    
     const next = {
       x: room.ball.position.x + room.ball.velocity.x,
       y: room.ball.position.y + room.ball.velocity.y,

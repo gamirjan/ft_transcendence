@@ -23,7 +23,13 @@ export class GameServer {
         const count = this.server.engine.clientsCount;
         console.log("Connected clients: " + count);
         this.server.emit('participants',count);
-        this.server.emit('online',client.id)
+        this.server.emit('online',client)
+        console.log("-----------------------");
+        console.log(client);
+        console.log("---------------------------");
+        
+        
+        
     }
     handleDisconnect(client: Socket){
         console.log('Disconnection');

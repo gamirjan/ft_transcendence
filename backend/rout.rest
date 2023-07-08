@@ -60,4 +60,4 @@ Content-Type: application/json
 
 ### for delete friend
 
-DELETE http://localhost:7000/friends/1/2
+GET   http://localhost:7000/pong/40

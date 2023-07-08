@@ -21,6 +21,11 @@ import GameOne from "./components/game/OneVOne";
 import Pong from "./components/game/OneVOne";
 import PingPong from "./components/game/OneVOne";
 import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
+import Pin from "./components/2Fa/Pin";
+import Game from "./components/game/gametest";
+import MatchmakingGame from "./components/game/match";
+import GameMatch from "./components/game/Pong";
+
 
 
 function App() {
@@ -42,6 +47,9 @@ function App() {
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
       <Route path="/chat1" element={<ChatComponent/>}/>
       <Route path="/main" element={<PingPong width={800} height={300}/>}/>
+      <Route path="/pin" element={<Pin/>}/>
+      <Route path="/gg" element={<MatchmakingGame/>}/>
+      <Route path="/aa" element={<GameMatch/>}/>
           </Routes>
        </Router>
   )

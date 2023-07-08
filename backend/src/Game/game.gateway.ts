@@ -1,4 +1,6 @@
 import {
+  ConnectedSocket,
+  MessageBody,
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
@@ -10,10 +12,11 @@ import {
   import { Room } from './interfaces/room.interface';
   import { UsersService } from '../Users/user.service';
   import { Status } from '../enums/status.enum';
+import { log } from 'console';
   
-  @WebSocketGateway({
+  @WebSocketGateway(4000,{
     cors: {
-      origin: process.env.FRONT_URL,
+      origin:"*",
     },
     namespace: 'pong',
   })
@@ -25,21 +28,20 @@ import {
     @WebSocketServer()
     server: any;
   
-    async handleConnection(client: Socket, userid: number): Promise<any> {
-      try {
-        const user = await this.userService.findOneById(userid);
+    async handleConnection(client: Socket): Promise<any> {
+      try
+      {
+        const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
         if (!user) return client.disconnect();
-  
-        // await this.userService.setStatus(user.id, Status.GAME);
-  
-        client.data.user = user;
+        
         client.emit('info', { user });
-      } catch {}
+      }
+      catch {}
     }
   
     async handleDisconnect(client: Socket): Promise<any> {
       try {
-        if (!client.data.user) return;
+        if (!this.roomService.getUserFromSocket(client)) return;
   
         await this.roomService.removeSocket(client);
         // await this.userService.setStatus(client.data.user.id, Status.ONLINE);
@@ -47,31 +49,39 @@ import {
     }
   
     @SubscribeMessage('queue')
-    joinQueue(client: Socket): void {
+    joinQueue(@ConnectedSocket() client: Socket,@MessageBody() data:any): void {
+      
       try {
-        if (!client.data.user) return;
-        this.roomService.addQueue(client);
+        
+        if (!data) return;
+        //console.log(client);
+        //console.log(data.data.id);
+        
+       // console.log("opoooooooooooooooooooooooooooo", client);
+        this.roomService.addQueue(client,data);
       } catch {}
     }
   
     @SubscribeMessage('room')
-    joinRoom(client: Socket, code?: string): void {
+    joinRoom(@ConnectedSocket() client: Socket, code?: string): void {
       try {
-        if (!client.data.user) return;
+        if (!this.roomService.getUserFromSocket(client)) return;
   
         let room: Room = this.roomService.getRoom(code);
         if (!room) room = this.roomService.createRoom(code);
-  
+        console.log("room emit",room);
+        
         this.roomService.joinRoom(client, room);
       } catch {}
     }
   
     @SubscribeMessage('ready')
-    onReady(client: Socket, input: Input): void {
+    onReady(@ConnectedSocket() client: Socket, input: Input): void {
       try {
-        if (!client.data.user) return;
+        const user = this.roomService.getUserFromSocket(client);
+        if (!user) return;
   
-        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        const player: Player = this.roomService.getPlayer(user.id);
         if (!player) return;
   
         this.roomService.ready(player, input);
@@ -79,27 +89,32 @@ import {
     }
   
     @SubscribeMessage('start')
-    onStart(client: Socket): void {
+    onStart(@ConnectedSocket() client: Socket): void {
       try {
-        if (!client.data.user) return;
-  
-        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        
+        const user = this.roomService.getUserFromSocket(client);
+        if (!user) return;
+        console.log("game has been started", user.id);
+
+        const player: Player = this.roomService.getPlayer(user.id);
         if (!player || !player.room) return;
-  
+        // console.log("pplplplplll--------------------------------------------------------p");
+        
         this.roomService.startCalc(player.room);
       } catch {}
     }
   
     @SubscribeMessage('tray')
-    updateTray(client: Socket, tray: number): void {
+    updateTray(@ConnectedSocket() client: Socket, tray: number): void {
       try {
-        if (!client.data.user) return;
+        const user = this.roomService.getUserFromSocket(client);
+        if (!user) return;
   
-        const player: Player = this.roomService.getPlayer(client.data.user.id);
+        const player: Player = this.roomService.getPlayer(user.id);
         if (!player) return;
   
         player.tray = tray * player.room.options.display.height;
-        RoomService.emit(player.room, 'tray', player.socket.data.user.id, tray);
+        RoomService.emit(player.room, 'tray', this.roomService.getUserFromSocket(player.socket).id, tray);
       } catch {}
     }
   }
