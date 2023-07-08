@@ -1,28 +1,35 @@
-body {
-  scrollbar-width: thin;
-  scrollbar-color: gray #e2e8f0;
+html {
+  scrollbar-width: auto;
+  scrollbar-color: gray transparent;
 }
 
 /* Track */
 ::-webkit-scrollbar {
-  width: 8px;
+  background-color: transparent ;
+  width: 4px;
+}
+
+::-webkit-scrollbar:hover {
+  background-color: transparent;
+  width: 4px;
 }
 
 /* Thumb */
 ::-webkit-scrollbar-thumb {
-  background-color: gray;
+  background-color: transparent;
   border-radius: 4px;
 }
 
 /* Handle hover effect */
 ::-webkit-scrollbar-thumb:hover {
-  background-color: #a0aec0;
-}
+  background-color: transparent;
+}  
+
  .App {
   text-align: center;
 }
 
-.App.main {
+/* .App.main {
   height: 40vmin;
   pointer-events: none;
 }
@@ -55,4 +62,4 @@ body {
   to {
     transform: rotate(360deg);
   }
-}
+} */
