@@ -11,7 +11,7 @@ import { Server } from "socket.io";
 import { Socket } from "socket.io";
 
 let sockets = [];
-@WebSocketGateway(4000, { 
+@WebSocketGateway(4001, { 
     cors: {
     origin:"*"
     }
@@ -56,7 +56,8 @@ export class ChatServer implements OnGatewayInit, OnGatewayConnection{
         console.log("-----------------------------------------")
         // socket.broadcast.emit('message', msg); // to all, but the sender
         // this.server.emit('message',data); // to all, including the sender
-        this.server/*to(sockets[data.userid])*/.emit('chat',data); // to all, including the sender
+        //it need to recive the recipient user id
+        this.server.to(data.userid).emit('chat',data); // to all, including the sender
         // client.emit('chat',data);
     }
     @SubscribeMessage('channels')

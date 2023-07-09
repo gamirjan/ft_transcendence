@@ -8,6 +8,8 @@ import { Player } from '../interfaces/player.interface';
 import { Room, State } from '../interfaces/room.interface';
 import { PongService } from './game.service';
 import { CreateGameDto } from '../../GameHistory/CreateGameDto';
+import { ConnectedSocket } from '@nestjs/websockets';
+import { json } from 'node:stream/consumers';
 
 @Injectable()
 export class RoomService {
@@ -24,13 +26,16 @@ export class RoomService {
   });
 
   queue: Array<Socket> = [];
-  rooms: Map<string, Room> = new Map();
+  rooms: Map<string, Room> =  new Map();
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static emit(room: Room, event: string, ...args: any): void {
-    for (const player of room.players) player.socket.emit(event, ...args);
-    if (room.spectators)
-      for (const spectator of room.spectators) spectator.emit(event, ...args);
+    //console.log(room);
+    
+    for (const player of room.players) {
+     // console.log(player);
+       
+      player.socket.emit(event, ...args)};
   }
 
   async removeSocket(socket: Socket): Promise<any> {
@@ -54,20 +59,43 @@ export class RoomService {
     }
   }
 
-  addQueue(socket: Socket): void {
+  addQueue(@ConnectedSocket() socket: Socket, data : any): void {
+    ////console.log("sock",socket);
+    
     for (const socket1 of this.queue)
-      if (socket1.data.user.id == socket.data.user.id) return;
-    if (this.getPlayer(socket.data.user.id)) return;
-
+    {
+      //console.log("sockets==>",socket1.data);
+        
+      if (this.getUserFromSocket(socket).id == data.id)
+      {
+        //console.log("artenn kaaaaaaaaaaaaaaaaaaaa");
+        return
+      };
+    }
+    if (this.getPlayer(data.id))
+    {
+      return
+    };
+    
     this.queue.push(socket);
     if (this.queue.length < 2) return;
 
     const room: Room = this.createRoom();
     while (this.queue.length && room.players.length < 2)
+    {
+      //console.log(this.queue.length);
+      //console.log(room.players.length);
       this.joinRoom(this.queue.shift(), room);
+      //console.log("rooooooooooooooooooom",room);
+      //console.log(this.queue.length);
+      //console.log(room.players.length);
+    }
+      
   }
 
   createRoom(code: string = null): Room {
+    //console.log("afsfsgsg");
+    
     while (!code) {
       const length = 10;
       const generated = Math.floor(
@@ -85,22 +113,40 @@ export class RoomService {
       speed: 0,
     };
     this.rooms.set(code, room);
+   console.log("roooom",this.rooms.values(),"\nroom size =>",this.rooms.size);
+    
     return room;
   }
 
   joinRoom(socket: Socket, room: Room): void {
+
+    //console.log("aaaaaaaaaaaaaaa",room.state)
     if (room.state == State.WAITING) {
       const player: Player = {
         socket,
-        user: socket.data.user,
+        user: this.getUserFromSocket(socket),
         room,
         input: null,
         tray: RoomService.options.display.height / 2,
         score: 0,
       };
       room.players.push(player);
-      if (room.players.length == 2) room.state = State.STARTING;
-    } else {
+      //console.log("lengthhhhhh", room.players.length);
+      //console.log("___________----------------------_____________________------------------");
+      //console.log("finisheeeeedddd");
+      if (room.players.length == 2) 
+      {
+        //console.log("mtelaaaaaaaaaaaaa");
+        room.state = State.STARTING
+      };
+    } 
+    else {
+      //console.log("elsssseeeeeeee");
+      //console.log("elsssseeeeeeee");
+      //console.log("elsssseeeeeeee");
+      //console.log("elsssseeeeeeee");
+      //console.log("elsssseeeeeeee");
+      
       if (!room.spectators) room.spectators = [];
       room.spectators.push(socket);
 
@@ -110,13 +156,30 @@ export class RoomService {
         room.players.map((player) => player.user),
       );
     }
-    socket.emit('room', room.code);
+    //const rm = JSON.stringify(room);
+   // console.log("00000000000000000000000000000000");
+    
+    //console.log(await json.toString(room));
+    console.log("rooooooooooooooooommmm",room,this.rooms.values());
+    
+     socket.emit('room',room.code);
   }
 
   getPlayer(userId: number): Player {
+    ////console.log("userid =>",userId);
+    //console.log("room size",this.rooms);
+    
     for (const room of this.rooms.values())
       for (const player of room.players)
+      {
+        ////console.log("plplplpll",player);
+       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
+        
+       // console.log(player);
+       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
+        
         if (player.user.id == userId) return player;
+      }
     return null;
   }
 
@@ -130,7 +193,7 @@ export class RoomService {
   }
 
   startGame(room: Room): void {
-    if (room.state != State.STARTING) return;
+     if (room.state != State.STARTING) return;
     for (const player of room.players) if (!player.input) return;
     room.state = State.COUNTDOWN;
 
@@ -154,7 +217,9 @@ export class RoomService {
   }
 
   startCalc(room: Room): void {
-    if (room.state != State.COUNTDOWN) return;
+    //if (room.state != State.COUNTDOWN) return;
+    console.log(";;;;;;;;;;;;;;;;;;;;;;;start calc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+    
 
     this.pong.resetBall(room);
     room.state = State.INGAME;
@@ -162,6 +227,7 @@ export class RoomService {
 
   @Interval(1000 / 60)
   loop(): void {
+
     for (const room of this.rooms.values())
       if (room.state == State.INGAME) this.pong.update(room);
   }
@@ -197,5 +263,11 @@ export class RoomService {
     if (!room) throw new HttpException('Room not found', HttpStatus.NOT_FOUND);
 
     return room;
+  }
+
+  getUserFromSocket(socket: Socket) {
+    //console.log(socket.handshake);
+    
+    return JSON.parse(socket.handshake.auth.headers.USER).user;
   }
 }
