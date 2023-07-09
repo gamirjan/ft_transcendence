@@ -11,7 +11,7 @@ import { Server } from "socket.io";
 import { Socket } from "socket.io";
 
 let sockets = [];
-@WebSocketGateway(4000, { 
+@WebSocketGateway(4001, { 
     cors: {
     origin:"*"
     }

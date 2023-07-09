@@ -1,6 +1,8 @@
 import {
   ConnectedSocket,
   MessageBody,
+    OnGatewayConnection,
+    OnGatewayInit,
     SubscribeMessage,
     WebSocketGateway,
     WebSocketServer,
@@ -12,8 +14,10 @@ import {
   import { Room } from './interfaces/room.interface';
   import { UsersService } from '../Users/user.service';
   import { Status } from '../enums/status.enum';
+  import { Server } from "socket.io";
 import { log } from 'console';
-  
+// import { log } from 'console';
+
   @WebSocketGateway(4000,{
     cors: {
       origin:"*",
@@ -27,11 +31,16 @@ import { log } from 'console';
     ) {}
     @WebSocketServer()
     server: any;
-  
-    async handleConnection(client: Socket): Promise<any> {
+    afterInit(server: Server){
+    }
+    async handleConnection(@ConnectedSocket() client: Socket): Promise<any> {
       try
       {
+       // console.log("dddddddddddddddd");
+        console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
         const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
+        //console.log(user);
+        
         if (!user) return client.disconnect();
         
         client.emit('info', { user });
@@ -39,8 +48,11 @@ import { log } from 'console';
       catch {}
     }
   
-    async handleDisconnect(client: Socket): Promise<any> {
+    async handleDisconnect(@ConnectedSocket() client: Socket): Promise<any> {
       try {
+        
+        console.log("disconected",JSON.parse(client.handshake.auth.headers.USER).user.id);
+        
         if (!this.roomService.getUserFromSocket(client)) return;
   
         await this.roomService.removeSocket(client);
@@ -57,7 +69,7 @@ import { log } from 'console';
         //console.log(client);
         //console.log(data.data.id);
         
-       // console.log("opoooooooooooooooooooooooooooo", client);
+       //console.log("opoooooooooooooooooooooooooooo", client);
         this.roomService.addQueue(client,data);
       } catch {}
     }
@@ -91,29 +103,41 @@ import { log } from 'console';
     @SubscribeMessage('start')
     onStart(@ConnectedSocket() client: Socket): void {
       try {
+        // console.log("stratt");
+        
+        //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{start game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]\n",client.handshake.auth.headers);
+       // console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{end scope of game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
+        
         
         const user = this.roomService.getUserFromSocket(client);
         if (!user) return;
-        console.log("game has been started", user.id);
-
+        // console.log("game has been started", user.id);
+        
         const player: Player = this.roomService.getPlayer(user.id);
+        // console.log("havayi______------------------____",player,player.room);
+        
         if (!player || !player.room) return;
-        // console.log("pplplplplll--------------------------------------------------------p");
+        //console.log("pplplplplll--------------------------------------------------------p");
         
         this.roomService.startCalc(player.room);
       } catch {}
     }
   
     @SubscribeMessage('tray')
-    updateTray(@ConnectedSocket() client: Socket, tray: number): void {
+    updateTray(@ConnectedSocket() client: Socket, @MessageBody() tray: number): void {
       try {
+        
         const user = this.roomService.getUserFromSocket(client);
+        //console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy",user);
         if (!user) return;
-  
+        
         const player: Player = this.roomService.getPlayer(user.id);
         if (!player) return;
+        console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy", tray);
   
         player.tray = tray * player.room.options.display.height;
+        console.log("hrightttttttttt->",player.room.options.display.height);
+        console.log(player.tray)
         RoomService.emit(player.room, 'tray', this.roomService.getUserFromSocket(player.socket).id, tray);
       } catch {}
     }

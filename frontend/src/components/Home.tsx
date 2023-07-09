@@ -4,10 +4,14 @@ import photo from '@SRC_DIR/assets/images/pong.jpg';
 import Layout  from "./Layout";
 import { useSelector } from "react-redux";
 import { Store } from "redux";
-import {store} from "./redux";
+import { store} from "./redux";
+import { io } from "socket.io-client";
+import { getUserState, ip } from "./utils/ip";
+
 
 
 const Home = () => {
+    
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
     useEffect(()=>{

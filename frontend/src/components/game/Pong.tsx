@@ -7,32 +7,55 @@ import { ip } from '../utils/ip';
 
 
 
-const gameSock = io(`${ip}:4000/pong`);
-const GameMatch = (data) => {
+const GameMatch = ({gameSock}) => {
+  const user = useSelector((state: AppState) => state.user);
 
-  const canvasRef = useRef(null);
+    var i = 0
   const pongRef = useRef(null);
   const endDialogRef = useRef(false);
   const winnerRef = useRef('');
   const inputRef = useRef([]);
   const mapColorRef = useRef('#121212');
-  const canvas = canvasRef.current;
   const pong = pongRef.current;
   const dispatch = useDispatch();
   const history = useNavigate()
-
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvas = canvasRef.current;
+  let animationFrameId: number;
+  let width = 500;
+  let height = 200;
+  let paddleSpeed = 8;
+  let ballSpeed = 4;
+  let paddleHeight = 80;
+  let paddleWidth = 10;
+  let ballRadius = 10;
+  let paddleLeftY = height / 2 - paddleHeight / 2;
+  let paddleRightY = height / 2 - paddleHeight / 2;
+  let ballX = width / 2;
+  let ballY = height / 2;
+  let ballDeltaX = ballSpeed;
+  let ballDeltaY = ballSpeed;
+  const [score, setScore] = useState<{ left: number; right: number }>({
+    left: 0,
+    right: 0,
+  });
   const leaveRoomHandler = () => {
 	endDialogRef.current = false;
 	gameSock.disconnect();
 	history("/home",{replace:true});
   };
 
-//   const handleReady = (options) => {
-// 	if (pong) {
-// 	  pong.options = options;
-// 	  changeColor(options.input.plan);
-// 	}
-//   };
+const drawPaddle = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+  ctx.fillRect(x, y, paddleWidth, paddleHeight);
+};
+
+const drawBall = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
+  ctx.beginPath();
+  ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.closePath();
+  ctx.fillStyle = 'white'
+};
 const handleMouseMove = (event) => {
 	
 	if (!pong) return;
@@ -45,7 +68,7 @@ const handleMouseMove = (event) => {
   };
 
   const handleBall = (ball) => {
-	console.log(ball);
+	console.log("-----------------------------------------------------------------");
 	
 	if (pong) {
 	  pong.updateBall(ball.x, ball.y);
@@ -99,29 +122,58 @@ const handleMouseMove = (event) => {
 
     let count = 3;
     const intervalID = setInterval(() => {
-      if (count && pong) {
-        pong.context.clearRect(
-          0,
-          0,
-          options.display.width,
-          options.display.height,
-        );
-        pong.context.beginPath();
-        pong.context.fillStyle = 'white';
-        pong.context.font = '48px Impact';
-        pong.context.fillText(count, options.display.width / 2, options.display.height / 2);
-        pong.context.closePath();
-        return count--;
-      }
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+    
+      // Clear canvas
+      ctx.clearRect(0, 0, width, height);
+    
+      // Draw border
+      ctx.strokeStyle = 'white';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(0, 0, width, height);
+    
+      // Draw paddles
+      drawPaddle(ctx, 0, paddleLeftY);
+      drawPaddle(ctx, width - paddleWidth, paddleRightY);
+    
+      // Draw ball
+      drawBall(ctx, ballX, ballY);
       clearInterval(intervalID);
+      
+      console.log("starttttttttttttttttt",i++);
+      window.addEventListener('keydown', (e) => {
+        switch (e.code) {
+          case 'ArrowUp':
+            movePaddle('right', -paddleSpeed);
+            break;
+          case 'ArrowDown':
+            movePaddle('right', paddleSpeed);
+            break;
+          default:
+            break;
+        }
+      });
+  
+      window.addEventListener('keyup', (e) => {
+        switch (e.code) {
+          case 'ArrowUp':
+          case 'ArrowDown':
+            movePaddle('right', 0);
+            break;
+          default:
+            break;
+        }
+      });
       gameSock.emit('start');
+      gameSock.emit('tray',3);
     }, 1000);
 
     return () => {
-      if (pong) {
         document.removeEventListener('mousemove', handleMouseMove);
         pongRef.current = null;
-      }
       gameSock.disconnect();
     };
   }, []);
@@ -129,24 +181,7 @@ const handleMouseMove = (event) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     const pong = pongRef.current;
-
-    if (!canvas || !pong) return;
-
-    document.addEventListener('mousemove', handleMouseMove);
-    gameSock.on('ball', handleBall);
-    gameSock.on('score', handleScore);
-    gameSock.on('tray', handleTray);
-    gameSock.on('stop', handleStop);
-    gameSock.on('disconnect', handleDisconnect);
-
-    return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      gameSock.off('ball', handleBall);
-      gameSock.off('score', handleScore);
-      gameSock.off('tray', handleTray);
-      gameSock.off('stop', handleStop);
-      gameSock.off('disconnect', handleDisconnect);
-    };
+    
   }, [gameSock]);
 
 
@@ -155,19 +190,6 @@ return (
 	<div>
 	<div className="container mx-auto h-full">
 	  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-		{endDialogRef.current && (
-		  <div className="bg-white p-4 rounded-lg max-w-sm">
-			<div className="bg-primary text-white text-center font-bold text-2xl p-4 rounded-t-lg">
-			  GAME INFO
-			</div>
-			<div className="text-h2 p-12 text-center">{winnerRef.current} has won!</div>
-			<div className="flex justify-end p-4">
-			  <button className="bg-blue text-white py-2 px-4 rounded-lg" onClick={leaveRoomHandler}>
-				Leave Room
-			  </button>
-			</div>
-		  </div>
-		)}
 	  </div>
 	  <div className="flex justify-center items-center h-full">
 		<div className="card bg-green p-4">
@@ -176,7 +198,14 @@ return (
 			<span className="text-white"> VS </span>
 			{/* {usersInGame[1].username} */}user 2
 		  </div>
-		  <canvas ref={canvasRef} style={{ backgroundColor: mapColorRef.current }} className="mx-5 my-5" id="pong"></canvas>
+      <div className="flex justify-center items-center h-screen bg-gray-800">
+      <canvas
+        ref={canvasRef}
+        className="border-2 border-white"
+        width={500}
+        height={150}
+      />
+    </div>
 		</div>
 	  </div>
 	</div>

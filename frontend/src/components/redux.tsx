@@ -2,6 +2,8 @@ import { createStore, AnyAction } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { PersistGate } from 'redux-persist/integration/react';
+import { io } from 'socket.io-client';
+import { ip } from './utils/ip';
 
 // Define the AppState interface
 interface AppState {
@@ -26,6 +28,7 @@ const initialState: AppState = {
 // Define the SET_USER action type constant
 const SET_USER = 'SET_USER';
 
+const SOCKET_CONNECT = 'SOCKET_CONNECT'
 // Define the SetUserAction interface
 interface SetUserAction extends AnyAction {
   payload: AppState['user'];
@@ -65,6 +68,21 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 // Create the Redux store
 const store = createStore(persistedReducer);
 const persistor = persistStore(store);
+export const connectSocket = () => (dispatch, getState) => {
+  const { user } = getState(); // Assuming 'user' is stored in the Redux state
 
+  const socket = io(`${ip}:4000/pong`, {
+    auth: {
+      headers: {
+        'USER': JSON.stringify({ user }),
+      },
+    },
+  });
+
+  dispatch({
+    type: SOCKET_CONNECT,
+    payload: socket,
+  });
+};
 // Export the store and persistor
 export { store, persistor };

@@ -26,13 +26,16 @@ export class RoomService {
   });
 
   queue: Array<Socket> = [];
-  rooms: Map<string, Room> = new Map();
+  rooms: Map<string, Room> =  new Map();
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static emit(room: Room, event: string, ...args: any): void {
-    for (const player of room.players) player.socket.emit(event, ...args);
-    if (room.spectators)
-      for (const spectator of room.spectators) spectator.emit(event, ...args);
+    //console.log(room);
+    
+    for (const player of room.players) {
+     // console.log(player);
+       
+      player.socket.emit(event, ...args)};
   }
 
   async removeSocket(socket: Socket): Promise<any> {
@@ -110,7 +113,7 @@ export class RoomService {
       speed: 0,
     };
     this.rooms.set(code, room);
-    //console.log("roooom",room);
+   console.log("roooom",this.rooms.values(),"\nroom size =>",this.rooms.size);
     
     return room;
   }
@@ -154,20 +157,26 @@ export class RoomService {
       );
     }
     //const rm = JSON.stringify(room);
-    console.log("00000000000000000000000000000000");
+   // console.log("00000000000000000000000000000000");
     
     //console.log(await json.toString(room));
+    console.log("rooooooooooooooooommmm",room,this.rooms.values());
     
      socket.emit('room',room.code);
   }
 
   getPlayer(userId: number): Player {
     ////console.log("userid =>",userId);
+    //console.log("room size",this.rooms);
     
     for (const room of this.rooms.values())
       for (const player of room.players)
       {
         ////console.log("plplplpll",player);
+       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
+        
+       // console.log(player);
+       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
         
         if (player.user.id == userId) return player;
       }
@@ -257,6 +266,8 @@ export class RoomService {
   }
 
   getUserFromSocket(socket: Socket) {
+    //console.log(socket.handshake);
+    
     return JSON.parse(socket.handshake.auth.headers.USER).user;
   }
 }

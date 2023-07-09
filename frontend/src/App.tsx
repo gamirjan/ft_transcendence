@@ -25,11 +25,23 @@ import Pin from "./components/2Fa/Pin";
 import Game from "./components/game/gametest";
 import MatchmakingGame from "./components/game/match";
 import GameMatch from "./components/game/Pong";
-
+import { Store } from "redux";
+import { io } from "socket.io-client";
+import { ip } from "./components/utils/ip";
 
 
 function App() {
+  
+  const user = useSelector((state: AppState) => state.user);
+ console.log("Dsddsdsdds");
+ const socket = io(`${ip}:4000/pong`,{auth:{
+  headers:{
+      'USER':JSON.stringify({user})
+  },
+},
 
+});
+ 
   
   return (
         <Router>
