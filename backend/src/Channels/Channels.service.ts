@@ -75,13 +75,21 @@ export class ChannelsService {
   }
 
   async createChannel(createChannelDto: CreateChannelDto): Promise<Channel> {
-    if (createChannelDto.channelType == "2" && (createChannelDto.password == null || createChannelDto.password == ''))
+    if (createChannelDto.channelType == "2" && (!createChannelDto.password || createChannelDto.password == ''))
     {
       throw new BadRequestException("You must provide a password");
     }
-    if (createChannelDto.channelType != "2" && (createChannelDto.password != null && createChannelDto.password != ''))
+    if (createChannelDto.channelType != "2" && (createChannelDto.password && createChannelDto.password != ''))
     {
       throw new BadRequestException("You can't set a password on public or invite-only channels");
+    }
+    if (createChannelDto.channelName == '' || !createChannelDto.channelName)
+    {
+      throw new BadRequestException("You must provide channel name");
+    }
+    if (!createChannelDto.owner)
+    {
+      throw new BadRequestException("Owner object can't be null");
     }
     const channel = new Channel();
     channel.channeltype = createChannelDto.channelType;
