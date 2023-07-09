@@ -5,9 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { socket } from "./Socket";
 import { ip } from "./utils/ip";
 import Modal from "./Chat/Modal";
-// import { Button, Modal } from 'antd';
 import { IMassage } from "./utils";
 import Layout from "./Layout";
+import { Field, Form, Formik, FormikProps } from 'formik';
+import ChatInfo from "./Chat/ChatInfo";
 function Chat() {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
@@ -20,6 +21,8 @@ function Chat() {
   const [dmMessage, setDMMessage] = useState("");
   const [sended, setSended] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
+  const [openModal, setOpenModal] = useState(false)
+
 
   const toggleSidebar = () => {
     Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
@@ -85,7 +88,7 @@ function Chat() {
   useEffect(() => {
     if (user == null) navigate("/", { replace: true });
     else {
-      fetch(`${ip}:7000/channels/${user.id}`)
+      fetch(`${ip}:7000/channels/user/all/${user.id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");
@@ -94,6 +97,8 @@ function Chat() {
         })
         .then((data) => {
           setContacts(data);
+          // console.log(data);
+          
         })
         .catch((error) => {
           console.log(error);
@@ -105,7 +110,7 @@ function Chat() {
         // console.log(messages);
       }
     }
-  }, [selectedUserName, sended]);
+  }, [selectedUserName, sended, openModal]);
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -119,7 +124,7 @@ function Chat() {
 
     setSuggestions(
       contacts.filter((obj) => {
-        return regex.test(obj.user.displayname);
+        return regex.test(obj.channel.channelname);
       })
     );
   };
@@ -200,7 +205,43 @@ function Chat() {
   socket.on("participants", (count) => {
     console.log("online :" + count);
   });
+  const createChannel = (data)=>{
+    // console.log(user, selectedUser);
+    // console.log(dmMessage);
+    // console.log(typeof(user.id));
 
+    const values = {
+      channelName: data.channelName,
+      owner: user,
+      password: data.password,
+      channelType: data.type
+    };
+    /* method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({   
+               channelType: "1",
+              channelName: newChannelName,
+              owner: user }), */
+    fetch(`${ip}:7000/channels`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        setOpenModal(false)
+        // setSended(!sended);
+        console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   return (
     <Layout>
       <div className="flex flex-col h-full bg-[#181818]">
@@ -213,8 +254,84 @@ function Chat() {
             {/* <!-- chat list --> */}
             <div className="flex flex-col h-full w-2/5  border-r-2 border-[#0f0f0f]">
               <div className="bg-[#212121] p-2 z-[4]">
-                <div className=" flex justify-center font-semibold text-2xl  px-2">
+                <div className=" flex flex-row justify-between font-semibold text-2xl  px-2">
+                  <div className="flex justify-start">
                   Channels
+
+                  </div>
+                  <div className="flex justify-end">
+                    <button className="flex justify-center mt-0 bg-[#181818] text-white hover:bg-[#313131] px-3 py-1" onClick={()=>setOpenModal(true)}>+</button>
+                  </div>
+                  <Modal
+                    open={openModal}
+                    className={null}
+                    onClose={()=>setOpenModal(false)}
+                    contentClassName={"bg-[#212121] "}
+                    
+                  >
+                    <div className="flex flex-col h-full p-5">
+                      <Formik 
+                        initialValues={{channelName: '', type: '1', password: ''}}
+                        onSubmit={createChannel}
+                        validate={(values)=>{
+                          const errors = {}
+                          if (values.channelName == '')
+                            errors.channelName = 'Required'
+                          if (values.password == '' && values.type == '2')
+                            errors.password = 'Required'
+                          return errors;
+                        }}
+                      >
+                        {({values, errors, touched, isSubmitting} : FormikProps<any>)=>(
+                          <Form className="flex flex-col text-sm justify-center h-full p-2">
+                            <div className={`${(errors.channelName && touched.channelName && errors.channelName) ? "text-red-800" : ""}`}>
+                              {errors.channelName && touched.channelName && errors.channelName}
+                            </div>
+                            <Field
+                              className="p-2 outline-none"
+                              name="channelName"
+                              placeholder="Channel Name"
+                              type="text"
+                            >
+                            </Field>
+                            <Field 
+                              name="type" as="select"
+                              className="mt-2 bg-[#181818] p-2 rounded "
+                            >
+                              <option value="1">Public</option>
+                              <option value="2">Protected</option>
+                              <option value="3">Private</option>
+                            </Field>
+                            {/* {errors.password && touched.password && errors.password} */}
+                            {values.type == "2" ? (
+                              <>
+                             <div className={`${(errors.password && touched.password && errors.password) ? "text-red-800" : ""}`}>
+                             {errors.password && touched.password && errors.password}
+                           </div>
+                            <Field
+                                name="password"
+                                className="p-2 outline-none"
+                                type="text"
+                                placeholder="Channel Password"
+                            >
+                             </Field>
+                             </>
+                            )
+                              : (<></>
+                            )}
+                             <button 
+                             type="submit" 
+                             disabled={(errors && Object.keys(errors).length != 0)}
+                             className={`p-2 bg-[#181818] ${!(errors && Object.keys(errors).length != 0) ? "hover:bg-[#313131]" : ""} rounded text-white`}
+                             >
+                              Create
+                              </button>
+                          </Form>
+                        )}
+                      </Formik>
+                      
+                    </div>
+                  </Modal>
                 </div>
 
                 {/* <!-- search compt --> */}
@@ -232,26 +349,38 @@ function Chat() {
                 <div className="flex flex-col overflow-y-scroll px-4" style={{maxHeight: "75vh"}}>
                   {suggestions &&
                     suggestions.map((elem, key) => (
-                      <div className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl">
+                      // <div>
+                      //   {console.log(elem)}
+                      // </div>
+                      <div 
+                      className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                      key={key}
+                      >
                         <div
                           className="flex w-full  justify-start"
                           onClick={() => {
-                            handleSelectUser(elem.user);
+                            handleSelectUser(elem.channel);
                             setSearchQuery("");
                             console.log("okkkkkk");
                           }}
                         >
                           <div className="w-1/4">
+                            {elem.channel.avatarurl ? (
                             <img
-                              src={elem.user.avatarurl}
+                              src={elem.channel.avatarurl}
                               alt=""
                               srcSet=""
                               className="object-cover h-12 w-12 rounded-full"
                             />
+                            ) : (
+                              <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
+                                  {elem.channel.channelname.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                           </div>
                           <div className="flex flex-row">
                             <div className="ml-3 text-lg font-semibold">
-                              {elem.user.displayname}
+                              {elem.channel.channelname}
                             </div>
                           </div>
                         </div>
@@ -265,39 +394,53 @@ function Chat() {
                 {!(searchQuery && searchQuery.length != 0) &&
                   contacts &&
                   contacts.map((elem, key) => (
-                    <div className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl">
+                    
+                    // <div>
+                    //     {console.log(elem)}
+                    //   </div>
+                    <div 
+                      className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                      key={key}
+                      >
+                        {console.log(elem.channel)}
                       <div
                         className="flex w-full  justify-start"
                         onClick={() => {
-                          handleSelectUser(elem.user);
+                          handleSelectUser(elem.channel);
                           console.log("okkkkkk");
                         }}
                       >
                         <div className="w-1/4">
-                          <img
-                            src={elem.user.avatarurl}
-                            alt=""
-                            srcSet=""
-                            className="object-cover h-12 w-12 rounded-full"
-                          />
+                        {elem.channel.avatarurl ? (
+                            <img
+                              src={elem.channel.avatarurl}
+                              alt=""
+                              srcSet=""
+                              className="object-cover h-12 w-12 rounded-full"
+                            />
+                            ) : (
+                              <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
+                                  {elem.channel.channelname.charAt(0).toUpperCase()}
+                              </div>
+                            )}
                         </div>
                         <div className="flex flex-row">
                           <div className="ml-3 text-lg font-semibold">
-                            {elem.user.displayname}
+                            {elem.channel.channelname}
                           </div>
                         </div>
                       </div>
                       <div className="flex justify-end">
-                        <Modal
+                        <ChatInfo
                           contentClassName={"bg-[#212121]"}
                           selectChat={() => {
                             const isOpen =
                               !selectedUser ||
                               Object.keys(selectedUser).length == 0 ||
-                              selectedUser.id != elem.user.id
+                              selectedUser.id != elem.channel.id
                                 ? true
                                 : !openSidebar;
-                            handleSelectUser(elem.user);
+                            handleSelectUser(elem.channel);
                             setOpenSidebar(isOpen);
                           }}
                           isSelectedUser={true}
@@ -325,23 +468,36 @@ function Chat() {
                     onClick={toggleSidebar}
                   >
                     <div className="flex px-4 pt-3 rounded-xl justify-start">
-                      <div className="flex flex-col">
-                        <img
+                      <div className="flex flex-col py-2">
+                      {(selectedUser && selectedUser.avatarurl) ? (
+                            <img
+                              src={selectedUser.avatarurl}
+                              alt=""
+                              srcSet=""
+                              className="object-cover h-12 w-12 rounded-full"
+                            />
+                            ) : (
+                              (selectedUser && selectedUser.channelname) && (<div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
+                                  {selectedUser.channelname.charAt(0).toUpperCase()}
+                              </div>
+                              )
+                            )}
+                        {/* <img
                           src={selectedUser.avatarurl ?? user.avatarurl}
                           className="object-cover h-10 self-center w-10 rounded-full"
                           alt=""
-                        />
+                        /> */}
                       </div>
                       <div className="flex flex-col">
                         <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
-                          {selectedUser.displayname ??
+                          {selectedUser.channelname ??
                             user.displayname ??
                             "Saved Message"}
                         </div>
                       </div>
                     </div>
                   </div>
-                  <Modal
+                  <ChatInfo
                     selectChat={toggleSidebar}
                     className={
                       "p-2 rounded-full text-white font-semibold relative"
@@ -360,9 +516,12 @@ function Chat() {
                     <div className="overflow-y-scroll  flex justify-center">
                       <div className="w-1/2 flex flex-col" style={{height: "70vh"}}>
                         {messages &&
-                          messages.map((msg) =>
+                          messages.map((msg, key) =>
                             user.id != msg.senderid ? (
-                              <div className="flex justify-start mb-4">
+                              <div 
+                              className="flex justify-start mb-4"
+                              key={key}
+                              >
                                 <img
                                   src={selectedUser.avatarurl}
                                   className="object-cover h-8 w-8 rounded-full"
@@ -373,7 +532,10 @@ function Chat() {
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex justify-end mb-4">
+                              <div 
+                              className="flex justify-end mb-4"
+                              key={key}
+                              >
                                 <div className="mr-2 py-3 px-4 bg-[#707579] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                                   {msg.message}
                                 </div>
@@ -432,20 +594,27 @@ function Chat() {
                   <div className="flex flex-col">
                     <div className="flex flex-row">
                       <div className="flex flex-row h-auto w-full relative">
-                        <img
-                          src={selectedUser.avatarurl}
-                          alt=""
-                          className="object-cover h-50 w-full"
-                        />
+                        {selectedUser && selectedUser.avatarurl ? (
+                          <img
+                            src={selectedUser.avatarurl}
+                            alt=""
+                            className="object-cover h-50 w-full"
+                          />
+                        ) : (
+                          <div className="object-cover h-50 w-full bg-gray-800 flex justify-center items-center">
+                            {selectedUser.channelname.charAt(0).toUpperCase()}
+                          </div>
+                        )
+                      }
                         <div className="absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]">
-                          {selectedUser.displayname}
+                          {selectedUser.channelname}
                         </div>
                       </div>
                     </div>
                   </div>
                   <div className="flex p-5 flex-col">
                     <div className="rounded-xl hover:bg-[#181818] p-5 text-white">
-                      <pre>{"Email: " + (selectedUser.email ?? "Hidden")}</pre>
+                      <pre>{"Type: " + (selectedUser.type ?? "Hidden")}</pre>
                     </div>
                   </div>
                 </div>

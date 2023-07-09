@@ -4,11 +4,11 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { socket } from "../Socket";
 import { ip } from "../utils/ip";
-import Modal from "./Modal";
 // import { Button, Modal } from 'antd';
 import { IMassage } from "../utils";
 import CollapsibleMenu from "./CollapsibleMenu";
 import Layout from "../Layout";
+import ChatInfo from "./ChatInfo";
 function Chat() {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
@@ -205,14 +205,14 @@ function Chat() {
   return (
     <Layout>
       <div className="flex flex-col h-full bg-[#181818]">
-        <div className="container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg">
+        <div className={`container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] rounded-lg`}>
           {/* <!-- headaer --> */}
 
           {/* <!-- end header --> */}
           {/* <!-- Chatting --> */}
-          <div className="flex flex-row h-full justify-between bg-[#212121]">
+          <div className={`flex flex-row h-full justify-between ${!(selectedUser && Object.keys(selectedUser).length != 0) ? "bg-[#181818]" : "bg-[212121]"}`}>
             {/* <!-- chat list --> */}
-            <div className="flex flex-col h-full w-2/5  border-r-2 border-[#0f0f0f]">
+            <div className="flex flex-col h-full w-2/5 border-x-2 border-[#0f0f0f] bg-[#212121] border-r-2 border-[#0f0f0f]">
               <div className="bg-[#212121] p-2 z-[4]">
                 <div className=" flex justify-center font-semibold text-2xl  px-2">
                   Chat
@@ -233,7 +233,10 @@ function Chat() {
                 <div className="flex flex-col overflow-y-scroll px-4" style={{maxHeight: "75vh"}}>
                   {suggestions &&
                     suggestions.map((elem, key) => (
-                      <div className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl">
+                      <div 
+                      className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                      key={key}
+                      >
                         <div
                           className="flex w-full  justify-start"
                           onClick={() => {
@@ -266,7 +269,10 @@ function Chat() {
                 {!(searchQuery && searchQuery.length != 0) &&
                   contacts &&
                   contacts.map((elem, key) => (
-                    <div className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl">
+                    <div 
+                    className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                    key={key}
+                    >
                       <div
                         className="flex w-full  justify-start"
                         onClick={() => {
@@ -289,7 +295,7 @@ function Chat() {
                         </div>
                       </div>
                       <div className="flex justify-end">
-                        <Modal
+                        <ChatInfo
                           contentClassName={"bg-[#212121]"}
                           selectChat={() => {
                             const isOpen =
@@ -313,7 +319,7 @@ function Chat() {
             </div>
             {/* <!-- end chat list --> */}
             {/* <!-- message --> */}
-            <div className="w-full flex flex-row justify-between bg-[#181818]">
+            <div className={`w-full flex flex-row justify-between bg-[#181818] border-r-2 border-[#0f0f0f] ${!(selectedUser && Object.keys(selectedUser).length != 0) ? "hidden" : ""}`}>
               {/* <div className="flex flex-row"> */}
                 <div className="flex flex-col w-full ">
                   <div className="px-4 flex justify-between items-center z-[1] bg-[#212121] border-b-2 border-[#0f0f0f]">
@@ -342,7 +348,7 @@ function Chat() {
                       </div>
                     </div>
                   </div>
-                  <Modal
+                  <ChatInfo
                     selectChat={toggleSidebar}
                     className={
                       "p-2 rounded-full text-white font-semibold relative"
@@ -361,9 +367,12 @@ function Chat() {
                     <div className="overflow-y-scroll  flex justify-center">
                       <div className="w-1/2 flex flex-col" style={{height: "70vh"}}>
                         {messages &&
-                          messages.map((msg) =>
+                          messages.map((msg, key) =>
                             user.id != msg.senderid ? (
-                              <div className="flex justify-start mb-4">
+                              <div 
+                                className="flex justify-start mb-4"
+                                key={key}
+                              >
                                 <img
                                   src={selectedUser.avatarurl}
                                   className="object-cover h-8 w-8 rounded-full"
@@ -374,7 +383,10 @@ function Chat() {
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex justify-end mb-4">
+                              <div 
+                                className="flex justify-end mb-4"
+                                key={key}
+                                >
                                 <div className="mr-2 py-3 px-4 bg-[#707579] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                                   {msg.message}
                                 </div>

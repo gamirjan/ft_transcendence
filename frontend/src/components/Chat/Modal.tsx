@@ -1,32 +1,37 @@
-
 import React from "react";
+import { useRef } from "react";
 
+const Modal = ({open, onClose, contentClassName, className, children}) =>{
+    const modalRef = useRef();
 
-const Modal = (props) => {
-  return (
-    <div
-      className={`${props.className} ${
-        props.isSelectedUser ? "hover:bg-[#181818] hover:cursor-pointer" : ''
-      }`}
-      onClick={props.selectChat}
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="24"
-        height="24"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="#aaaaaa"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <circle cx="12" cy="12" r="1"></circle>
-        <circle cx="12" cy="5" r="1"></circle>
-        <circle cx="12" cy="19" r="1"></circle>
-      </svg>
-    </div>
-  );
-};
+    const handleOutsideClick = (event) => {
+      if (modalRef.current && !modalRef.current.contains(event.target)) {
+        onClose();
+      }
+    };
+  
+    // const handleEscapeKey = (event) => {
+    //   if (event.keyCode === 27) {
+    //     onClose();
+    //   }
+    // };
+  
+    // const handleModalClick = () => {
+    //   onClose();
+    // };
+    return (
+        <div 
+            className={`fixed flex justify-center items-center flex-col h-screen w-screen top-0 left-0 ${!open ? "hidden" : ""} ${className ?? "bg-[rgba(0,0,0,0.3)]"}`} style={{zIndex: 200}}
+            onClick={handleOutsideClick}
+        >
+            <div 
+            className={`flex flex-col min-w-[50%] min-h-[50%] rounded-xl items-center shadow-[#212121] shadow ${contentClassName ?? "bg-white"}`}
+            ref={modalRef}
+            >
+                {children}
+            </div>
+        </div>
+    )
+}
 
 export default Modal;
