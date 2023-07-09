@@ -6,6 +6,8 @@ import { User } from '../Users/user.entity';
 import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 import { JoinPublicChannelDto } from './JoinPublicChannelDto';
 import { JoinProtectedChannelDto } from './JoinProtectedChannelDto';
+import { PropertyMetadata } from '@nestjs/core/injector/instance-wrapper';
+import { UserJoinedChannelDto } from './UserJoinedChannelDto';
 
 @Controller('channels')
 export class ChannelsController {
@@ -39,6 +41,11 @@ export class ChannelsController {
   @Get('user/:userId')
   async getUserChannels(@Param('userId') userId: number, @Res() res): Promise<Channel[]> {
     return res.send(await this.channelService.getUserChannels(userId));
+  }
+
+  @Get('user/all/:userId')
+  async getUserJoinedChannels(@Param('userId') userId: number, @Res() res): Promise<UserJoinedChannelDto[]> {
+    return res.send(await this.channelService.getUserJoinedChannels(userId));
   }
   
   @Post()

@@ -1,6 +1,7 @@
 version: '3.9'
 services:
   backend:
+    container_name: backend
     build:
       context: backend/
       dockerfile: Dockerfile
@@ -9,6 +10,7 @@ services:
       - "4000:4000"
       - "5500:5500"
   frontend:
+    container_name: frontend 
     build:
       context: frontend/
       dockerfile: Dockerfile
