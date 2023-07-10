@@ -5,7 +5,7 @@ import { ip } from '../utils/ip';
 import { useNavigate } from 'react-router-dom';
 import GameMatch from './Pong';
 import {store} from "../redux"
-
+type PaddlePosition = 'left' | 'right';
 const MatchmakingGame = () => {
   const [isSocket,setIsSoket]  = useState(false);
   const [socket,setSocket] = useState(io());
@@ -19,14 +19,16 @@ const MatchmakingGame = () => {
           headers:{
               'USER':JSON.stringify({user})
           },
+          
       },
       
       }));
       setIsSoket(true);
     }
      // Update the server URL and namespace
-     let width  =600;
-     let height = 200;
+     let width  =1000;
+     let height = 600;
+     let paddleHeight = (200 * height) / 1080;
   const [room, setRoom] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameDetails, setGameDetails] = useState(null);
@@ -34,19 +36,24 @@ const MatchmakingGame = () => {
   const [isStart,setIsStart] = useState(false)
   const [ballX,setBallX] = useState( width / 2);
   const [ballY,setBallY] = useState( height / 2);
+  const [gameScore,setGameScore] = useState({player1:{},player2:{}})
+  const [paddleLeftY,setpaddleLeftY] = useState(height / 2 - paddleHeight / 2)
+  const [paddleRightY,setpaddleRightY] = useState(height / 2 - paddleHeight / 2)
+  const [who,setWho]  = useState("0 : 0")
+  const [pos,setPos] = useState("");
+
  // let ballY = height / 2;
   const navigate = useNavigate();
-
+  
   const canvasRef = useRef<HTMLCanvasElement>(null);
- 
+  
   let animationFrameId: number;
   let paddleSpeed = 8;
   let ballSpeed = 4;
-  let paddleHeight = 80;
-  let paddleWidth = 10;
+  let paddleWidth = 25;
   let ballRadius = 10;
-  let paddleLeftY = height / 2 - paddleHeight / 2;
-  let paddleRightY = height / 2 - paddleHeight / 2;
+  //let paddleLeftY = height / 2 - paddleHeight / 2;
+  //let paddleRightY = height / 2 - paddleHeight / 2;
 
   let ballDeltaX = ballSpeed;
   let ballDeltaY = ballSpeed;
@@ -63,32 +70,37 @@ const MatchmakingGame = () => {
     ctx.closePath();
     ctx.fillStyle = 'white'
   };
+  const handleMouseMove = (event) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const y = event.pageY;
+    const rect = canvas.getBoundingClientRect();
+    const scrollY = window.scrollY || window.pageYOffset;
+    const top = rect.top + scrollY;
+    const bottom = rect.bottom + scrollY;
+    
+    if (y < top || y > (bottom - (paddleHeight))) return;
+    
+    const tray = (y - top) / canvas.clientHeight;
+    socket.emit('tray', tray);
+   // document.removeEventListener('mousemove',handleMouseMove);
+    };
 
-const update = ()=>{
-  const canvas = canvasRef.current;
-  if (!canvas) return;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) return;
-
-  // Clear canvas
-  ctx.clearRect(0, 0, width, height);
-
-  // Draw border
-  ctx.strokeStyle = 'white';
-  ctx.lineWidth = 2;
-  ctx.strokeRect(0, 0, width, height);
-
-  // Draw paddles
-  drawPaddle(ctx, 0, paddleLeftY);
-  drawPaddle(ctx, width - paddleWidth, paddleRightY);
-
-  // Draw ball
-  drawBall(ctx, ballX, ballY);
-}
+    const movePaddle = (deltaY: number) => {
+      if (pos === 'left') {
+        const newPaddleLeftY = paddleLeftY + 1  / 1080;
+          socket.emit('tray',newPaddleLeftY);
+      } else {
+        const newPaddleRightY = paddleRightY + 1 / 1080;
+        
+          socket.emit('tray',newPaddleRightY);
+          //paddleRightY = newPaddleRightY;
+      }
+    };
 useEffect(()=>{
   setTimeout(() => {
     
-    console.log(ballX,ballY);
+    //console.log(ballX,ballY);
     
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -104,14 +116,14 @@ useEffect(()=>{
     ctx.strokeRect(0, 0, width, height);
   
     // Draw paddles
-    drawPaddle(ctx, 0, paddleLeftY);
-    drawPaddle(ctx, width - paddleWidth, paddleRightY);
+    drawPaddle(ctx, 0 + 10, paddleLeftY);
+    drawPaddle(ctx, (width - paddleWidth) - 10, paddleRightY);
   
     // Draw ball
     drawBall(ctx, ballX, ballY);
   },100);
 
-},[ballX,ballY]);
+},[ballX,ballY,paddleLeftY,paddleRightY]);
 
 
   // useEffect(() => {
@@ -143,16 +155,16 @@ useEffect(()=>{
       
   //     console.log("starttttttttttttttttt");
       
-  //     socket.emit('start');
+  //    // socket.emit('start');
   //     //document.addEventListener('Ar')
   //     //socket.emit('tray',800);
-  //   }, 1000);
+  //   }, 100);
 
   //   return () => {
-  //      // document.removeEventListener('mousemove', handleMouseMove);
-  //     socket.disconnect();
+  //       //document.removeEventListener('mousemove', handleMouseMove);
+  //     //socket.disconnect();
   //   };
-  // }, []);
+  // }, [[ballX,ballY,paddleLeftY,paddleRightY]]);
 
 
   useEffect(() => {
@@ -173,12 +185,15 @@ useEffect(()=>{
       //setUser(data.user);
     });
 
-    socket.on('room', (data) => {
+    socket.on('room', (code,id) => {
         
-        console.log("room sdgddfdggrs",data);
+        console.log("room sdgddfdggrs");
+        if(id == user.id)
+          setPos("left");
+        else
+          setPos("right");
         if(!isStart)
         {
-
           socket.emit('start');
           setIsStart(true);
         }
@@ -194,6 +209,42 @@ useEffect(()=>{
       setGameStarted(true);
       setGameDetails(details);
     });
+        // Set up keyboard listeners
+        window.addEventListener('keydown', (e) => {
+          switch (e.code) {
+            case 'ArrowUp':
+              movePaddle( -paddleSpeed);
+              break;
+            case 'ArrowDown':
+              movePaddle( paddleSpeed);
+              break;
+            case 'KeyW':
+              movePaddle( -paddleSpeed);
+              break;
+            case 'KeyS':
+              movePaddle( paddleSpeed);
+              break;
+            default:
+              break;
+          }
+        });
+    
+        window.addEventListener('keyup', (e) => {
+          switch (e.code) {
+            case 'ArrowUp':
+            case 'ArrowDown':
+              movePaddle( 0);
+              break;
+            case 'KeyW':
+            case 'KeyS':
+              movePaddle( 0);
+              break;
+            default:
+              break;
+          }
+        });
+    document.addEventListener('mousemove',handleMouseMove);
+    document.addEventListener('mouseleave',handleMouseMove);
     socket.on('ball', (data)=>{
       setBallX(((data.x * width)/1920))
       setBallY(((data.y * height)/1080))
@@ -206,10 +257,21 @@ useEffect(()=>{
     });
     socket.on('score', (data)=>{
       console.log("score=>",data);
+      setGameScore(data)
+      if(data.player1.id == user.id)
+        setWho( data.player1.score + " : " + data.player2.score);
+      else
+        setWho( data.player2.score + " : " + data.player1.score);
+      
       
     });
-    socket.on('tray', (id, pos)=>{
-      console.log("trey=>",id, pos);
+    socket.on('tray', (pos,id, tray)=>{
+      console.log("trey=>",id, pos,tray);
+      if(pos === "left")
+        setpaddleLeftY(tray * height);
+      else
+        setpaddleRightY(tray * height);
+      // if(user.id == id)
       //setPlayer(data);
 
       
@@ -217,7 +279,8 @@ useEffect(()=>{
     socket.on('stop', (data)=>{
       console.log("stop=>",data);
       setIsStart(false);
-      socket.close();
+      window.location.reload();
+      //socket.close();
       
       
     });
@@ -229,12 +292,13 @@ useEffect(()=>{
 
     return () => {
      //rs
+     document.removeEventListener('mousemove',handleMouseMove)
      console.log("socket closed");
      socket.off('room')
      socket.off('ball')
      socket.close()
      //socket.off();
-      socket.disconnect();
+      //socket.disconnect();
     };
   }, []);
 
@@ -261,13 +325,17 @@ useEffect(()=>{
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-  return (isStart ? ( <div className="flex justify-center items-center h-screen bg-gray-800">
-  <canvas
-    ref={canvasRef}
-    className="border-2 border-white"
-    width={width}
-    height={height}
-  />
+  return (isStart ? ( <div className="flex flex-col items-center bg-gray-800">
+  <h2 className="text-white text-3xl py-4">Score: {who} </h2> {/* Add a score section */}
+  <h3 className="text-white text-2xl py-2">{gameScore.player1.displayname} vs {gameScore.player2.displayname}</h3> {/* Add player names */}
+  <div className="flex justify-center items-center h-screen">
+    <canvas
+      ref={canvasRef}
+      className="border-2 border-white"
+      width={width}
+      height={height}
+    />
+  </div>
 </div>) : 
    ( <div>
       <h1>Matchmaking Game</h1>

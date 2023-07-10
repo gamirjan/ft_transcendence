@@ -138,7 +138,8 @@ import { log } from 'console';
         player.tray = tray * player.room.options.display.height;
         console.log("hrightttttttttt->",player.room.options.display.height);
         console.log(player.tray)
-        RoomService.emit(player.room, 'tray', this.roomService.getUserFromSocket(player.socket).id, tray);
+        var pos = player.room.players[0].user.id == this.roomService.getUserFromSocket(player.socket).id ? "left" : "right";
+        RoomService.emit(player.room, 'tray', pos, this.roomService.getUserFromSocket(player.socket).id, tray);
       } catch {}
     }
   }
