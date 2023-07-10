@@ -1,6 +1,11 @@
-import { Controller, Get, NotFoundException, Param, Res } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Res, Post, Body, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './user.service';
 import { User } from './user.entity';
+import { diskStorage } from 'multer';
+import { v4 as uuid } from 'uuid';
+import { extname } from 'path';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
@@ -30,5 +35,38 @@ export class UsersController {
       throw new NotFoundException(`User with displayName '${displayName}' not found`);
     }
     return res.send(user);
+  }
+
+  @Post('avatar')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './app/photos',
+      filename: (req, file, callback) => {
+        const uniqueName = uuid();
+        const fileExtension = extname(file.originalname);
+        callback(null, `${uniqueName}${fileExtension}`);
+      },
+    }),
+  }))
+  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Res() res): Promise<void> {
+    console.log("starting");
+    if (!file) {
+      res.status(400).send('No avatar found in the request');
+    } else {
+      const avatarUrl = `/app/photos/${file.filename}`;
+      res.status(200).send({ avatarUrl });
+    }
   }
 }
