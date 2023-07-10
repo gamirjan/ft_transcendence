@@ -52,7 +52,7 @@ export class UsersController {
   })
   @UseInterceptors(FileInterceptor('image', {
     storage: diskStorage({
-      destination: './app/photos',
+      destination: './photos',
       filename: (req, file, callback) => {
         const uniqueName = uuid();
         const fileExtension = extname(file.originalname);
