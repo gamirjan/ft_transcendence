@@ -41,6 +41,14 @@ export class User {
   })
   email: string | null;
 
+  @Column("character varying", {
+    name: "twofactoremail",
+    nullable: true,
+    unique: true,
+    length: 50,
+  })
+  twofactoremail: string | null;
+
   @Column("text", { name: "avatarurl", nullable: true })
   avatarurl: string | null;
 

@@ -11,7 +11,7 @@ const Contacts = () => {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUsers, setSelectedUsers] = useState([]);
 
   useEffect(() => {
     if (user == null) navigate("/", { replace: true });
@@ -30,7 +30,7 @@ const Contacts = () => {
           console.log(error);
         });
     }
-  }, []);
+  }, [selectedUsers, contacts]);
 
   const handleSearch =  (e) => {
     const query = e.target.value;
@@ -49,7 +49,7 @@ const Contacts = () => {
         return response.json();
       })
       .then((data) => {
-       console.log(data);
+      //  console.log(data);
        
         const regex = new RegExp('.*' + e.target.value + '.*');
 
@@ -63,19 +63,33 @@ const Contacts = () => {
   };
 
   const handleSelectUser = (user) => {
-    setSelectedUser(user);
+    let users = selectedUsers
+    if (users.includes(user)) {
+      setSelectedUsers(users.filter((selected) => selected !== user));
+    } else {
+      setSelectedUsers([...users, user]);
+    }
+    // let selected = selectedUsers
+    // if (!selected.find((sel)=>sel.id == user.id))
+    // {
+    //   selectedUsers.push(user);
+    //   setSelectedUsers(selected);
+    // }
+    // console.log(selectedUsers);
+    
   };
 
   const handleAddFriend = () => {
-    console.log(selectedUser);
+    console.log(selectedUsers);
     
-    if (selectedUser) {
+    selectedUsers && selectedUsers.map((selectedUser)=>{
+
       const requestOptions = {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({userid:user.id,friendid:selectedUser.id}),
       };
-
+  
       fetch(`${ip}:7000/friends`, requestOptions)
         .then((response) => {
           if (!response.ok) {
@@ -88,7 +102,7 @@ const Contacts = () => {
           console.log(error);
           alert(" the user is already in your friend list just refresh the page")
         });
-    }
+    })
   };
 
   const filteredContacts = contacts.filter((elem) =>
@@ -134,12 +148,24 @@ const Contacts = () => {
         <div className="mt-4">
           <h2 className="text-lg font-bold mb-2">Suggestions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {suggestions.map((user) => (
+            {suggestions.map((user) => { 
+              // const found = selectedUsers.find((sel)=>sel.id === user.id);
+              
+              // console.log(found ? "true" : "false");
+              // if (found)
+                // console.log("ids: ", found.id, user.id);
+              // else
+                // console.log("ids1: ", user.id);
+                
+              
+              return(
               <div
                 key={user.id}
-                className={`bg-white shadow rounded-md p-4 flex items-center ${
-                  user === selectedUser ? "border-2 border-blue-500" : ""
-                }`}
+                className={`bg-white shadow rounded-md p-4 flex items-center hover:cursor-pointer  
+                ${
+                    selectedUsers.includes(user) ? " border-2 border-red-500" : " border-2 border-blue-500"
+                  }
+                `}
                 onClick={() => handleSelectUser(user)}
               >
                 <img
@@ -154,9 +180,8 @@ const Contacts = () => {
                   </p>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
-          {selectedUser && (
             <div className="mt-4">
               <button
                 className="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2"
@@ -165,7 +190,6 @@ const Contacts = () => {
                 Add Friend
               </button>
             </div>
-          )}
         </div>
       </div>
     </Layout>

@@ -143,13 +143,34 @@ const ChannelComponent = () =>{
   }
 
 
-   
+    const handleSelectChannel= (e) => {
+      setSelectedChannel(e);
+      setSelectedChannelName(selectedChannel.channelname);
+    }
+    useEffect(() => {
+        const onConnect = () => {
+            console.log("CONNECTED")
+        }
 
+        const onOnline = (p) => {
+            console.log("ONLINE", p)
+            // fetchMessages();
+            
+            // console.log();
+            
+        }
+
+        socket.on("connect", onConnect);        
+        socket.on("online", onOnline);
+
+        socket.emit("online", { msg: "Hello, world!!!" })
+        
    
 
     socket.on('participants', (count)=> {
         console.log("online :" + count);
     });
+    }, [])
 
   return (
     <Layout>

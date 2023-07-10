@@ -16,23 +16,38 @@ export class UserPinsService {
     private usersRepository: Repository<User>
   ) {}
 
-  async SetPin(userid: number, pin: string): Promise<void> {
-    const userpin = new UserPin();
-    userpin.userid = userid;
-    userpin.pin = await bcrypt.hash(pin, 10);
-    if (!await this.userPinsRepository.save(userpin))
-        throw new InternalServerErrorException();
+  async EnableTF(userid: number, email: string): Promise<void> {
+    if (!email)
+      throw new BadRequestException("email field is required");
     var user = await this.usersRepository.findOne({ where: { id: userid } });
+    if (!user || user.istwofactorenabled === true)
+      throw new BadRequestException();
     user.istwofactorenabled = true;
+    user.twofactoremail = email;
     if (!await this.usersRepository.save(user))
         throw new InternalServerErrorException();
   }
 
+  async DisableTF(userid: number): Promise<void> {
+    var user = await this.usersRepository.findOne({ where: { id: userid } });
+    if (!user || user.istwofactorenabled === false)
+      throw new BadRequestException();
+    user.istwofactorenabled = false;
+    if (!await this.usersRepository.save(user))
+      throw new InternalServerErrorException();
+  }
+
   async CheckPin(userid: number, pin: string): Promise<object> {
-    var user = await this.userPinsRepository.findOne({ where: { userid: userid } });
-    if (!user)
+    var userPin = await this.userPinsRepository.findOne({ where: { userid: userid } });
+    if (!userPin)
         throw new BadRequestException();
-    return { verify: await bcrypt.compare(pin, user.pin) }
+    const isverified = await bcrypt.compare(pin, userPin.pin);
+    if (isverified)
+    {
+      if (!await this.userPinsRepository.remove(userPin))
+        throw new InternalServerErrorException();
+    }
+    return { verify: isverified }
   }
 
   async ChangePin(userid: number, oldpin: string, newpin: string): Promise<void> {
