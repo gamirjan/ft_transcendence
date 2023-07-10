@@ -160,9 +160,15 @@ export class RoomService {
    // console.log("00000000000000000000000000000000");
     
     //console.log(await json.toString(room));
-    console.log("rooooooooooooooooommmm",room,this.rooms.values());
+    //console.log("rooooooooooooooooommmm",room,this.rooms.values());
+    //console.log(room.players[0].user.id);
+    console.log("000000000000000000000000000000000000000000000000000000000");
     
-     socket.emit('room',room.code);
+    console.log(room.code,room.players[0].user.id)
+    console.log("000000000000000000000000000000000000000000000000000000000");
+
+     socket.emit('room',room.code,room.players[0].user.id);
+     
   }
 
   getPlayer(userId: number): Player {
