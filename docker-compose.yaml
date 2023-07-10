@@ -11,6 +11,8 @@ services:
       - "5500:5500"
     volumes:
     - /var/www/photos:/app/photos
+    restart: on-failure
+    
   frontend:
     container_name: frontend 
     build:
