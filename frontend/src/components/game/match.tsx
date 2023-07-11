@@ -11,11 +11,12 @@ const MatchmakingGame = () => {
   const [socket,setSocket] = useState(io());
 
     const user = useSelector((state: any) => state.user);
-
     if(isSocket == false)
     {
 
-      setSocket( io(`${ip}:4000/pong`,{auth:{
+      setSocket( io(`${ip}:4000/pong`,{
+        autoConnect:false,
+        auth:{
           headers:{
               'USER':JSON.stringify({user})
           },
@@ -25,6 +26,16 @@ const MatchmakingGame = () => {
       }));
       setIsSoket(true);
     }
+    useEffect(()=>{
+      socket.connect()
+      socket.on("connection",(data)=>{
+        console.log("conectionnnnn");
+      })
+      return()=>{
+        socket.disconnect();
+      }
+    },[])
+
      // Update the server URL and namespace
      let width  =600;
      let height = 300;
@@ -212,6 +223,7 @@ useEffect(() => {
     socket.on('ball', (data)=>{
       setBallX(((data.x * width)/1920))
       setBallY(((data.y * height)/1080))
+
       // setTimeout(()=>{},2)
       // update();
       //drawBall(ctx, ballX, ballY);
@@ -268,6 +280,7 @@ useEffect(() => {
      console.log("socket closed");
      socket.off('room')
      socket.off('ball')
+     socket.disconnect();
      socket.close()
      //socket.off();
       //socket.disconnect();
