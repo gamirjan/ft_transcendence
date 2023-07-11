@@ -59,7 +59,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
-      <Route path="/twofactor" element={<TwoFactorProvider />} />
+      <Route path="/twofactor" element={<TwoFactorProvider user={user}/>} />
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}

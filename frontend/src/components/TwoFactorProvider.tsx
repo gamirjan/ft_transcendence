@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 import { useNavigate } from "react-router-dom";
 import { Formik } from "formik";
 import Modal from "./Chat/Modal";
 import "./styles/signin.css"
+import { setUser } from "./redux";
 
-const TwoFactorProvider = () => {
-  const user = useSelector((state: AppState) => state.user);
+const TwoFactorProvider = ({user}) => {
+  console.log(user, "===================================");
+  
+  const currentUser = useSelector((state: AppState) => state.user);
+  const dispatch = useDispatch();
   const [otpPin, setOtpPin] = useState("");
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -16,7 +20,7 @@ const TwoFactorProvider = () => {
   const [errMSG, setErrMSG] = useState("");
   // const [open, setOpen] = useState(false);
 
-  const checkTwoFactor = async () => {
+  const checkTwoFactor = () => {
     if (!user) return;
     const params = {
       userid: user.id,
@@ -37,6 +41,12 @@ const TwoFactorProvider = () => {
         return response.json();
       })
       .then((data) => {
+        if (data.verify)
+        {
+          dispatch(setUser(null));
+          dispatch(setUser(user));
+          navigate("/home", {replace: true});
+        }
         setVerified(data.verify);
         if (!data.verify) setErrMSG("One time password is wrong. Try again.");
         console.log("enabled?");
@@ -49,7 +59,7 @@ const TwoFactorProvider = () => {
         console.log(error);
       });
   };
-  const generateOtp = async () => {
+  const generateOtp = () => {
     if (!user) return;
     const params = {
       userid: user.id,
@@ -88,8 +98,12 @@ const TwoFactorProvider = () => {
     setOtpPin("");
   };
   useEffect(() => {
-    if (!user.istwofactorenabled || verified)
+    console.log("eqa string", user);
+    
+    if (currentUser || verified)
+    {
       navigate("/home", { replace: true });
+    }
     // console.log("tfo", user);
   });
   return (
@@ -110,7 +124,7 @@ const TwoFactorProvider = () => {
       <div
         className={`fixed top-[30%] border-2 shadow rounded-xl border-[#181818] left-[30%] max-h-xl max-w-xl ${
           open ? "h-[50%]" : "h-1/4"
-        } w-1/2 flex flex-col backdrop-blur-md h-full pt-10 w-50`}
+        } w-1/2 flex flex-col backdrop-blur-md  pt-10 w-50`}
       >
         <div className="flex flex-col h-full">
           <div className="flex self-center min-h-[10%] text-red-900">

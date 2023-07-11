@@ -450,8 +450,8 @@ const ChannelComponent = () => {
                           <div className="flex flex-col">
                             <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
                               {selectedUser.channelname ??
-                                user.displayname ??
-                                "Saved Message"}
+                                (user ? user.displayname :
+                                "Saved Message")}
                             </div>
                           </div>
                         </div>
@@ -475,7 +475,7 @@ const ChannelComponent = () => {
                             >
                               {messages &&
                                 messages.map((msg, key) =>
-                                  user.id != msg.user.id ? (
+                                  (user && user.id != msg.user.id) ? (
                                     <div
                                       className="flex justify-start mb-4"
                                       key={key}

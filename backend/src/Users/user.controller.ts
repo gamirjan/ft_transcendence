@@ -1,4 +1,4 @@
-import { Controller, Get, NotFoundException, Param, Res, Post, Body, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Res, Post, Body, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './user.service';
 import { User } from './user.entity';
@@ -48,6 +48,9 @@ export class UsersController {
           type: 'string',
           format: 'binary',
         },
+        userid: {
+          type: 'number',
+        },
       },
     },
   })
@@ -61,9 +64,15 @@ export class UsersController {
       },
     }),
   }))
-  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Res() res): Promise<void> {
-    console.log("starting");
-    if (!file) {
+  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Body() payload: { userid: number }, @Res() res): Promise<void> {
+    const { userid } = payload;
+    var user = await this.usersService.findOneByPKId(userid);
+    if (!user)
+    {
+      throw new BadRequestException("User not found!");
+    }
+    if (!file)
+    {
       res.status(400).send('No avatar found in the request');
     } else {
       const avatarUrl = `${ip}:7000/img/${file.filename}`;

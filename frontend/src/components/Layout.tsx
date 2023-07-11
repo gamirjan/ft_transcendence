@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 import { setUser, store } from "./redux";
 import { useDispatch } from "react-redux";
 const del = () => {};
-const Layout = ({ children, auth = true }) => {
+const Layout = ({ children, auth = true, scrollable = false }) => {
   return (
-    <div className="flex flex-col h-full overflow-hidden min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full">
+    <div className={`flex flex-col h-full ${!scrollable ? "overflow-hidden" : ""} min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}>
       <div className="flex flex-row sticky shadow bg-[#212121] top-0 z-[2] border-2 border-[#0f0f0f] justify-around py-3">
         <div className="flex text-2xl font-bold  self-start">My App</div>
         <div className={`flex flex-row justify-between text-2xl space-x-4 font-bold self-end ${!auth ? "hidden" : ""}`}>
