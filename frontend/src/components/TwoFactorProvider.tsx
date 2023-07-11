@@ -110,7 +110,7 @@ const TwoFactorProvider = () => {
       <div
         className={`fixed top-[30%] border-2 shadow rounded-xl border-[#181818] left-[30%] max-h-xl max-w-xl ${
           open ? "h-[50%]" : "h-1/4"
-        } w-1/2 flex flex-col backdrop-blur-md h-full pt-10 w-50`}
+        } w-1/2 flex flex-col backdrop-blur-md  pt-10 w-50`}
       >
         <div className="flex flex-col h-full">
           <div className="flex self-center min-h-[10%] text-red-900">
