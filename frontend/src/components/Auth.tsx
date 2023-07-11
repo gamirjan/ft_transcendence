@@ -5,16 +5,17 @@ import { ip } from './utils/ip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux';
 import LayoutProvider from './LayoutProvider';
+import TwoFactorProvider from './TwoFactorProvider';
 const Auth = () => {
 
-	console.log("heeeellloooo");
+	// console.log("heeeellloooo");
 	
 	const user = useSelector((state: AppState) => state.user);
-	// const [loged, setLoged] = useState(null);
+	const [currentUser, setCurrentUser] = useState(user);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const login = async (params:object) => {
-		
+	const login = (params:object) => {
+	
 		fetch(`${ip}:7000/auth/google/login`, {
 		method: 'POST',
 		// mode:'no-cors',
@@ -33,14 +34,22 @@ const Auth = () => {
 		.then(data => {
 			
 			console.log("daddadadada",data);
+			if (!data.istwofactorenabled)
+			{
+				dispatch(setUser(null));
+				dispatch(setUser(data));
+				navigate("/home",{replace:true})
+			}
+			else
+			{
+				// console.log("hell: ", loged);
+				
+				console.log("okkk");
+				setCurrentUser(data);
+				// navigate("/twofactor", {replace: true, state: data})
+
+			}
 			// setLoged(data);
-			// console.log("hell: ", loged);
-			
-			dispatch(setUser(null));
-			dispatch(setUser(data));
-			console.log("okkk");
-			
-			navigate("/twofactor",{replace:true})
 			
 			// Process the response data received from the server
 			console.log(data);
@@ -88,18 +97,18 @@ const Auth = () => {
 			// Handle any errors
 			console.log(error);
 		  });
-	  }, []);
+	  }, [currentUser]);
   return (
-	<LayoutProvider auth={false}>
-		<div>Auth Google</div>
-	</LayoutProvider>
-	// <Link   
-	// 		to="/thegame"
-	// 		className="relative bg-[#212121] hover:bg-[#181818] text-[#aaaaaa] font-bold py-5 px-16 rounded-2xl">
-	// 			The Game Play
-	// </Link>
-	// <div>Audddddth ggoogle</div>
-  )
+	<>
+	{(currentUser && currentUser.istwofactorenabled) ? (
+		<TwoFactorProvider user={currentUser} />
+	) : (
+		
+		<LayoutProvider auth={false}>
+			<div>Auth Google</div>
+		</LayoutProvider>
+	)} 
+	</>)
 }
 
 export default Auth

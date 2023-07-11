@@ -131,7 +131,7 @@ const Profile = () => {
     // },[])
     // console.log("useerrrrprofile",store.getState());
     return (
-        <Layout>
+        <Layout scrollable={true}>
         <div className="">
             <div x-data="{ openSettings: false }" className="absolute right-12 mt-4 rounded">
             </div>

@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from './redux';
 import env from "react-dotenv"
 import { ip } from './utils/ip';
+import { useState } from 'react';
+import TwoFactorProvider from './TwoFactorProvider';
 import LayoutProvider from './LayoutProvider';
 
 const Ft_Auth = () => {
@@ -12,13 +14,14 @@ const Ft_Auth = () => {
 	
 	const navigate = useNavigate();
 	const user = useSelector((state: AppState) => state.user);
-	  const dispatch = useDispatch();
-	const login = async (params:object) => {
+	const [currentUser, setCurrentUser] = useState(user);
+	const dispatch = useDispatch();
+	const login = (params:object) => {
 		console.log("email =>",params.email);
 		
 		console.log("loggginnn",ip);
 		
-		if(!user)
+		if(!currentUser)
 		{
 					fetch(`${ip}:7000/auth/42/login`, {
 			method: 'POST',
@@ -33,9 +36,16 @@ const Ft_Auth = () => {
 				return response.json()})
 			.then(data => {
 				console.log("ddddddddd",data);
-				//   dispatch(setUser(null));
-				  dispatch(setUser(data));
-				navigate("/home",{replace:true})
+				if (!data.istwofactorenabled)
+				{
+					dispatch(setUser(null));
+					dispatch(setUser(data));
+					navigate("/home",{replace:true})
+				}
+				else
+				{
+					setCurrentUser(data);
+				}
 				// Process the response data received from the server
 				console.log(data);
 			})
@@ -87,10 +97,16 @@ const Ft_Auth = () => {
 		  });
 	  }, []);
   return (
-	<LayoutProvider auth={false}>
-		<div>Auth 42</div>
-
-	</LayoutProvider>
+	<>
+	{(currentUser && currentUser.istwofactorenabled) ? (
+		<TwoFactorProvider user={currentUser} />
+	) : (
+		
+		<LayoutProvider auth={false}>
+			<div>Auth 42</div>
+		</LayoutProvider>
+	)} 
+	</>
   )
 }
 

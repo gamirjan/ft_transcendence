@@ -9,7 +9,8 @@ import { IMassage } from "../utils";
 import CollapsibleMenu from "./CollapsibleMenu";
 import Layout from "../Layout";
 import ChatInfo from "./ChatInfo";
-function Chat() {
+import LayoutProvider from "../LayoutProvider";
+const Chat = ()=> {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
@@ -22,6 +23,10 @@ function Chat() {
   const [sended, setSended] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
 
+  useEffect(()=>{
+  if (!user) navigate("/", { replace: true });
+
+  })
   const toggleSidebar = () => {
     Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
   };
@@ -63,8 +68,6 @@ function Chat() {
     };
   }, []);
   const fetchMessages = () => {
-    if (user == null) navigate("/", { replace: true });
-    else {
       fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
         .then((response) => {
           if (!response.ok) {
@@ -80,12 +83,11 @@ function Chat() {
         .catch((error) => {
           console.log(error);
         });
-    }
   };
 
   useEffect(() => {
-    if (user == null) navigate("/", { replace: true });
-    else {
+    if (user)
+    {
       fetch(`${ip}:7000/friends/${user.id}`)
         .then((response) => {
           if (!response.ok) {
@@ -203,8 +205,8 @@ function Chat() {
   });
 
   return (
-    <Layout>
-      <div className="flex flex-col h-full bg-[#181818]">
+    <LayoutProvider>
+      <div className="flex flex-col h-full bg-[#181818]" style={{zIndex: 100, minWidth: "1000px"}}>
         <div className={`container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] rounded-lg`}>
           {/* <!-- headaer --> */}
 
@@ -334,7 +336,7 @@ function Chat() {
                     <div className="flex px-4 pt-3 rounded-xl justify-start">
                       <div className="flex flex-col">
                         <img
-                          src={selectedUser.avatarurl ?? user.avatarurl}
+                          src={selectedUser.avatarurl ?? (user ? user.avatarurl : "Photo")}
                           className="object-cover h-10 self-center w-10 rounded-full"
                           alt=""
                         />
@@ -342,8 +344,8 @@ function Chat() {
                       <div className="flex flex-col">
                         <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
                           {selectedUser.displayname ??
-                            user.displayname ??
-                            "Saved Message"}
+                            (user ? user.displayname :
+                            "Saved Message")}
                         </div>
                       </div>
                     </div>
@@ -368,7 +370,7 @@ function Chat() {
                       <div className="w-1/2 flex flex-col" style={{height: "70vh"}}>
                         {messages &&
                           messages.map((msg, key) =>
-                            user.id != msg.senderid ? (
+                            (user && (user.id != msg.senderid)) ? (
                               <div 
                                 className="flex justify-start mb-4"
                                 key={key}
@@ -468,7 +470,7 @@ function Chat() {
           </div>
         </div>
       </div>
-    </Layout>
+    </LayoutProvider>
     // </div>
   );
 }

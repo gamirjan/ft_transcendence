@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import photo from "@SRC_DIR/assets/images/pong.jpg";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./styles/signin.css"; // Import the CSS file for styling
 import { ip } from "./utils/ip";
+import { useSelector } from "react-redux";
 
 /*import React from 'react';
 
@@ -52,13 +53,20 @@ function getUrl() {
 }
 
 const SignIn = () => {
+  const user = useSelector(state=>state.user)
+  const navigate = useNavigate();
   const handleGoogleSignIn = () => {
+    // if (user) navigate("/home", {replace: true});
     // Implement the logic for Google sign-in here
   };
 
-  const handle42SignIn = () => {
-    // Implement the logic for 42 sign-in here
-  };
+  // const handle42SignIn = () => {
+  //   if (user) navigate("/twofactor", {replace: true});
+  //   // Implement the logic for 42 sign-in here
+  // };
+ useEffect(()=>{
+  if (user) navigate("/home", {replace: true});
+ })
   const ft_link =
     process.env.redirect_link ??
     "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ba3aea4480c6fd2f33eb1c38078b70eb56bfc32316df9eed3ce24c731b6b48c1&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fft_auth&response_type=code";
