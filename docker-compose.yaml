@@ -9,6 +9,7 @@ services:
       - "7000:7000"
       - "4000:4000"
       - "5500:5500"
+      - "4001:4001"
     volumes:
     - /var/www/photos:/app/photos
     restart: on-failure
