@@ -30,10 +30,10 @@ export class RoomService {
 
   // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static emit(room: Room, event: string, ...args: any): void {
-    //console.log(room);
+    ////console.log(room);
     
     for (const player of room.players) {
-     // console.log(player);
+     // //console.log(player);
        
       player.socket.emit(event, ...args)};
   }
@@ -60,20 +60,31 @@ export class RoomService {
   }
 
   addQueue(@ConnectedSocket() socket: Socket, data : any): void {
-    ////console.log("sock",socket);
+    //console.log("sock",socket);
+    
+    
     
     for (const socket1 of this.queue)
     {
-      //console.log("sockets==>",socket1.data);
+      console.log("==================================");
+      console.log( "dataaa=>" ,this.getUserFromSocket(socket1).id,data.data.id);
+      console.log("==================================");
+      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      console.log(this.getUserFromSocket(socket1).id == data.data.id);
+
+      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      
         
-      if (this.getUserFromSocket(socket).id == data.id)
+      if (this.getUserFromSocket(socket1).id == data.data.id)
       {
-        //console.log("artenn kaaaaaaaaaaaaaaaaaaaa");
+        console.log("artenn kaaaaaaaaaaaaaaaaaaaa");
         return
       };
     }
-    if (this.getPlayer(data.id))
+    if (this.getPlayer(data.data.id))
     {
+      console.log("finnndd");
+      
       return
     };
     
@@ -83,18 +94,18 @@ export class RoomService {
     const room: Room = this.createRoom();
     while (this.queue.length && room.players.length < 2)
     {
-      //console.log(this.queue.length);
-      //console.log(room.players.length);
+      ////console.log(this.queue.length);
+      ////console.log(room.players.length);
       this.joinRoom(this.queue.shift(), room);
-      //console.log("rooooooooooooooooooom",room);
-      //console.log(this.queue.length);
-      //console.log(room.players.length);
+      ////console.log("rooooooooooooooooooom",room);
+      ////console.log(this.queue.length);
+      ////console.log(room.players.length);
     }
       
   }
 
   createRoom(code: string = null): Room {
-    //console.log("afsfsgsg");
+    ////console.log("afsfsgsg");
     
     while (!code) {
       const length = 10;
@@ -113,14 +124,14 @@ export class RoomService {
       speed: 0,
     };
     this.rooms.set(code, room);
-   console.log("roooom",this.rooms.values(),"\nroom size =>",this.rooms.size);
+   //console.log("roooom",this.rooms.values(),"\nroom size =>",this.rooms.size);
     
     return room;
   }
 
   joinRoom(socket: Socket, room: Room): void {
 
-    //console.log("aaaaaaaaaaaaaaa",room.state)
+    ////console.log("aaaaaaaaaaaaaaa",room.state)
     if (room.state == State.WAITING) {
       const player: Player = {
         socket,
@@ -131,21 +142,21 @@ export class RoomService {
         score: 0,
       };
       room.players.push(player);
-      //console.log("lengthhhhhh", room.players.length);
-      //console.log("___________----------------------_____________________------------------");
-      //console.log("finisheeeeedddd");
+      ////console.log("lengthhhhhh", room.players.length);
+      ////console.log("___________----------------------_____________________------------------");
+      ////console.log("finisheeeeedddd");
       if (room.players.length == 2) 
       {
-        //console.log("mtelaaaaaaaaaaaaa");
+        ////console.log("mtelaaaaaaaaaaaaa");
         room.state = State.STARTING
       };
     } 
     else {
-      //console.log("elsssseeeeeeee");
-      //console.log("elsssseeeeeeee");
-      //console.log("elsssseeeeeeee");
-      //console.log("elsssseeeeeeee");
-      //console.log("elsssseeeeeeee");
+      ////console.log("elsssseeeeeeee");
+      ////console.log("elsssseeeeeeee");
+      ////console.log("elsssseeeeeeee");
+      ////console.log("elsssseeeeeeee");
+      ////console.log("elsssseeeeeeee");
       
       if (!room.spectators) room.spectators = [];
       room.spectators.push(socket);
@@ -157,32 +168,32 @@ export class RoomService {
       );
     }
     //const rm = JSON.stringify(room);
-   // console.log("00000000000000000000000000000000");
+   // //console.log("00000000000000000000000000000000");
     
-    //console.log(await json.toString(room));
-    //console.log("rooooooooooooooooommmm",room,this.rooms.values());
-    //console.log(room.players[0].user.id);
-    console.log("000000000000000000000000000000000000000000000000000000000");
+    ////console.log(await json.toString(room));
+    ////console.log("rooooooooooooooooommmm",room,this.rooms.values());
+    ////console.log(room.players[0].user.id);
+    //console.log("000000000000000000000000000000000000000000000000000000000");
     
-    console.log(room.code,room.players[0].user.id)
-    console.log("000000000000000000000000000000000000000000000000000000000");
+    //console.log(room.code,room.players[0].user.id)
+    //console.log("000000000000000000000000000000000000000000000000000000000");
 
      socket.emit('room',room.code,room.players[0].user.id);
      
   }
 
   getPlayer(userId: number): Player {
-    ////console.log("userid =>",userId);
-    //console.log("room size",this.rooms);
+    //////console.log("userid =>",userId);
+    ////console.log("room size",this.rooms);
     
     for (const room of this.rooms.values())
       for (const player of room.players)
       {
-        ////console.log("plplplpll",player);
-       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
+        //////console.log("plplplpll",player);
+       // //console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
         
-       // console.log(player);
-       // console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
+       // //console.log(player);
+       // //console.log("'''''''''''''''''''''''''''''''''''''''''''''''ddddddddddddddddddddddddddddddddddddd'''''''");
         
         if (player.user.id == userId) return player;
       }
@@ -224,14 +235,14 @@ export class RoomService {
 
   startCalc(room: Room): void {
     //if (room.state != State.COUNTDOWN) return;
-    console.log(";;;;;;;;;;;;;;;;;;;;;;;start calc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+    //console.log(";;;;;;;;;;;;;;;;;;;;;;;start calc ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
     
 
     this.pong.resetBall(room);
     room.state = State.INGAME;
   }
 
-  @Interval(1000 / 60)
+  @Interval(1000 / 40)
   loop(): void {
 
     for (const room of this.rooms.values())
@@ -272,7 +283,7 @@ export class RoomService {
   }
 
   getUserFromSocket(socket: Socket) {
-    //console.log(socket.handshake);
+    ////console.log(socket.handshake);
     
     return JSON.parse(socket.handshake.auth.headers.USER).user;
   }

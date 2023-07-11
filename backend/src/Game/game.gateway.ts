@@ -36,10 +36,10 @@ import { log } from 'console';
     async handleConnection(@ConnectedSocket() client: Socket): Promise<any> {
       try
       {
-       // console.log("dddddddddddddddd");
-        console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
+       // //console.log("dddddddddddddddd");
+        //console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
         const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
-        //console.log(user);
+        ////console.log(user);
         
         if (!user) return client.disconnect();
         
@@ -51,7 +51,7 @@ import { log } from 'console';
     async handleDisconnect(@ConnectedSocket() client: Socket): Promise<any> {
       try {
         
-        console.log("disconected",JSON.parse(client.handshake.auth.headers.USER).user.id);
+        //console.log("disconected",JSON.parse(client.handshake.auth.headers.USER).user.id);
         
         if (!this.roomService.getUserFromSocket(client)) return;
   
@@ -66,10 +66,10 @@ import { log } from 'console';
       try {
         
         if (!data) return;
-        //console.log(client);
-        //console.log(data.data.id);
+        ////console.log(client);
+        ////console.log(data.data.id);
         
-       //console.log("opoooooooooooooooooooooooooooo", client);
+       ////console.log("opoooooooooooooooooooooooooooo", client);
         this.roomService.addQueue(client,data);
       } catch {}
     }
@@ -81,12 +81,27 @@ import { log } from 'console';
   
         let room: Room = this.roomService.getRoom(code);
         if (!room) room = this.roomService.createRoom(code);
-        console.log("room emit",room);
+        //console.log("room emit",room);
         
         this.roomService.joinRoom(client, room);
       } catch {}
     }
-  
+
+  @SubscribeMessage('chat')
+  handleChat(@ConnectedSocket() client:Socket,message?:string,code?:string):void{
+    try {
+      if(!message || !code) return;
+      const user = this.roomService.getUserFromSocket(client)
+      if (!user) return;
+
+      let room: Room = this.roomService.getRoom(code);
+      if (!room) return;
+      //console.log("room emit",room,{userid:user.id,username:user.displayname,mes:message});
+      
+      RoomService.emit(room,'chat',{userid:user.id,username:user.displayname,mes:message})
+    } catch {}
+  }
+
     @SubscribeMessage('ready')
     onReady(@ConnectedSocket() client: Socket, input: Input): void {
       try {
@@ -103,21 +118,21 @@ import { log } from 'console';
     @SubscribeMessage('start')
     onStart(@ConnectedSocket() client: Socket): void {
       try {
-        // console.log("stratt");
+        // //console.log("stratt");
         
-        //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{start game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]\n",client.handshake.auth.headers);
-       // console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{end scope of game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
+        ////console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{start game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]\n",client.handshake.auth.headers);
+       // //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{end scope of game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
         
         
         const user = this.roomService.getUserFromSocket(client);
         if (!user) return;
-        // console.log("game has been started", user.id);
+        // //console.log("game has been started", user.id);
         
         const player: Player = this.roomService.getPlayer(user.id);
-        // console.log("havayi______------------------____",player,player.room);
+        // //console.log("havayi______------------------____",player,player.room);
         
         if (!player || !player.room) return;
-        //console.log("pplplplplll--------------------------------------------------------p");
+        ////console.log("pplplplplll--------------------------------------------------------p");
         
         this.roomService.startCalc(player.room);
       } catch {}
@@ -128,16 +143,16 @@ import { log } from 'console';
       try {
         
         const user = this.roomService.getUserFromSocket(client);
-        //console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy",user);
+        ////console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy",user);
         if (!user) return;
         
         const player: Player = this.roomService.getPlayer(user.id);
         if (!player) return;
-        console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy", tray);
+        //console.log("trraaaaayyyyyyyyyyyyyyyyyyyyyy", tray);
   
         player.tray = tray * player.room.options.display.height;
-        console.log("hrightttttttttt->",player.room.options.display.height);
-        console.log(player.tray)
+        //console.log("hrightttttttttt->",player.room.options.display.height);
+        //console.log(player.tray)
         var pos = player.room.players[0].user.id == this.roomService.getUserFromSocket(player.socket).id ? "left" : "right";
         RoomService.emit(player.room, 'tray', pos, this.roomService.getUserFromSocket(player.socket).id, tray);
       } catch {}
