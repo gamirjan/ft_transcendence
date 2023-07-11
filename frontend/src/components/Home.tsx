@@ -1,45 +1,37 @@
-import React, { useEffect } from "react"
-import { Link, useNavigate } from 'react-router-dom'
-import photo from '@SRC_DIR/assets/images/pong.jpg';
-import Layout  from "./Layout";
+import React, { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import photo from "@SRC_DIR/assets/images/pong.jpg";
+import Layout from "./Layout";
 import { useSelector } from "react-redux";
-import { Store } from "redux";
-import { store} from "./redux";
-import { io } from "socket.io-client";
-import { getUserState, ip } from "./utils/ip";
-
-
+import { store } from "./redux";
+import LayoutProvider from "./LayoutProvider";
 
 const Home = () => {
-    
-    const user = useSelector((state: AppState) => state.user);
-    const navigate = useNavigate();
-    useEffect(()=>{
-        if(user == null)
-        {
-            navigate("/",{replace:true}) 
-            //return null
-        }
-    },[])
-    console.log("useerrrr",store.getState());
-   
-    return (
-    <Layout>
-        <div className="mt-8 relative w-full h-screen">
-             {/* <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" /> */}
-             <img className="absolute w-full h-full object-cover mix-blend-overlay" style={{opacity: "0.5", marginTop: "-32px"}}   src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/129325364/original/afaddcb9d7dfaaf5bff7ef04101935814665ac16/design-an-attractive-background-for-your-website.png" alt="" />
+  const user = useSelector((state: AppState) => state.user);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (user == null) {
+      navigate("/", { replace: true });
+      //return null
+    }
+  }, []);
+  console.log("useerrrr", store.getState());
 
-                <div className="grid place-items-center h-screen inline-flax">
-                    <Link   
-                         to="/thegame"
-                         className="relative bg-[#212121] hover:bg-[#181818] text-[#aaaaaa] font-bold py-5 px-16 rounded-2xl">
-                              The Game Play
-                    </Link>
 
-            </div>
-        </div>
-    </Layout>
-    )
-}
+  return (
+    <LayoutProvider>
+      <div className=" eye shape-1 text-slate-700 text-3xl flex justify-center items-center"></div>
+      <div className="eye shape-2 text-slate-800 text-3xl flex justify-center items-center"></div>
+      <div className=" eye shape-3 text-slate-700 text-3xl flex justify-center items-center"></div>
+      <div className="eye shape-4 text-slate-800 text-3xl flex justify-center items-center"></div>
+      <Link
+        to="/thegame"
+        className="relative bg-[#212121] hover:bg-[#181818] text-[#aaaaaa] font-bold py-5 px-16 rounded-2xl"
+      >
+        The Game Play
+      </Link>
+    </LayoutProvider>
+  );
+};
 
 export default Home;

@@ -21,6 +21,10 @@ import GameOne from "./components/game/OneVOne";
 import Pong from "./components/game/OneVOne";
 import PingPong from "./components/game/OneVOne";
 import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
+
+import { Link } from "react-router-dom";
+import TwoFactorProvider from "./components/TwoFactorProvider";
+
 import Pin from "./components/2Fa/Pin";
 import Game from "./components/game/gametest";
 import MatchmakingGame from "./components/game/match";
@@ -28,6 +32,7 @@ import GameMatch from "./components/game/Pong";
 import { Store } from "redux";
 import { io } from "socket.io-client";
 import { ip } from "./components/utils/ip";
+
 
 
 function App() {
@@ -54,10 +59,11 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
+      <Route path="/twofactor" element={<TwoFactorProvider />} />
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
-      <Route path="/chat1" element={<ChatComponent/>}/>
+      {/* <Route path="/chat1" element={<ChatComponent/>}/> */}
       <Route path="/main" element={<PingPong width={800} height={300}/>}/>
       <Route path="/pin" element={<Pin/>}/>
       <Route path="/gg" element={<MatchmakingGame/>}/>

@@ -5,15 +5,15 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from './redux';
 import env from "react-dotenv"
 import { ip } from './utils/ip';
+import LayoutProvider from './LayoutProvider';
 
-function Ft_Auth() {
+const Ft_Auth = () => {
 	console.log("ft_auttthhththt");
 	
 	const navigate = useNavigate();
 	const user = useSelector((state: AppState) => state.user);
 	  const dispatch = useDispatch();
-	async function login(params:object) 
-	{
+	const login = async (params:object) => {
 		console.log("email =>",params.email);
 		
 		console.log("loggginnn",ip);
@@ -87,7 +87,10 @@ function Ft_Auth() {
 		  });
 	  }, []);
   return (
-	<div>Auth 42</div>
+	<LayoutProvider auth={false}>
+		<div>Auth 42</div>
+
+	</LayoutProvider>
   )
 }
 
