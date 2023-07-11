@@ -3,4 +3,5 @@ WORKDIR /app
 RUN mkdir -p /app/photos
 COPY . .
 RUN npm i --force
-CMD ["npm", "run", "build"]
+RUN npm run build
+CMD ["npm", "start"]
