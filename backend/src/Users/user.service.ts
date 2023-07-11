@@ -20,6 +20,13 @@ export class UsersService {
   
   async findOneByDisplayName(displayName: string): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { displayname: displayName } });
+  }
 
+  async findOneByPKId(userid: number): Promise<User | undefined> {
+    return await this.userRepository.findOne({ where: { id: userid } });
+  }
+
+  async updateUserInfo(user: User): Promise<User> {
+    return await this.userRepository.save(user);
   }
 }
