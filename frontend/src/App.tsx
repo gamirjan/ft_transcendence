@@ -21,7 +21,8 @@ import GameOne from "./components/game/OneVOne";
 import Pong from "./components/game/OneVOne";
 import PingPong from "./components/game/OneVOne";
 import CollapsibleMenu from "./components/Chat/CollapsibleMenu";
-
+import { Link } from "react-router-dom";
+import TwoFactorProvider from "./components/TwoFactorProvider";
 
 function App() {
 
@@ -37,10 +38,11 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             {/* <Route path="/landing" element={<LandingPage />} /> */}
 			<Route path="/auth" element={<Auth/>}/>
+      <Route path="/twofactor" element={<TwoFactorProvider />} />
       <Route path="/ft_auth" element={<Ft_Auth/>}/>
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
-      <Route path="/chat1" element={<ChatComponent/>}/>
+      {/* <Route path="/chat1" element={<ChatComponent/>}/> */}
       <Route path="/main" element={<PingPong width={800} height={300}/>}/>
           </Routes>
        </Router>

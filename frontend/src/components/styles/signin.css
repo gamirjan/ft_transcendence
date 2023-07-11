@@ -7,7 +7,7 @@
 }
 .signin {
   display: grid;
-  background-color:rgb(139, 126, 126);
+  background-color:#181818;
   place-items: center;
   height: 100vh;
 }
@@ -15,21 +15,145 @@
   width: 100px;
   height: 100px;
 }
-.shape {
+.shape, .eye {
+  padding: 3rem;
   height: 200px;
   width: 200px;
   position: absolute;
   border-radius: 50%;
 }
+
+@keyframes circleLeft {
+  0% {
+    right: 100%;
+    background: radial-gradient(circle at 70% 80%, white, black 20px, #00325c 3%, #000 60%, black 100%);
+    }
+  50% {
+    right: 0%;
+    background: radial-gradient(circle at 40% 80%, white, black 20px, #00325c 3%, #000 60%, black 100%);
+  }
+  100% {
+    right: 100%;
+    background: radial-gradient(circle at 70% 80%, white, black 20px, #00325c 3%, #000 60%, black 100%);
+  }
+}
+@keyframes circleRight {
+  0% {
+    right: 0%;
+    background: radial-gradient(circle at 20% 20%, white, black 20px, #dd1212 3%, #000 60%, black 100%);
+    }
+  50% {
+    right: 100%;
+    background: radial-gradient(circle at 70% 20%, white, black 20px, #dd1212 3%, #000 60%, black 100%);
+  }
+  100% {
+    right: 0%;
+    background: radial-gradient(circle at 20% 20%, white, black 20px, #dd1212 3%, #000 60%, black 100%);
+  }
+}
+
+@keyframes circleUp {
+  0% {
+    bottom: 0%;
+    background: radial-gradient(circle at 80% 20%, white, black 20px, #0e2b09 3%, #000 60%, black 100%);
+  }
+  50% {
+    bottom: 100%;
+    background: radial-gradient(circle at 80% 70%, white, black 20px, #0e2b09 3%, #000 60%, black 100%);
+  }
+  100% {
+    bottom: 0%;
+    background: radial-gradient(circle at 80% 20%, white, black 20px, #0e2b09 3%, #000 60%, black 100%);
+  }
+}
+
+@keyframes circleDown {
+  0% {
+    bottom: 100%;
+    background: radial-gradient(circle at 20% 70%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  }
+  50% {
+    bottom: 0%;
+    background: radial-gradient(circle at 20% 20%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  }
+  100% {
+    bottom: 100%;
+    background: radial-gradient(circle at 20% 70%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  }
+}
+@keyframes circleDownIntra {
+  0% {
+    bottom: 100%;
+    background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
+  }
+  50% {
+    bottom: 0%;
+    background: radial-gradient(circle at 7% 55%, white 1px, #3e2eb0 3%, #2e2e90 60%, black 100%)
+  }
+  100% {
+    bottom: 100%;
+    background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
+  }
+}
+
+.shape:last-child:hover
+{
+  background: radial-gradient(circle at 7% 55%, white 1px, #3e2eb0 3%, #2e2e90 60%, black 100%)
+}
+.shape:first-child:hover
+{
+  background: radial-gradient(circle at 5% 55%, white 1px, #9e0f37 3%, #290711 60%, black 100%)
+}
+.shape:last-child
+{
+  right: 50%;
+  bottom: 45%;
+  background: radial-gradient(circle at 65% 15%, white 1px, aqua 3%, darkblue 60%, aqua 100%);
+  /* animation: circleDownIntra 7s infinite; */
+}
+
 .shape:first-child {
-  background: linear-gradient(#1845ad, #23a2f6);
+  background: radial-gradient(circle at 90% 33%, white 1px, #5c0000 3%, #230505 60%, black 100%);
   right: 35%;
   bottom: 15%;
 }
-.shape:last-child {
-  background: linear-gradient(to right, #ff512f, #f09819);
-  left: 35%;
+.shape:nth-child(2), .shape-1 {
+
+  background: radial-gradient(circle at 60% 80%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  right: 75%;
+  bottom: 70%;
+  animation: circleLeft 7s infinite;
 }
+.shape-1
+{
+  right: 100%;
+  /* animation-delay: .9s; */
+}
+.shape-3
+{
+  background: radial-gradient(circle at 40% 10%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  right: 0%;
+  bottom: 10%;
+  animation: circleRight 7s infinite;
+  /* animation-delay: .3s; */
+  
+}
+.shape:nth-child(3), .shape-2 {
+
+  background: radial-gradient(circle at 80% 45%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  right: 75%;
+  bottom: 10%;
+  animation: circleUp 7s infinite;
+}
+.shape-4 {
+
+  background: radial-gradient(circle at 80% 45%, white, black 20px, #fff 3%, #000 60%, black 100%);
+  right: 15%;
+  bottom: 75%;
+  animation: circleDown 7s infinite;
+}
+
+
 .signin > form {
   max-width: 600px;
   background-color: rgba(255, 255, 255, 0.13);
@@ -89,8 +213,8 @@ button {
 .social div {
   background: red;
   width: 45%;
-  border-radius: 3px;
-  padding: 0.5em 1em;
+  border-radius: 9999px;
+  padding: 2em;
   background-color: rgba(255, 255, 255, 0.27);
   color: #eaf0fb;
   text-align: center;

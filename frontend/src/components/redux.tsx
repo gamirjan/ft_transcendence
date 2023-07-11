@@ -10,6 +10,7 @@ interface AppState {
     id_42: number;
     displayname: string;
     email: string | null;
+    twofactoremail: string | null;
     avatarurl: string;
     isverified: boolean | null;
     istwofactorenabled: boolean;
