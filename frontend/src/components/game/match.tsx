@@ -345,17 +345,27 @@ useEffect(() => {
     />
   </div>
 </div></>) : 
-   ( <div>
-      <h1>Matchmaking Game</h1>
-      {user && (
-        <div>
-          <p>Connected as: {user.username}</p>
-          {!room && (
-            <div>
-              <input type="text" value={inputValue} onChange={handleInputChange} />
-              <button onClick={joinRoom}>Join Room</button>
-              <button onClick={joinQueue}>Join Queue</button>
-            </div>
+   ( <div className="bg-grey h-full text-white p-4 flex flex-col items-center">
+   <h1 className="text-4xl mb-8 text-darkBlue">Matchmaking Game</h1>
+   {user && (
+     <div className="flex flex-col items-center">
+     <p className="text-red-500 mb-5">Connected as: {user.displayname}</p>
+     {!room && (
+          <div className="flex flex-col items-center">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={handleInputChange}
+              className="border border-red-500 bg-darkGrey px-4 py-2 rounded-md text-white mb-4 focus:outline-none focus:border-red-600 transition-colors duration-300"
+              placeholder="Enter your name"
+            />
+            <button
+              onClick={joinQueue}
+              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md transition-colors duration-300"
+            >
+              Join Queue
+            </button>
+          </div>
           )}
           {room && (
             <div>

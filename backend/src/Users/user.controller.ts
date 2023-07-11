@@ -6,6 +6,7 @@ import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
 import { extname } from 'path';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
@@ -65,7 +66,7 @@ export class UsersController {
     if (!file) {
       res.status(400).send('No avatar found in the request');
     } else {
-      const avatarUrl = `/app/photos/${file.filename}`;
+      const avatarUrl = `${ip}:7000/img/${file.filename}`;
       res.status(200).send({ avatarUrl });
     }
   }

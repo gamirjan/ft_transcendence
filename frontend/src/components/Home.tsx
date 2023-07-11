@@ -25,7 +25,7 @@ const Home = () => {
       <div className=" eye shape-3 text-slate-700 text-3xl flex justify-center items-center"></div>
       <div className="eye shape-4 text-slate-800 text-3xl flex justify-center items-center"></div>
       <Link
-        to="/thegame"
+        to="/gg"
         className="relative bg-[#212121] hover:bg-[#181818] text-[#aaaaaa] font-bold py-5 px-16 rounded-2xl"
       >
         The Game Play
