@@ -48,6 +48,7 @@ import { UserPinsModule } from './TwoFactor/Userpins.module';
 import { GameServer } from './Game/Game.server';
 import { GameModule } from './Game/game.module';
 import { GameService } from './GameHistory/GameHistory.service';
+import { ImageController } from './ImageService/image.controller';
 
 
 
@@ -73,7 +74,7 @@ import { GameService } from './GameHistory/GameHistory.service';
     ],
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
-      ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController],
+      ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController, ImageController],
     providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService,GameServer],
   })
   export class AppModule {
