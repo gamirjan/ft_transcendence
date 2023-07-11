@@ -97,6 +97,8 @@
     "react-dropdown": "^1.11.0",
     "react-ga": "^3.3.1",
     "react-modal": "^3.16.1",
+    "react-pin": "^0.1.6",
+    "react-pin-input-hook": "^1.0.9",
     "react-pong": "file:react-pong",
     "react-redux": "^8.1.1",
     "react-reveal": "^1.2.2",

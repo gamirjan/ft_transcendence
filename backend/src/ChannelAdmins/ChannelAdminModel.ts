@@ -1,7 +1,11 @@
 import { User } from "../Users/user.entity";
+import { ApiProperty } from "@nestjs/swagger";
 
-export interface ChannelAdminModel {
-    id: number;
-    channelid: number,
+export class ChannelAdminModel {
+    @ApiProperty()
+    id: number
+    @ApiProperty()
+    channelid: number
+    @ApiProperty()
     admin: User
 }

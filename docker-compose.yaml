@@ -9,6 +9,10 @@ services:
       - "7000:7000"
       - "4000:4000"
       - "5500:5500"
+    volumes:
+    - /var/www/photos:/app/photos
+    restart: on-failure
+    
   frontend:
     container_name: frontend 
     build:
@@ -18,4 +22,6 @@ services:
       - "3000:3000"
     depends_on:
       - backend
-      
+    volumes:
+    - /var/www/photos:/app/photos
+    restart: on-failure

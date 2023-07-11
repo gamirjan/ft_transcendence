@@ -26,7 +26,7 @@ export class ChannelsService {
   ) {}
 
   async getAllChannels(): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { channeltype: In([1, 2]) } })
+    return this.channelRepository.find({ where: { channeltype: In([1, 2]) }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner"] });
   }
 
   async getChannelUsers(id: number): Promise<User[]> {
@@ -45,47 +45,60 @@ export class ChannelsService {
   } 
 
   async getChannelById(id: number): Promise<Channel> {
-    return this.channelRepository.findOne({ where: { id: id } });
+    return this.channelRepository.findOne({ where: { id: id }, relations: ["owner", "channelusers.user", "channeladmins.admin"], select: ["id", "channelname", "channeltype", "owner"] });
   }
 
   async getUserChannels(userId: number): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { owner: { id: userId } } });
+    return this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner"] });
   }
 
   async getUserJoinedChannels(userId: number): Promise<UserJoinedChannelDto[]> {
-    var ownedChannels = (await this.channelRepository.find({ where: { owner: { id: userId } } }))
+    var ownedChannels = (await this.channelRepository.find({ where: { owner: { id: userId } }, relations: ["owner"],
+                                                             select: ["id", "channelname", "channeltype", "owner"] }))
                                                      .map(c => ({
                                                       role: ChannelRole.OWNER,
                                                       channel: c
                                                     }));
-    var adminedChannels = (await this.channelAdminsRepository.find({ where: { adminid: userId }, relations: ['channel'] }))
+    var adminedChannels = (await this.channelAdminsRepository.find({ where: { adminid: userId }, relations: ["channel", "channel.owner"] }))
                                                              .map(ca => ({
                                                               role: ChannelRole.ADMIN,
                                                               channel: ca.channel
                                                              }));
-    var regularChannels = (await this.channelUsersRepository.find({ where: { userid: userId }, relations: ['channel'] }))
+    var regularChannels = (await this.channelUsersRepository.find({ where: { userid: userId }, relations: ["channel", "channel.owner"] }))
                                                             .map(cu => ({
                                                               role: ChannelRole.USER,
                                                               channel: cu.channel
                                                             }));
-    return ownedChannels.concat(adminedChannels, regularChannels);
+    var result = ownedChannels.concat(adminedChannels, regularChannels);
+    result.forEach(uc => uc.channel.password = null);
+    return result;
   }
 
   async createChannel(createChannelDto: CreateChannelDto): Promise<Channel> {
-    if (createChannelDto.channelType == "2" && (createChannelDto.password == null || createChannelDto.password == ''))
+    if (createChannelDto.channelType == "2" && (!createChannelDto.password || createChannelDto.password == ''))
     {
       throw new BadRequestException("You must provide a password");
     }
-    if (createChannelDto.channelType != "2" && (createChannelDto.password != null && createChannelDto.password != ''))
+    if (createChannelDto.channelType != "2" && (createChannelDto.password && createChannelDto.password != ''))
     {
       throw new BadRequestException("You can't set a password on public or invite-only channels");
+    }
+    if (createChannelDto.channelName == '' || !createChannelDto.channelName)
+    {
+      throw new BadRequestException("You must provide channel name");
+    }
+    if (!createChannelDto.owner)
+    {
+      throw new BadRequestException("Owner object can't be null");
     }
     const channel = new Channel();
     channel.channeltype = createChannelDto.channelType;
     channel.channelname = createChannelDto.channelName;
     channel.owner = createChannelDto.owner;
     channel.password = createChannelDto.channelType == "2" ? await bcrypt.hash(createChannelDto.password, 10) : null;
-    return await this.channelRepository.save(channel);
+    var r = await this.channelRepository.save(channel);
+    r.password = null;
+    return r;
   }
 
   async joinUserToPublicChannel(joinPublicChannelDto: JoinPublicChannelDto): Promise<ChannelUser> {

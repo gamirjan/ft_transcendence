@@ -24,4 +24,9 @@ export class AddUsersService {
     user.losses = createUserDto.losses;
     return this.userRepository.save(user);
   }
+
+  async delete(id: string): Promise<void> {
+    // Implement your deletion logic here
+    await this.userRepository.delete(id);
+  }
 }

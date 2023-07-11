@@ -20,8 +20,8 @@ export class UserPinsService {
     if (!email)
       throw new BadRequestException("email field is required");
     var user = await this.usersRepository.findOne({ where: { id: userid } });
-    if (!user || user.istwofactorenabled === true)
-      throw new BadRequestException();
+    if (!user)
+      throw new BadRequestException("User not found");
     user.istwofactorenabled = true;
     user.twofactoremail = email;
     if (!await this.usersRepository.save(user))

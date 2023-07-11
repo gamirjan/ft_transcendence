@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import photo from "@SRC_DIR/assets/images/pong.jpg";
 import Layout from "./Layout";
 import { useSelector } from "react-redux";
-import { Store } from "redux";
 import { store } from "./redux";
 import LayoutProvider from "./LayoutProvider";
 
@@ -17,6 +16,7 @@ const Home = () => {
     }
   }, []);
   console.log("useerrrr", store.getState());
+
 
   return (
     <LayoutProvider>

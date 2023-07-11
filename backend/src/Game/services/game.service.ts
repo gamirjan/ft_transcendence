@@ -17,6 +17,10 @@ export class PongService {
     room.ball.position.y = y;
     room.ball.velocity = PongService.velocity((room.speed *= 1.01), radian);
     RoomService.emit(room, 'ball', room.ball.position);
+    ////console.log("''''''''''''''''''''''''''poss'''''''''''''''''''''''''''");
+    ////console.log(room.ball.position.x,room.ball.position.y);
+    
+    
   }
 
   resetBall(room: Room, left?: boolean): void {
@@ -34,6 +38,8 @@ export class PongService {
   }
 
   update(room: Room): any {
+    ////console.log("::::::::::::::::::::update:::::::::::::::::::::::::::::::::::::");
+    let goal;
     const next = {
       x: room.ball.position.x + room.ball.velocity.x,
       y: room.ball.position.y + room.ball.velocity.y,
@@ -43,13 +49,27 @@ export class PongService {
       next.x - room.options.ball.radius < 0 ||
       next.x + room.options.ball.radius > room.options.display.width
     ) {
-      if (next.x > room.options.ball.radius) ++room.players[0].score;
-      else ++room.players[1].score;
+      if (next.x > room.options.ball.radius) 
+      {
+        goal = room.players[0].user.displayname
+        ++room.players[0].score;
+      }
+      else 
+      {
+        goal = room.players[1].user.displayname
+        ++room.players[1].score
+      };
+
+      //console.log(room.players[0].user.id,room.players[1].user.id);
 
       RoomService.emit(
         room,
         'score',
-        room.players.map((player) => player.score),
+        {
+          who:goal,
+          player1: { id: room.players[0].user.id, displayname: room.players[0].user.displayname, score: room.players[0].score,position:"left" },
+          player2: { id: room.players[1].user.id, displayname: room.players[1].user.displayname, score: room.players[1].score,position:"right" }
+        },
       );
 
       for (const player of room.players)

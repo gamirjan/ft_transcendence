@@ -12,7 +12,6 @@ import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
 import { User } from "../Users/user.entity";
 import { ChannelUser} from "../ChannelUsers/ChannelUser.entity";
 
-@Index("channels_channelname_key", ["channelname"], { unique: true })
 @Index("channels_pkey", ["id"], { unique: true })
 @Entity("channels", { schema: "public" })
 export class Channel {
@@ -29,7 +28,7 @@ export class Channel {
   @Column("character varying", {
     name: "channelname",
     nullable: true,
-    unique: true,
+    unique: false,
     length: 50,
   })
   channelname: string | null;
