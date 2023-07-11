@@ -41,6 +41,9 @@ export class Channel {
   })
   password: string | null;
 
+  @Column("text", { name: "channelpictureurl", nullable: true })
+  channelpictureurl: string | null;
+
   @OneToMany(() => ChannelAdmin, (channeladmins) => channeladmins.channel)
   channeladmins: ChannelAdmin[];
 
