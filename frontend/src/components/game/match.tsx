@@ -28,7 +28,7 @@ const MatchmakingGame = () => {
      // Update the server URL and namespace
      let width  =1000;
      let height = 600;
-     let paddleHeight = (200 * height) / 1080;
+     let paddleHeight = ((200 * height) / 1080) /2;
   const [room, setRoom] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
   const [gameDetails, setGameDetails] = useState(null);
@@ -41,6 +41,8 @@ const MatchmakingGame = () => {
   const [paddleRightY,setpaddleRightY] = useState(height / 2 - paddleHeight / 2)
   const [who,setWho]  = useState("0 : 0")
   const [pos,setPos] = useState("");
+  const [trayy,setTrayy] = useState(0.500)
+  const [chat,setChat] = useState([]);
 
  // let ballY = height / 2;
   const navigate = useNavigate();
@@ -50,7 +52,7 @@ const MatchmakingGame = () => {
   let animationFrameId: number;
   let paddleSpeed = 8;
   let ballSpeed = 4;
-  let paddleWidth = 25;
+  let paddleWidth = 20;
   let ballRadius = 10;
   //let paddleLeftY = height / 2 - paddleHeight / 2;
   //let paddleRightY = height / 2 - paddleHeight / 2;
@@ -82,21 +84,56 @@ const MatchmakingGame = () => {
     if (y < top || y > (bottom - (paddleHeight))) return;
     
     const tray = (y - top) / canvas.clientHeight;
+    // console.log(tray);
+    
     socket.emit('tray', tray);
-   // document.removeEventListener('mousemove',handleMouseMove);
     };
 
     const movePaddle = (deltaY: number) => {
       if (pos === 'left') {
         const newPaddleLeftY = paddleLeftY + 1  / 1080;
-          socket.emit('tray',newPaddleLeftY);
+          socket.emit('tray',0.25 );
       } else {
         const newPaddleRightY = paddleRightY + 1 / 1080;
         
-          socket.emit('tray',newPaddleRightY);
+          socket.emit('tray',0.25);
           //paddleRightY = newPaddleRightY;
       }
     };
+    function handleKeyDown(event) {
+      if (event.key === 'w') {
+        calculateTray('up');
+        // console.log(trayy);
+        socket.emit('tray', calculateTray('up'));
+      } else if (event.key === 's') {
+        calculateTray('down');
+        // console.log(trayy);
+        socket.emit('tray', calculateTray('down'));
+      }
+    }
+    
+    function handleKeyUp(event) {
+      if (event.key === 'w' || event.key === 's') {
+        //setTrayy(0);
+        socket.emit('tray', trayy);
+      }
+    }
+    
+    function calculateTray(direction) {
+      const trayIncrement = 0.1;
+      const trayMax = 1;
+      const trayMin = 0;
+      let tray = 0;
+      if (direction === 'up') {
+       tray =  Math.max(trayMin, trayy - trayIncrement);
+      } else if (direction === 'down') {
+        tray =  Math.min(trayMax, tray + trayIncrement);
+      }
+    // console.log("call=>",tray);
+    
+      return tray;
+    }
+
 useEffect(()=>{
   setTimeout(() => {
     
@@ -123,60 +160,18 @@ useEffect(()=>{
     drawBall(ctx, ballX, ballY);
   },100);
 
-},[ballX,ballY,paddleLeftY,paddleRightY]);
+},[ballX,ballY,paddleLeftY,paddleRightY,trayy]);
 
-
-  // useEffect(() => {
-
-  //   let count = 3;
-  //   const intervalID = setInterval(() => {
-  //     console.log(ballX,ballY);
-      
-  //     const canvas = canvasRef.current;
-  //     if (!canvas) return;
-  //     const ctx = canvas.getContext('2d');
-  //     if (!ctx) return;
-    
-  //     // Clear canvas
-  //     ctx.clearRect(0, 0, width, height);
-    
-  //     // Draw border
-  //     ctx.strokeStyle = 'white';
-  //     ctx.lineWidth = 2;
-  //     ctx.strokeRect(0, 0, width, height);
-    
-  //     // Draw paddles
-  //     drawPaddle(ctx, 0, paddleLeftY);
-  //     drawPaddle(ctx, width - paddleWidth, paddleRightY);
-    
-  //     // Draw ball
-  //     drawBall(ctx, ballX, ballY);
-  //     clearInterval(intervalID);
-      
-  //     console.log("starttttttttttttttttt");
-      
-  //    // socket.emit('start');
-  //     //document.addEventListener('Ar')
-  //     //socket.emit('tray',800);
-  //   }, 100);
-
-  //   return () => {
-  //       //document.removeEventListener('mousemove', handleMouseMove);
-  //     //socket.disconnect();
-  //   };
-  // }, [[ballX,ballY,paddleLeftY,paddleRightY]]);
-
-
-  useEffect(() => {
+useEffect(() => {
     socket.onopen = function(event) {
-        console.log('Connected to the server');
+        // console.log('Connected to the server');
         
         // Send data to the server
         const data = user;
         socket.send(data);
       };
     socket.on('connect', () => {
-      console.log('Connected to server',);
+       console.log('Connected to server');
     });
 
     socket.on('info', (data) => {
@@ -205,44 +200,13 @@ useEffect(()=>{
     });
 
     socket.on('game:start', (details) => {
-        console.log("starttt",details);
+        // console.log("starttt",details);
       setGameStarted(true);
       setGameDetails(details);
     });
         // Set up keyboard listeners
-        window.addEventListener('keydown', (e) => {
-          switch (e.code) {
-            case 'ArrowUp':
-              movePaddle( -paddleSpeed);
-              break;
-            case 'ArrowDown':
-              movePaddle( paddleSpeed);
-              break;
-            case 'KeyW':
-              movePaddle( -paddleSpeed);
-              break;
-            case 'KeyS':
-              movePaddle( paddleSpeed);
-              break;
-            default:
-              break;
-          }
-        });
-    
-        window.addEventListener('keyup', (e) => {
-          switch (e.code) {
-            case 'ArrowUp':
-            case 'ArrowDown':
-              movePaddle( 0);
-              break;
-            case 'KeyW':
-            case 'KeyS':
-              movePaddle( 0);
-              break;
-            default:
-              break;
-          }
-        });
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
     document.addEventListener('mousemove',handleMouseMove);
     document.addEventListener('mouseleave',handleMouseMove);
     socket.on('ball', (data)=>{
@@ -256,7 +220,7 @@ useEffect(()=>{
       
     });
     socket.on('score', (data)=>{
-      console.log("score=>",data);
+      // console.log("score=>",data);
       setGameScore(data)
       if(data.player1.id == user.id)
         setWho( data.player1.score + " : " + data.player2.score);
@@ -266,7 +230,8 @@ useEffect(()=>{
       
     });
     socket.on('tray', (pos,id, tray)=>{
-      console.log("trey=>",id, pos,tray);
+      //console.log("trey=>",id, pos,tray);
+      setTrayy(tray);
       if(pos === "left")
         setpaddleLeftY(tray * height);
       else
@@ -289,10 +254,17 @@ useEffect(()=>{
       socket.close();
       
     });
+    socket.on('chat',(data)=>{
+      console.log("chatt",data);
+      
+    })
 
     return () => {
      //rs
      document.removeEventListener('mousemove',handleMouseMove)
+     document.removeEventListener('keydown', handleKeyDown);
+     document.removeEventListener('keyup', handleKeyUp);
+    document.removeEventListener('mouseleave',handleMouseMove);
      console.log("socket closed");
      socket.off('room')
      socket.off('ball')
@@ -325,10 +297,33 @@ useEffect(()=>{
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-  return (isStart ? ( <div className="flex flex-col items-center bg-gray-800">
+  return (isStart ? ( 
+  <>
+ 
+
+  <div className="flex flex-col items-center bg-gray-800">
   <h2 className="text-white text-3xl py-4">Score: {who} </h2> {/* Add a score section */}
   <h3 className="text-white text-2xl py-2">{gameScore.player1.displayname} vs {gameScore.player2.displayname}</h3> {/* Add player names */}
   <div className="flex justify-center items-center h-screen">
+  <div className="flex flex-col h-screen">
+   Chat Content 
+  <div className="flex-1 p-4 overflow-y-auto">
+     Chat Messages 
+    <div className="space-y-4">
+    </div>
+  </div>
+
+   Chat Input and Send Button 
+  <div className="p-4 bg-gray-100">
+    <div className="flex space-x-2">
+       Input field 
+      <input type="text" className="flex-1 p-2 border border-gray-300 rounded" placeholder="Type your message"/>
+
+       Send button 
+      <button className="px-4 py-2 text-white bg-blue-500 rounded">Send</button>
+    </div>
+  </div>
+</div>
     <canvas
       ref={canvasRef}
       className="border-2 border-white"
@@ -336,7 +331,7 @@ useEffect(()=>{
       height={height}
     />
   </div>
-</div>) : 
+</div></>) : 
    ( <div>
       <h1>Matchmaking Game</h1>
       {user && (

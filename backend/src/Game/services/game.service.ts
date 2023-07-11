@@ -17,8 +17,8 @@ export class PongService {
     room.ball.position.y = y;
     room.ball.velocity = PongService.velocity((room.speed *= 1.01), radian);
     RoomService.emit(room, 'ball', room.ball.position);
-    //console.log("''''''''''''''''''''''''''poss'''''''''''''''''''''''''''");
-    //console.log(room.ball.position.x,room.ball.position.y);
+    ////console.log("''''''''''''''''''''''''''poss'''''''''''''''''''''''''''");
+    ////console.log(room.ball.position.x,room.ball.position.y);
     
     
   }
@@ -38,7 +38,7 @@ export class PongService {
   }
 
   update(room: Room): any {
-    //console.log("::::::::::::::::::::update:::::::::::::::::::::::::::::::::::::");
+    ////console.log("::::::::::::::::::::update:::::::::::::::::::::::::::::::::::::");
     let goal;
     const next = {
       x: room.ball.position.x + room.ball.velocity.x,
@@ -60,7 +60,7 @@ export class PongService {
         ++room.players[1].score
       };
 
-      console.log(room.players[0].user.id,room.players[1].user.id);
+      //console.log(room.players[0].user.id,room.players[1].user.id);
 
       RoomService.emit(
         room,

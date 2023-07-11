@@ -171,6 +171,8 @@ const PingPong: React.FC<PingPongProps> = ({ width, height }) => {
 
     // Set up keyboard listeners
     window.addEventListener('keydown', (e) => {
+      console.log("dsdsdsdsdsd",e.code);
+      
       switch (e.code) {
         case 'ArrowUp':
           movePaddle('right', -paddleSpeed);
