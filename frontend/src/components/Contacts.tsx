@@ -51,7 +51,7 @@ const Contacts = () => {
       .then((data) => {
       //  console.log(data);
        
-        const regex = new RegExp('.*' + e.target.value + '.*');
+        const regex = new RegExp(".*" + e.target.value + ".*", 'i');
 
          setSuggestions( data.filter((obj)=>{
             return regex.test(obj.displayname)
@@ -75,7 +75,7 @@ const Contacts = () => {
     //   selectedUsers.push(user);
     //   setSelectedUsers(selected);
     // }
-    // console.log(selectedUsers);
+    console.log(selectedUsers);
     
   };
 

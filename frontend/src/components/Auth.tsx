@@ -1,19 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import queryString from 'query-string'
 import { useNavigate } from 'react-router-dom';
 import { ip } from './utils/ip';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux';
-
-function Auth() {
+import LayoutProvider from './LayoutProvider';
+const Auth = () => {
 
 	console.log("heeeellloooo");
 	
 	const user = useSelector((state: AppState) => state.user);
+	// const [loged, setLoged] = useState(null);
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	async function login(params:object) 
-	{
+	const login = async (params:object) => {
 		
 		fetch(`${ip}:7000/auth/google/login`, {
 		method: 'POST',
@@ -33,12 +33,14 @@ function Auth() {
 		.then(data => {
 			
 			console.log("daddadadada",data);
+			// setLoged(data);
+			// console.log("hell: ", loged);
 			
 			dispatch(setUser(null));
 			dispatch(setUser(data));
 			console.log("okkk");
 			
-			navigate("/home",{replace:true})
+			navigate("/twofactor",{replace:true})
 			
 			// Process the response data received from the server
 			console.log(data);
@@ -79,7 +81,6 @@ function Auth() {
 		  .then(data => {
 			// Process the response data
 			console.log("LOGGED IN")
-			
 			login(data);
 			//console.log(data);
 		  })
@@ -89,7 +90,15 @@ function Auth() {
 		  });
 	  }, []);
   return (
-	<div>Audddddth ggoogle</div>
+	<LayoutProvider auth={false}>
+		<div>Auth Google</div>
+	</LayoutProvider>
+	// <Link   
+	// 		to="/thegame"
+	// 		className="relative bg-[#212121] hover:bg-[#181818] text-[#aaaaaa] font-bold py-5 px-16 rounded-2xl">
+	// 			The Game Play
+	// </Link>
+	// <div>Audddddth ggoogle</div>
   )
 }
 
