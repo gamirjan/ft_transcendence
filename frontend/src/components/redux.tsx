@@ -35,6 +35,7 @@ interface SetUserAction extends AnyAction {
   payload: AppState['user'];
 }
 
+
 // Define the reducer function
 function reducer(state = initialState, action: SetUserAction): AppState {
   switch (action.type) {
@@ -57,7 +58,6 @@ const persistConfig = {
 export function setUser(user: AppState['user']): SetUserAction {
   console.log("payload",user);
   return {
-    
     type: SET_USER,
     payload: user,
   };
