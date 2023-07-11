@@ -26,8 +26,8 @@ const MatchmakingGame = () => {
       setIsSoket(true);
     }
      // Update the server URL and namespace
-     let width  =1000;
-     let height = 600;
+     let width  =600;
+     let height = 300;
      let paddleHeight = ((200 * height) / 1080) /2;
   const [room, setRoom] = useState(null);
   const [gameStarted, setGameStarted] = useState(false);
