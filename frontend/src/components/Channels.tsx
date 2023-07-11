@@ -10,6 +10,7 @@ import Layout from "./Layout";
 import { Field, Form, Formik, FormikProps } from "formik";
 import ChatInfo from "./Chat/ChatInfo";
 import ModalBox from "./Chat/ModalBox";
+import LayoutProvider from "./LayoutProvider";
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
@@ -294,23 +295,23 @@ const ChannelComponent = () => {
       });
   };
   return (
-    <Layout>
-      <div className="flex flex-col h-full bg-[#181818]">
-        <div className="container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg">
-          <div className="relative flex flex-col h-full justify-center">
-            {/* <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" /> */}
+    <LayoutProvider>
+      <div className="relative flex flex-col h-full bg-[#181818]">
             <img
               className="absolute w-full h-full object-cover mix-blend-overlay"
               style={{ opacity: "0.5" }}
               src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/129325364/original/afaddcb9d7dfaaf5bff7ef04101935814665ac16/design-an-attractive-background-for-your-website.png"
               alt=""
             />
-            <div className="flex flex-col">
+        <div className="container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg" style={{minWidth: "80vw"}}>
+          <div className=" flex flex-col h-full justify-center">
+            {/* <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" /> */}
+            <div className="flex flex-col h-full">
               <div className="flex flex-row h-full justify-between bg-transparent" style={{zIndex: 1000}}>
                 {/* <!-- chat list --> */}
                 <div className="flex flex-col h-full w-2/5  border-r-2 border-[#0f0f0f]">
                   <div className="bg-[#212121] p-2 z-[4]">
-                    <div className=" flex flex-row justify-between font-semibold text-2xl  px-2">
+                    <div className=" flex flex-row justify-between font-semibold text-2xl px-2">
                       <ModalBox create={true} createChannel={createChannel} />
                     </div>
 
@@ -340,7 +341,7 @@ const ChannelComponent = () => {
                     </div>
                   )}
                   <div
-                    className="flex flex-col px-4 overflow-y-scroll"
+                    className="flex flex-col px-4 bg-[#181818] overflow-y-scroll"
                     style={{ maxHeight: "75vh" }}
                   >
                     {/* <!-- end search compt -->
@@ -364,9 +365,9 @@ const ChannelComponent = () => {
                             }}
                           >
                             <div className="w-1/4">
-                              {elem.channel.avatarurl ? (
+                              {elem.channel.channelpictureurl ? (
                                 <img
-                                  src={elem.channel.avatarurl}
+                                  src={elem.channel.channelpictureurl}
                                   alt=""
                                   srcSet=""
                                   className="object-cover h-12 w-12 rounded-full"
@@ -424,9 +425,9 @@ const ChannelComponent = () => {
                       >
                         <div className="flex px-4 pt-3 rounded-xl justify-start">
                           <div className="flex flex-col py-2">
-                            {selectedUser && selectedUser.avatarurl ? (
+                            {selectedUser && selectedUser.channelpictureurl ? (
                               <img
-                                src={selectedUser.avatarurl}
+                                src={selectedUser.channelpictureurl}
                                 alt=""
                                 srcSet=""
                                 className="object-cover h-12 w-12 rounded-full"
@@ -442,7 +443,7 @@ const ChannelComponent = () => {
                               )
                             )}
                             {/* <img
-                          src={selectedUser.avatarurl ?? user.avatarurl}
+                          src={selectedUser.channelpictureurl ?? user.channelpictureurl}
                           className="object-cover h-10 self-center w-10 rounded-full"
                           alt=""
                         /> */}
@@ -481,7 +482,7 @@ const ChannelComponent = () => {
                                       key={key}
                                     >
                                       <img
-                                        src={msg.user.avatarurl}
+                                        src={msg.user.channelpictureurl}
                                         className="object-cover h-8 w-8 rounded-full"
                                         alt=""
                                       />
@@ -498,7 +499,7 @@ const ChannelComponent = () => {
                                         {msg.message}
                                       </div>
                                       <img
-                                        src={user.avatarurl}
+                                        src={user.channelpictureurl}
                                         className="object-cover h-8 w-8 rounded-full"
                                         alt=""
                                       />
@@ -555,9 +556,9 @@ const ChannelComponent = () => {
                       <div className="flex flex-col">
                         <div className="flex flex-row">
                           <div className="flex flex-row h-auto w-full relative">
-                            {selectedUser && selectedUser.avatarurl ? (
+                            {selectedUser && selectedUser.channelpictureurl ? (
                               <img
-                                src={selectedUser.avatarurl}
+                                src={selectedUser.channelpictureurl}
                                 alt=""
                                 className="object-cover h-52 w-full"
                               />
@@ -594,7 +595,7 @@ const ChannelComponent = () => {
           {/* <!-- Chatting --> */}
         </div>
       </div>
-    </Layout>
+    </LayoutProvider>
     // </div>
   );
 };

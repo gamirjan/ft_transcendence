@@ -10,6 +10,9 @@ import CollapsibleMenu from "./CollapsibleMenu";
 import Layout from "../Layout";
 import ChatInfo from "./ChatInfo";
 import LayoutProvider from "../LayoutProvider";
+import background from "@SRC_DIR/assets/images/chat.jpg";
+
+
 const Chat = ()=> {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
@@ -321,7 +324,10 @@ const Chat = ()=> {
             </div>
             {/* <!-- end chat list --> */}
             {/* <!-- message --> */}
-            <div className={`w-full flex flex-row justify-between bg-[#181818] border-r-2 border-[#0f0f0f] ${!(selectedUser && Object.keys(selectedUser).length != 0) ? "hidden" : ""}`}>
+            <div 
+              className={`w-full flex flex-row justify-between bg-[#181818] border-r-2 border-[#0f0f0f] ${!(selectedUser && Object.keys(selectedUser).length != 0) ? "hidden" : ""}`}
+              style={{backgroundImage: `url(${background})`, backgroundRepeat: "no-repeat", backgroundSize: "100%"}}
+            >
               {/* <div className="flex flex-row"> */}
                 <div className="flex flex-col w-full ">
                   <div className="px-4 flex justify-between items-center z-[1] bg-[#212121] border-b-2 border-[#0f0f0f]">

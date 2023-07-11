@@ -23,7 +23,7 @@ const Modal = ({open, onClose = null, contentClassName = null, className = null,
     return (
         open ? (
         <div 
-            className={`fixed flex justify-center items-center flex-col h-screen w-screen top-0 left-0} ${className ? className :  "bg-[rgba(0,0,0,0.3)]"}`} style={{zIndex: 200}}
+            className={`fixed flex justify-center items-center flex-col h-screen w-screen top-0 left-0 ${className ? className :  "bg-[rgba(0,0,0,0.3)]"}`} style={{zIndex: 200}}
             onClick={handleOutsideClick}
         >
             <div 
