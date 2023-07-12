@@ -11,7 +11,7 @@ const Layout = ({ children, auth = true, scrollable = false }) => {
         !scrollable ? "overflow-hidden" : ""
       } min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}
     >
-      <div className="flex flex-row sticky shadow bg-[#212121] top-0 z-[2] border-b-2 border-[#585858] justify-around py-3">
+      <div className="flex flex-row sticky shadow bg-[#181923] top-0 z-[2] border-b-2 border-[#585858] justify-around py-3">
         <div className="flex text-2xl font-bold justify-center items-center h-full self-start">My App</div>
         <div
           className={`flex flex-row justify-between text-2xl space-x-4 font-bold self-end ${

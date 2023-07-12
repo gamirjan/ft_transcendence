@@ -172,7 +172,7 @@ const Profile = () => {
                                 required
                             />
                             <button 
-                            type="submit"
+                            // type="submit"
                             className="m-2 py-2 text-sm bg-[#212121] hover:bg-[#313131] rounded-xl text-[#aaaaaa]"
                             style={{width:"50%"}}
                             onClick={fetchTFA}
