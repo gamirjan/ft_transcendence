@@ -1,5 +1,6 @@
-import { Controller, Get, Post, Delete, Param, Body, Res } from '@nestjs/common';
+import { Controller, Get, Post, Delete, Param, Body, Res, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { Channel } from './Channel.entity';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ChannelsService } from './Channels.service'; 
 import { CreateChannelDto } from './CreateChannelDto';
 import { User } from '../Users/user.entity';
@@ -8,6 +9,10 @@ import { JoinPublicChannelDto } from './JoinPublicChannelDto';
 import { JoinProtectedChannelDto } from './JoinProtectedChannelDto';
 import { PropertyMetadata } from '@nestjs/core/injector/instance-wrapper';
 import { UserJoinedChannelDto } from './UserJoinedChannelDto';
+import { extname } from 'path';
+import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { diskStorage } from 'multer';
+import { v4 as uuid } from 'uuid';
 
 @Controller('channels')
 export class ChannelsController {
@@ -66,5 +71,51 @@ export class ChannelsController {
   @Delete(':id')
   async deleteChannel(@Param('id') id: number, @Res() res): Promise<void> {
     return res.send(await this.channelService.deleteChannel(id));
-  }  
+  }
+
+  @Post('picture')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        image: {
+          type: 'string',
+          format: 'binary',
+        },
+        channelid: {
+          type: 'number',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('image', {
+    storage: diskStorage({
+      destination: './photos',
+      filename: (req, file, callback) => {
+        const uniqueName = uuid();
+        const fileExtension = extname(file.originalname);
+        callback(null, `${uniqueName}${fileExtension}`);
+      },
+    }),
+  }))
+  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Body() payload: { channelid: number }, @Res() res): Promise<any> {
+    const { channelid } = payload;
+    var channel = await this.channelService.getChannelById(channelid);
+    if (!channel)
+    {
+      throw new BadRequestException("Channel not found!");
+    }
+    if (!file)
+    {
+      res.status(400).send('No avatar found in the request');
+    }
+    else
+    {
+      const pictureurl = `${process.env.IP}:7000/img/${file.filename}`;
+      channel.channelpictureurl = pictureurl;
+      this.channelService.updateChannelInfo(channel);
+      res.status(200).send({ pictureurl });
+    }
+  }
 }
