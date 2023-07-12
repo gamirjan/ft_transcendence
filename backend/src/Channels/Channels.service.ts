@@ -26,7 +26,7 @@ export class ChannelsService {
   ) {}
 
   async getAllChannels(): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { channeltype: In([1, 2]) }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner"] });
+    return this.channelRepository.find({ where: { channeltype: In([1, 2]) }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
   }
 
   async getChannelUsers(id: number): Promise<User[]> {
@@ -45,16 +45,19 @@ export class ChannelsService {
   } 
 
   async getChannelById(id: number): Promise<Channel> {
-    return this.channelRepository.findOne({ where: { id: id }, relations: ["owner", "channelusers.user", "channeladmins.admin"], select: ["id", "channelname", "channeltype", "owner"] });
+    var channel = await this.channelRepository.findOne({ where: { id: id }, relations: ["owner", "channelusers.user", "channeladmins.admin"], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
+    if (!channel)
+      throw new NotFoundException("Channel not found");
+    return channel;
   }
 
   async getUserChannels(userId: number): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner"] });
+    return this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
   }
 
   async getUserJoinedChannels(userId: number): Promise<UserJoinedChannelDto[]> {
     var ownedChannels = (await this.channelRepository.find({ where: { owner: { id: userId } }, relations: ["owner"],
-                                                             select: ["id", "channelname", "channeltype", "owner"] }))
+                                                             select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] }))
                                                      .map(c => ({
                                                       role: ChannelRole.OWNER,
                                                       channel: c
