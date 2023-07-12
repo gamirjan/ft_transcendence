@@ -19,9 +19,9 @@ export class RoomService {
   ) {}
   static options: Option = Object.freeze({
     display: { width: 1920, height: 1080 },
-    ball: { speed: 20, radius: 20 },
+    ball: { speed: 10, radius: 5 },
     tray: { width: 20, height: 200, x: 50 },
-    score: { y: 15, max: 10 },
+    score: { y: 15, max: 5 },
     input: { plan: Plan.DEFAULT, mode: Mode.NONE },
   });
 
@@ -66,24 +66,24 @@ export class RoomService {
     
     for (const socket1 of this.queue)
     {
-      console.log("==================================");
-      console.log( "dataaa=>" ,this.getUserFromSocket(socket1).id,data.data.id);
-      console.log("==================================");
-      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
-      console.log(this.getUserFromSocket(socket1).id == data.data.id);
+      // console.log("==================================");
+      // console.log( "dataaa=>" ,this.getUserFromSocket(socket1).id,data.data.id);
+      // console.log("==================================");
+      // console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      // console.log(this.getUserFromSocket(socket1).id == data.data.id);
 
-      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      // console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
       
         
       if (this.getUserFromSocket(socket1).id == data.data.id)
       {
-        console.log("artenn kaaaaaaaaaaaaaaaaaaaa");
+        console.log("artenn kaaaaaaaaaaaaaaaaaa");
         return
       };
     }
     if (this.getPlayer(data.data.id))
     {
-      console.log("finnndd");
+      console.log("finnnd");
       
       return
     };
@@ -131,7 +131,7 @@ export class RoomService {
 
   joinRoom(socket: Socket, room: Room): void {
 
-    ////console.log("aaaaaaaaaaaaaaa",room.state)
+    console.log("aaaaaaaaaaaaaa------------------------------a")
     if (room.state == State.WAITING) {
       const player: Player = {
         socket,
@@ -173,12 +173,12 @@ export class RoomService {
     ////console.log(await json.toString(room));
     ////console.log("rooooooooooooooooommmm",room,this.rooms.values());
     ////console.log(room.players[0].user.id);
-    //console.log("000000000000000000000000000000000000000000000000000000000");
+    // console.log("000000000000000000000000000000000000000000000000000000000");
     
-    //console.log(room.code,room.players[0].user.id)
-    //console.log("000000000000000000000000000000000000000000000000000000000");
+    // console.log(room.code,room.players[0].user.id,room.code,room.players[1].user.id)
+    // console.log("000000000000000000000000000000000000000000000000000000000");
 
-     socket.emit('room',room.code,room.players[0].user.id);
+     socket.emit('room',room.code);
      
   }
 
@@ -246,7 +246,10 @@ export class RoomService {
   loop(): void {
 
     for (const room of this.rooms.values())
+    {
       if (room.state == State.INGAME) this.pong.update(room);
+      if(room.state == State.END) return;
+    }
   }
 
   async stopGame(room: Room, player: Player): Promise<void> {
@@ -270,6 +273,9 @@ export class RoomService {
     }
 
     RoomService.emit(room, 'stop', player.user);
+    for (const player of room.players) {
+        this.removeSocket(player.socket);
+   }
   }
 
   getRoomForUser(userId: number): Room {

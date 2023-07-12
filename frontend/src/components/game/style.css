@@ -3,8 +3,12 @@ body {
 	margin: 0;
 	color: white;
 	font-family: 'Courier New', Courier, monospace;
-	touch-action: none;
+	touch-action:'cross-slide-y';
 	width: 100%;
+}
+html
+{
+	overflow: hidden !important;
 }
 
 h1 {

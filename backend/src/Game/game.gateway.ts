@@ -16,15 +16,22 @@ import {
   import { Status } from '../enums/status.enum';
   import { Server } from "socket.io";
 import { log } from 'console';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import { Injectable } from '@nestjs/common';
+import { createServer, ServerOptions } from 'http';
+
 // import { log } from 'console';
 
-  @WebSocketGateway(4000,{
-    cors: {
-      origin:"*",
-    },
-    namespace: 'pong',
-  })
-  export class GameGateway {
+@WebSocketGateway(4000,{
+  transports:['polling','websocket'],
+  cors: {
+    origin:"*",
+  },
+  namespace: 'pong',
+})
+
+@Injectable()
+  export class GameGateway{
     constructor(
       private readonly userService: UsersService,
       private readonly roomService: RoomService,
@@ -123,7 +130,6 @@ import { log } from 'console';
         ////console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{start game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]\n",client.handshake.auth.headers);
        // //console.log("{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{end scope of game}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}]");
         
-        
         const user = this.roomService.getUserFromSocket(client);
         if (!user) return;
         // //console.log("game has been started", user.id);
@@ -133,7 +139,7 @@ import { log } from 'console';
         
         if (!player || !player.room) return;
         ////console.log("pplplplplll--------------------------------------------------------p");
-        
+        RoomService.emit(player.room,'playerinfo',player.room.players[0].user,player.room.players[1].user,player.room.options);
         this.roomService.startCalc(player.room);
       } catch {}
     }

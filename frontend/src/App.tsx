@@ -64,10 +64,10 @@ function App() {
       <Route path="/out" element={<Out/>}/>
       {/* <Route path="/thegame" element={<PingPong/>}/> */}
       {/* <Route path="/chat1" element={<ChatComponent/>}/> */}
-      <Route path="/main" element={<PingPong width={800} height={300}/>}/>
+      {/* <Route path="/main" element={<PingPong width={800} height={300}/>}/> */}
       <Route path="/pin" element={<Pin/>}/>
       <Route path="/gg" element={<MatchmakingGame/>}/>
-      <Route path="/aa" element={<GameMatch/>}/>
+      {/* <Route path="/aa" element={<GameMatch/>}/> */}
           </Routes>
        </Router>
   )

@@ -97,184 +97,44 @@ const Profile = () => {
   //     }
   //     else{
 
-  //         fetch(`${ip}:7000/game/user/${user.id}`)
-  //         .then(response => {
-  //             if (!response.ok) {
-  //               throw new Error('Request failed');
-  //             }
-  //             return response.json(); // assuming the server returns JSON data
-  //           })
-  //           .then(data => {
-  //             // Process the response data
-  //             games = data.data
-  //             console.log(games,Object.keys(games).length);
+    //         fetch(`${ip}:7000/game/user/${user.id}`)
+    //         .then(response => {
+    //             if (!response.ok) {
+    //               throw new Error('Request failed');
+    //             }
+    //             return response.json(); // assuming the server returns JSON data
+    //           })
+    //           .then(data => {
+    //             // Process the response data
+    //             games = data.data
+    //             console.log(games,Object.keys(games).length);
+                
+    //             //console.log(data);
+    //           })
+    //           .catch(error => {
+    //             // Handle any errors
+    //             console.log(error);
+    //           });
+    //     }
+    //     /*  const  game_info = get_game_info(user);
+    //     console.log("game info",game_info); */
+    // },[])
+    // console.log("useerrrrprofile",store.getState());
+    return (
+        <LayoutProvider>
+        <div className="">
 
-  //             //console.log(data);
-  //           })
-  //           .catch(error => {
-  //             // Handle any errors
-  //             console.log(error);
-  //           });
-  //     }
-  //     /*  const  game_info = get_game_info(user);
-  //     console.log("game info",game_info); */
-  // },[])
-  // console.log("useerrrrprofile",store.getState());
-  return (
-    <LayoutProvider scrollable={true}>
-      <div className="flex flex-col h-full w-full p-5" style={{ zIndex: 100 }}>
-        <div className="flex flex-row h-full w-full">
-          <div className="flex flex-col h-full w-1/2 shadow">
-            <div className="flex justify-center p-5 items-center relative">
-              <div className="flex flex-col items-center justify-center">
-                <img
-                  src={user.avatarurl}
-                  className="w-40 border-4 border-white rounded-full"
-                />
-                <div className="flex items-center">
-                  <p className="text-2xl">{user.displayname}</p>
-                </div>
-                <p className="text-gray-700">{user.displayname}</p>
-                <div
-                  className="flex flex-row items-center hover:cursor-pointer"
-                  onClick={() => setTFA(!TFA)}
-                >
-                  <div className="flex flex-col justify-center items-center self-start py-3">
-                    <span className="text-lg font-bold p-3">TFA: </span>
-                  </div>
-                  <div className="flex items-center relative w-max cursor-pointer select-none justify-end">
-                    <input
-                      type="checkbox"
-                      checked={TFA}
-                      onChange={(e) => {
-                        setTFA(e.target.value == "on" ? true : false);
-                      }}
-                      className="appearance-none transition-colors m-0 cursor-pointer outline-none w-14 rounded-full focus:outline-none  bg-gray-500 checked:bg-blue-600"
-                    />
-                    <span className="absolute font-medium text-xs uppercase right-1 text-white">
-                      {" "}
-                      OFF{" "}
-                    </span>
-                    <span className="absolute font-medium text-xs uppercase right-8 text-white">
-                      {" "}
-                      ON{" "}
-                    </span>
-                    <span
-                      className={`w-7 h-7 ${
-                        TFA ? "right-0" : "right-[1.8rem]"
-                      } top-[0.1rem] absolute rounded-full transform transition-transform bg-gray-200 `}
-                    />
-                  </div>
-                </div>
-                {TFA ? (
-                  <div className="flex flex-col py-5">
-                    <div className="flex flex-col justify-center items-center">
-                      Two Factor Email
-                    </div>
-                    <div className="flex flex-col">
-                      <input
-                        type="email"
-                        onChange={(e) => {
-                          setTFAEmail(e.target.value);
-                        }}
-                        name="email"
-                        id=""
-                        value={TFAEmail}
-                        placeholder="TFA Email"
-                        className="bg-[#212121] border-2 border-transparent hover:border-2 outline-none hover:border-[#313131] rounded-xl"
-                      />
-                    </div>
-                    <div className="flex flex-col self-end">
-                      <button
-                        className="bg-[#212121] hover:bg-[#313131] p-3 rounded-xl text-[#aaaaaa] w-16"
-                        onClick={fetchTFA}
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                ) : (
-                  <></>
-                )}
-                <p className="text-sm text-gray-500"> Created 7 June 2023</p>
-                <div className="flex p-2 jutify-around">
-                  <button className="mr-2 w-1/2 mt-3 bg-[#212121] hover:bg-gray-400 hover:text-slate-800 text-gray-500 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                    Friend
-                  </button>
-                  <button className="mr-2 w-1/2 mt-3  bg-[#212121] hover:bg-gray-400 hover:text-slate-800  hover:bg-gray-400 text-gray-500 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                    Chat
-                  </button>
-                  <button className="mr-2 w-1/2 mt-3  bg-[#212121] hover:bg-gray-400 hover:text-slate-800 hover:bg-gray-400 text-gray-500 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                    Black
-                  </button>
-                </div>
-              </div>
+        <div className="flex flex-row justify-center">
+            <div className="flex flex-col items-center" style={{width:"30%", height:"100%"}}>
+                <p className="text-sm text-gray-500 py-2"> Created 7 June 2023</p>
+                <img src={user.avatarurl} className="border-4 border-white rounded-full" style={{width:"80%", height:"80%"}}/>   
+                <p className="text-2xl text-center">{user.displayname}</p>
             </div>
-          </div>
-          <div className="flex flex-col">
-                <div className="flex-1 shadow-xl p-8">
-                    <h4 className="text-xl text-[#aaaaaa] font-bold">Personal Info</h4>
-                    <ul className="mt-2 text-gray-700">
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Birthday:</span>
-                            <span className="text-gray-700">2 Nov, 1984</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Mobile:</span>
-                            <span className="text-gray-700">(123) 123-1234</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Email:</span>
-                            <span className="text-gray-700">mikhayil.arzumanyan@gmail.com</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Location:</span>
-                            <span className="text-gray-700">Yerevan, Armenia</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Languages:</span>
-                            <span className="text-gray-700">Arminian, Russian, English</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div className="flex flex-col">
-                <div className="flex-1 shadow-xl p-8">
-                    <h4 className="text-xl text-[#aaaaaa] font-bold">Game Info</h4>
-                    <ul className="mt-2 text-gray-700">
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Total:</span>
-                            <span className="text-gray-700">{Object.keys(games).length}</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Wins:</span>
-                            <span className="text-gray-700">6</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Loses:</span>
-                            <span className="text-gray-700">7</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Win Ratio:</span>
-                            <span className="text-gray-700">47%</span>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        {/* <div className="flex flex-row h-full"></div> */}
-      </div>
-      {/* <div className="flex flex-col h-full p-2 z-[100]">
-            <div className="flex flex-col items-center justify-center">
-                <img src={user.avatarurl} className="w-40 border-4 border-white rounded-full"/>
-                <div className="flex items-center">
-                    <p className="text-2xl">{user.displayname}</p>
-
-                </div>
-                <p className="text-gray-700">{user.displayname}</p>
+            
+            <div className="flex flex-col" style={{width:"30%"}}>
                 <div 
-                    className="flex flex-row items-center hover:cursor-pointer"
+                    className="flex items-center hover:cursor-pointer"
+                    style={{width:"40%"}}
                     onClick={()=>setTFA(!TFA)}
                 >
                     <div className="flex flex-col justify-center items-center self-start py-3">
@@ -295,102 +155,106 @@ const Profile = () => {
 
                     </div>
                 </div>
-                {TFA ? (
-                <div className="flex flex-col py-5">
+
+                {/* {TFA ? ( */}
+                <div className="" style={{width:"80%", height:"50%"}}>
                     <div className="flex flex-col justify-center items-center">Two Factor Email</div>
+                    
                     <div className="flex flex-col">
-                    <input 
-                        type="email"
-                        onChange={(e)=>{setTFAEmail(e.target.value)}}
-                        name="email" id=""
-                        value={TFAEmail}
-                        placeholder="TFA Email"
-                        className="bg-[#212121] border-2 border-transparent hover:border-2 outline-none hover:border-[#313131] rounded-xl"
-                    />
-
-                    </div>
-                    <div className="flex flex-col self-end">
-                        <button 
-                        className="bg-[#212121] hover:bg-[#313131] p-3 rounded-xl text-[#aaaaaa] w-16"
-                        onClick={fetchTFA}
-                    >
-                        Save
-                    </button>
+                        <form>
+                            <input
+                                type="email"
+                                onChange={(e)=>{setTFAEmail(e.target.value)}}
+                                name="email" id=""
+                                value={TFAEmail}
+                                placeholder="TFA Email"
+                                className="bg-[#212121] border-2 border-transparent hover:border-2 outline-none hover:border-[#313131] text-[#aaaaaa] rounded-xl"
+                                required
+                            />
+                            <button 
+                            type="submit"
+                            className="m-2 py-2 text-sm bg-[#212121] hover:bg-[#313131] rounded-xl text-[#aaaaaa]"
+                            style={{width:"50%"}}
+                            onClick={fetchTFA}
+                            >
+                                Save changes
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                ) : (<></>)}
-                <p className="text-sm text-gray-500"> Created 7 June 2023</p>
-                <div className="flex">
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Friend
-                    </button>
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Chat
-                    </button>
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Black
-                    </button>
-                </div>
+                {/* ) : (<></>)} */}
             </div>
+
+            <div className="flex flex-col">
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Friend
+                </button>
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Chat
+                </button>
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Black
+                </button>
+            </div>
+        </div>
 
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 flex justify-center mt-14">
+        <div className="text-xs md:text-sm bg-[#414141] border-2 border-transparent flex-1 rounded-t-lg shadow-xl grid grid-cols-2 flex justify-center mt-10">
             <div className="flex flex-col">
-                <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
-                    <h4 className="text-xl text-[#aaaaaa] font-bold">Personal Info</h4>
-                    <ul className="mt-2 text-gray-700">
+                <div className=" p-8">
+                    <h4 className="text-xs md:text-lg text-white font-bold">Personal Info</h4>
+                    <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Birthday:</span>
-                            <span className="text-gray-700">2 Nov, 1984</span>
+                            <span className="text-gray-300">2 Nov, 1984</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Mobile:</span>
-                            <span className="text-gray-700">(123) 123-1234</span>
+                            <span className="text-gray-300">(123) 123-1234</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Email:</span>
-                            <span className="text-gray-700">mikhayil.arzumanyan@gmail.com</span>
+                            <span className="text-gray-300">mikhayil.arzumanyan@gmail.com</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Location:</span>
-                            <span className="text-gray-700">Yerevan, Armenia</span>
+                            <span className="text-gray-300">Yerevan, Armenia</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Languages:</span>
-                            <span className="text-gray-700">Arminian, Russian, English</span>
+                            <span className="text-gray-300">Arminian, Russian, English</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div className="flex flex-col">
-                <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
-                    <h4 className="text-xl text-[#aaaaaa] font-bold">Game Info</h4>
-                    <ul className="mt-2 text-gray-700">
+                <div className="p-8">
+                    <h4 className="text-xs md:text-lg text-white font-bold">Game Info</h4>
+                    <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Total:</span>
-                            <span className="text-gray-700">{Object.keys(games).length}</span>
+                            <span className="text-gray-300">{Object.keys(games).length}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Wins:</span>
-                            <span className="text-gray-700">6</span>
+                            <span className="text-gray-300">6</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Loses:</span>
-                            <span className="text-gray-700">7</span>
+                            <span className="text-gray-300">7</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Win Ratio:</span>
-                            <span className="text-gray-700">47%</span>
+                            <span className="text-gray-300">47%</span>
                         </li>
                     </ul>
                 </div>
             </div>
-        </div> */}
-    </LayoutProvider>
-  );
-};
+        </div>
+        </LayoutProvider>
+    )
+}
 
 export default Profile;
