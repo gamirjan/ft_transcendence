@@ -77,13 +77,13 @@ export class RoomService {
         
       if (this.getUserFromSocket(socket1).id == data.data.id)
       {
-        console.log("artenn kaaaaaaaaaaaaaaaaaaaa");
+        console.log("artenn kaaaaaaaaaaaaaaaaaa");
         return
       };
     }
     if (this.getPlayer(data.data.id))
     {
-      console.log("finnndd");
+      console.log("finnnd");
       
       return
     };
