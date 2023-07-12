@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { store } from "./redux";
 import { ip } from "./utils/ip";
+import LayoutProvider from "./LayoutProvider";
 
 const get_game_info =async (param:object)=>{
      let res  = await fetch(`${ip}:7000/game/user/${param.id}`)
@@ -131,20 +132,20 @@ const Profile = () => {
     // },[])
     // console.log("useerrrrprofile",store.getState());
     return (
-        <Layout scrollable={true}>
+        <LayoutProvider>
         <div className="">
-            <div x-data="{ openSettings: false }" className="absolute right-12 mt-4 rounded">
+
+        <div className="flex flex-row justify-center">
+            <div className="flex flex-col items-center" style={{width:"30%", height:"100%"}}>
+                <p className="text-sm text-gray-500 py-2"> Created 7 June 2023</p>
+                <img src={user.avatarurl} className="border-4 border-white rounded-full" style={{width:"80%", height:"80%"}}/>   
+                <p className="text-2xl text-center">{user.displayname}</p>
             </div>
-
-            <div className="flex flex-col items-center mt-10">
-                <img src={user.avatarurl} className="w-40 border-4 border-white rounded-full"/>
-                <div className="flex items-center space-x-2 mt-2">
-                    <p className="text-2xl">{user.displayname}</p>
-
-                </div>
-                <p className="text-gray-700">{user.displayname}</p>
+            
+            <div className="flex flex-col" style={{width:"30%"}}>
                 <div 
-                    className="flex flex-row items-center hover:cursor-pointer"
+                    className="flex items-center hover:cursor-pointer"
+                    style={{width:"40%"}}
                     onClick={()=>setTFA(!TFA)}
                 >
                     <div className="flex flex-col justify-center items-center self-start py-3">
@@ -165,101 +166,105 @@ const Profile = () => {
 
                     </div>
                 </div>
-                {TFA ? (
-                <div className="flex flex-col py-5">
+
+                {/* {TFA ? ( */}
+                <div className="" style={{width:"80%", height:"50%"}}>
                     <div className="flex flex-col justify-center items-center">Two Factor Email</div>
+                    
                     <div className="flex flex-col">
-                    <input 
-                        type="email"
-                        onChange={(e)=>{setTFAEmail(e.target.value)}}
-                        name="email" id=""
-                        value={TFAEmail}
-                        placeholder="TFA Email"
-                        className="bg-[#212121] border-2 border-transparent hover:border-2 outline-none hover:border-[#313131] rounded-xl"
-                    />
-
-                    </div>
-                    <div className="flex flex-col self-end">
-                        <button 
-                        className="bg-[#212121] hover:bg-[#313131] p-3 rounded-xl text-[#aaaaaa] w-16"
-                        onClick={fetchTFA}
-                    >
-                        Save
-                    </button>
+                        <form>
+                            <input
+                                type="email"
+                                onChange={(e)=>{setTFAEmail(e.target.value)}}
+                                name="email" id=""
+                                value={TFAEmail}
+                                placeholder="TFA Email"
+                                className="bg-[#212121] border-2 border-transparent hover:border-2 outline-none hover:border-[#313131] text-[#aaaaaa] rounded-xl"
+                                required
+                            />
+                            <button 
+                            type="submit"
+                            className="m-2 py-2 text-sm bg-[#212121] hover:bg-[#313131] rounded-xl text-[#aaaaaa]"
+                            style={{width:"50%"}}
+                            onClick={fetchTFA}
+                            >
+                                Save changes
+                            </button>
+                        </form>
                     </div>
                 </div>
-
-                ) : (<></>)}
-                <p className="text-sm text-gray-500"> Created 7 June 2023</p>
-                <div className="flex">
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Friend
-                    </button>
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Chat
-                    </button>
-                    <button className="mr-2 w-1/2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
-                        Black
-                    </button>
-                </div>
+                {/* ) : (<></>)} */}
             </div>
+
+            <div className="flex flex-col">
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Friend
+                </button>
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Chat
+                </button>
+                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                    Black
+                </button>
+            </div>
+        </div>
 
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 flex justify-center mt-14">
+        <div className="text-xs md:text-sm bg-[#414141] border-2 border-transparent flex-1 rounded-t-lg shadow-xl grid grid-cols-2 flex justify-center mt-10">
             <div className="flex flex-col">
-                <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
-                    <h4 className="text-xl text-gray-900 font-bold">Personal Info</h4>
-                    <ul className="mt-2 text-gray-700">
+                <div className=" p-8">
+                    <h4 className="text-xs md:text-lg text-white font-bold">Personal Info</h4>
+                    <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Birthday:</span>
-                            <span className="text-gray-700">2 Nov, 1984</span>
+                            <span className="text-gray-300">2 Nov, 1984</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Mobile:</span>
-                            <span className="text-gray-700">(123) 123-1234</span>
+                            <span className="text-gray-300">(123) 123-1234</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Email:</span>
-                            <span className="text-gray-700">mikhayil.arzumanyan@gmail.com</span>
+                            <span className="text-gray-300">mikhayil.arzumanyan@gmail.com</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Location:</span>
-                            <span className="text-gray-700">Yerevan, Armenia</span>
+                            <span className="text-gray-300">Yerevan, Armenia</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Languages:</span>
-                            <span className="text-gray-700">Arminian, Russian, English</span>
+                            <span className="text-gray-300">Arminian, Russian, English</span>
                         </li>
                     </ul>
                 </div>
             </div>
 
             <div className="flex flex-col">
-                <div className="flex-1 bg-white rounded-t-lg shadow-xl p-8">
-                    <h4 className="text-xl text-gray-900 font-bold">Game Info</h4>
-                    <ul className="mt-2 text-gray-700">
+                <div className="p-8">
+                    <h4 className="text-xs md:text-lg text-white font-bold">Game Info</h4>
+                    <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Total:</span>
-                            <span className="text-gray-700">{Object.keys(games).length}</span>
+                            <span className="text-gray-300">{Object.keys(games).length}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Wins:</span>
-                            <span className="text-gray-700">6</span>
+                            <span className="text-gray-300">6</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Loses:</span>
-                            <span className="text-gray-700">7</span>
+                            <span className="text-gray-300">7</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Win Ratio:</span>
-                            <span className="text-gray-700">47%</span>
+                            <span className="text-gray-300">47%</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
-        </Layout>
+        </LayoutProvider>
     )
 }
 
