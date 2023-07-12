@@ -31,13 +31,14 @@ export class AuthController {
         console.log(body.id);
         console.log("========================");
 
-        
-        const is_user = await this.userService.findOneById(body.id);
-       await console.log("fiiinddd",is_user);
-       console.log(!is_user,is_user == null);
-        
-        if(!is_user)
-        {
+        try {
+            const is_user = await this.userService.findOneById(body.id);
+          await console.log("fiiinddd",is_user);
+          console.log(!is_user,is_user == null);
+          return res.status(201).send(is_user)
+          
+        } catch (error) {
+          
           const user = await this.addUserService.create({
               ID_42:body.id,
             displayName: body.name,
@@ -49,8 +50,12 @@ export class AuthController {
           })
           return res.status(208).send(user);
         }
+        
+        // if(!is_user)
+        // {
+        // }
 
-        return res.status(201).send(is_user)
+        // return res.status(201).send(is_user)
    
         
       //  // return res.send(is_user);
