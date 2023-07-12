@@ -27,7 +27,7 @@ export class PongService {
     let radian = (Math.random() * Math.PI) / 2 - Math.PI / 4;
     if (left) radian += Math.PI;
 
-    room.speed = room.options.ball.speed;
+    room.speed = 30/* room.options.ball.speed */;
 
     this.updateBall(
       room.options.display.width / 2,
@@ -61,19 +61,18 @@ export class PongService {
       };
 
       //console.log(room.players[0].user.id,room.players[1].user.id);
-
-      RoomService.emit(
-        room,
-        'score',
-        {
-          who:goal,
-          player1: { id: room.players[0].user.id, displayname: room.players[0].user.displayname, score: room.players[0].score,position:"left" },
-          player2: { id: room.players[1].user.id, displayname: room.players[1].user.displayname, score: room.players[1].score,position:"right" }
-        },
-      );
+        RoomService.emit(
+          room,
+          'score',
+          {
+            who:goal,
+            player1: { id: room.players[0].user.id, displayname: room.players[0].user.displayname, score: room.players[0].score,position:"left" },
+            player2: { id: room.players[1].user.id, displayname: room.players[1].user.displayname, score: room.players[1].score,position:"right" }
+          },
+        );
 
       for (const player of room.players)
-        if (player.score == room.options.score.max)
+        if (player.score == 5)
           return this.roomService.stopGame(room, player);
 
       this.resetBall(

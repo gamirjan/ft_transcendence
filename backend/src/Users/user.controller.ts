@@ -6,6 +6,7 @@ import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
 import { extname } from 'path';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @Controller('users')
 export class UsersController {
