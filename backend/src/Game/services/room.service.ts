@@ -66,13 +66,13 @@ export class RoomService {
     
     for (const socket1 of this.queue)
     {
-      console.log("==================================");
-      console.log( "dataaa=>" ,this.getUserFromSocket(socket1).id,data.data.id);
-      console.log("==================================");
-      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
-      console.log(this.getUserFromSocket(socket1).id == data.data.id);
+      // console.log("==================================");
+      // console.log( "dataaa=>" ,this.getUserFromSocket(socket1).id,data.data.id);
+      // console.log("==================================");
+      // console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      // console.log(this.getUserFromSocket(socket1).id == data.data.id);
 
-      console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
+      // console.log("|||||||||||||||||||||||||||||||||||||||||||||||||||");
       
         
       if (this.getUserFromSocket(socket1).id == data.data.id)
@@ -131,7 +131,7 @@ export class RoomService {
 
   joinRoom(socket: Socket, room: Room): void {
 
-    ////console.log("aaaaaaaaaaaaaaa",room.state)
+    console.log("aaaaaaaaaaaaaa------------------------------a")
     if (room.state == State.WAITING) {
       const player: Player = {
         socket,
@@ -173,12 +173,12 @@ export class RoomService {
     ////console.log(await json.toString(room));
     ////console.log("rooooooooooooooooommmm",room,this.rooms.values());
     ////console.log(room.players[0].user.id);
-    //console.log("000000000000000000000000000000000000000000000000000000000");
+    // console.log("000000000000000000000000000000000000000000000000000000000");
     
-    //console.log(room.code,room.players[0].user.id)
-    //console.log("000000000000000000000000000000000000000000000000000000000");
+    // console.log(room.code,room.players[0].user.id,room.code,room.players[1].user.id)
+    // console.log("000000000000000000000000000000000000000000000000000000000");
 
-     socket.emit('room',room.code,room.players[0].user.id);
+     socket.emit('room',room.code);
      
   }
 

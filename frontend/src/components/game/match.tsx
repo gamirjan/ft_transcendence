@@ -3,8 +3,8 @@ import { useSelector } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { ip } from '../utils/ip';
 import { useNavigate } from 'react-router-dom';
-import GameMatch from './Pong';
 import {store} from "../redux"
+import Game from './Game';
 type PaddlePosition = 'left' | 'right';
 const MatchmakingGame = () => {
   const [isSocket,setIsSoket]  = useState(false);
@@ -15,6 +15,11 @@ const MatchmakingGame = () => {
     {
 
       setSocket( io(`${ip}:4000/pong`,{
+        closeOnBeforeunload:true,
+        protocols:'ws',
+        secure:true,
+        randomizationFactor:0.8,
+        transports: ['websocket'],
         autoConnect:false,
         auth:{
           headers:{
@@ -32,6 +37,7 @@ const MatchmakingGame = () => {
         console.log("conectionnnnn");
       })
       return()=>{
+        socket.close();
         socket.disconnect();
       }
     },[])
@@ -41,137 +47,20 @@ const MatchmakingGame = () => {
      let height = 300;
      let paddleHeight = ((200 * height) / 1080) /2;
   const [room, setRoom] = useState(null);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [gameDetails, setGameDetails] = useState(null);
   const [inputValue, setInputValue] = useState('');
-  const [isStart,setIsStart] = useState(false)
-  const [ballX,setBallX] = useState( width / 2);
-  const [ballY,setBallY] = useState( height / 2);
-  const [gameScore,setGameScore] = useState({player1:{},player2:{}})
-  const [paddleLeftY,setpaddleLeftY] = useState(height / 2 - paddleHeight / 2)
-  const [paddleRightY,setpaddleRightY] = useState(height / 2 - paddleHeight / 2)
-  const [who,setWho]  = useState("0 : 0")
+  const [isStart,setIsStart] = useState(false);
   const [pos,setPos] = useState("");
-  const [trayy,setTrayy] = useState(0.500)
   const [chat,setChat] = useState([]);
+  const [end,setEnd] = useState(false);
+  const [players,setPlayers] = useState([]);
+  const [player1,setPlayer1] = useState("player1");
+  const [player2,setPlayer2] = useState("player2");
+  const [winner,setWinner]  =useState({});
 
- // let ballY = height / 2;
-  const navigate = useNavigate();
-  
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  
-  let animationFrameId: number;
-  let paddleSpeed = 8;
-  let ballSpeed = 4;
-  let paddleWidth = 20;
-  let ballRadius = 10;
-  //let paddleLeftY = height / 2 - paddleHeight / 2;
-  //let paddleRightY = height / 2 - paddleHeight / 2;
-
-  let ballDeltaX = ballSpeed;
-  let ballDeltaY = ballSpeed;
-  const [player,setPlayer] = useState(0);
-
-  const drawPaddle = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-    ctx.fillRect(x, y, paddleWidth, paddleHeight);
-  };
-
-  const drawBall = (ctx: CanvasRenderingContext2D, x: number, y: number) => {
-    ctx.beginPath();
-    ctx.arc(x, y, ballRadius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.closePath();
-    ctx.fillStyle = 'white'
-  };
-  const handleMouseMove = (event) => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const y = event.pageY;
-    const rect = canvas.getBoundingClientRect();
-    const scrollY = window.scrollY || window.pageYOffset;
-    const top = rect.top + scrollY;
-    const bottom = rect.bottom + scrollY;
+  useEffect(()=>{
+    console.log("wiinnn");
     
-    if (y < top || y > (bottom - (paddleHeight))) return;
-    
-    const tray = (y - top) / canvas.clientHeight;
-    // console.log(tray);
-    
-    socket.emit('tray', tray);
-    };
-
-    const movePaddle = (deltaY: number) => {
-      if (pos === 'left') {
-        const newPaddleLeftY = paddleLeftY + 1  / 1080;
-          socket.emit('tray',0.25 );
-      } else {
-        const newPaddleRightY = paddleRightY + 1 / 1080;
-        
-          socket.emit('tray',0.25);
-          //paddleRightY = newPaddleRightY;
-      }
-    };
-    function handleKeyDown(event) {
-      if (event.key === 'w') {
-        calculateTray('up');
-        // console.log(trayy);
-        socket.emit('tray', calculateTray('up'));
-      } else if (event.key === 's') {
-        calculateTray('down');
-        // console.log(trayy);
-        socket.emit('tray', calculateTray('down'));
-      }
-    }
-    
-    function handleKeyUp(event) {
-      if (event.key === 'w' || event.key === 's') {
-        //setTrayy(0);
-        socket.emit('tray', trayy);
-      }
-    }
-    
-    function calculateTray(direction) {
-      const trayIncrement = 0.1;
-      const trayMax = 1;
-      const trayMin = 0;
-      let tray = 0;
-      if (direction === 'up') {
-       tray =  Math.max(trayMin, trayy - trayIncrement);
-      } else if (direction === 'down') {
-        tray =  Math.min(trayMax, tray + trayIncrement);
-      }
-    // console.log("call=>",tray);
-    
-      return tray;
-    }
-
-useEffect(()=>{
-  setTimeout(() => {
-    
-    //console.log(ballX,ballY);
-    
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-  
-    // Clear canvas
-    ctx.clearRect(0, 0, width, height);
-  
-    // Draw border
-    ctx.strokeStyle = 'white';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(0, 0, width, height);
-  
-    // Draw paddles
-    drawPaddle(ctx, 0 + 10, paddleLeftY);
-    drawPaddle(ctx, (width - paddleWidth) - 10, paddleRightY);
-  
-    // Draw ball
-    drawBall(ctx, ballX, ballY);
-  },100);
-
-},[ballX,ballY,paddleLeftY,paddleRightY,trayy]);
+  },[winner])
 
 useEffect(() => {
     socket.onopen = function(event) {
@@ -188,75 +77,37 @@ useEffect(() => {
     socket.on('info', (data) => {
         console.log("info",data);
         
-      //setUser(data.user);
     });
 
-    socket.on('room', (code,id) => {
+    socket.on('playerinfo',(data,data1)=>{
+      console.log("sddsddsdsdsdsd",data,data1);
+      setPlayer1(data.displayname);
+      setPlayer2(data1.displayname);
+      
+    });
+
+    socket.on('room', (code) => {
         
         console.log("room sdgddfdggrs");
-        if(id == user.id)
-          setPos("left");
-        else
-          setPos("right");
+        //console.log("ssssssssssssssssssss",data);
+
+        // if(data == user.id)
+        //   setPos("left");
+        // else
+        //   setPos("right");
         if(!isStart)
         {
           socket.emit('start');
           setIsStart(true);
         }
-       // socket.emit('start');
-       // navigate('/aa',{replace:true})
-        
-        
-      //setRoom(data);
     });
 
-    socket.on('game:start', (details) => {
-        // console.log("starttt",details);
-      setGameStarted(true);
-      setGameDetails(details);
-    });
-        // Set up keyboard listeners
-        document.addEventListener('keydown', handleKeyDown);
-        document.addEventListener('keyup', handleKeyUp);
-    document.addEventListener('mousemove',handleMouseMove);
-    document.addEventListener('mouseleave',handleMouseMove);
-    socket.on('ball', (data)=>{
-      setBallX(((data.x * width)/1920))
-      setBallY(((data.y * height)/1080))
-
-      // setTimeout(()=>{},2)
-      // update();
-      //drawBall(ctx, ballX, ballY);
-
-      //console.log("ball=>",data);
-      
-    });
-    socket.on('score', (data)=>{
-      // console.log("score=>",data);
-      setGameScore(data)
-      if(data.player1.id == user.id)
-        setWho( data.player1.score + " : " + data.player2.score);
-      else
-        setWho( data.player2.score + " : " + data.player1.score);
-      
-      
-    });
-    socket.on('tray', (pos,id, tray)=>{
-      //console.log("trey=>",id, pos,tray);
-      setTrayy(tray);
-      if(pos === "left")
-        setpaddleLeftY(tray * height);
-      else
-        setpaddleRightY(tray * height);
-      // if(user.id == id)
-      //setPlayer(data);
-
-      
-    });
     socket.on('stop', (data)=>{
       console.log("stop=>",data);
+      setWinner(data);
       setIsStart(false);
-      window.location.reload();
+      setEnd(true);
+     // window.location.reload();
       //socket.close();
       
       
@@ -272,14 +123,8 @@ useEffect(() => {
     })
 
     return () => {
-     //rs
-     document.removeEventListener('mousemove',handleMouseMove)
-     document.removeEventListener('keydown', handleKeyDown);
-     document.removeEventListener('keyup', handleKeyUp);
-    document.removeEventListener('mouseleave',handleMouseMove);
      console.log("socket closed");
      socket.off('room')
-     socket.off('ball')
      socket.disconnect();
      socket.close()
      //socket.off();
@@ -310,83 +155,35 @@ useEffect(() => {
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-  return (isStart ? ( 
-  <>
- 
-
-  <div className="flex flex-col items-center bg-gray-800">
-  <h2 className="text-white text-3xl py-4">Score: {who} </h2> {/* Add a score section */}
-  <h3 className="text-white text-2xl py-2">{gameScore.player1.displayname} vs {gameScore.player2.displayname}</h3> {/* Add player names */}
-  <div className="flex justify-center items-center h-screen">
-  <div className="flex flex-col h-screen">
-   Chat Content 
-  <div className="flex-1 p-4 overflow-y-auto">
-     Chat Messages 
-    <div className="space-y-4">
-    </div>
-  </div>
-
-   Chat Input and Send Button 
-  <div className="p-4 bg-gray-100">
-    <div className="flex space-x-2">
-       Input field 
-      <input type="text" className="flex-1 p-2 border border-gray-300 rounded" placeholder="Type your message"/>
-
-       Send button 
-      <button className="px-4 py-2 text-white bg-blue-500 rounded">Send</button>
-    </div>
-  </div>
-</div>
-    <canvas
-      ref={canvasRef}
-      className="border-2 border-white"
-      width={width}
-      height={height}
-    />
-  </div>
-</div></>) : 
-   ( <div className="bg-grey h-full text-white p-4 flex flex-col items-center">
-   <h1 className="text-4xl mb-8 text-darkBlue">Matchmaking Game</h1>
+  return (isStart  ? (<Game socket={socket} name1={player1} name2={player2}/>):
+   (!end ? (<div className="bg-gradient-to-br from-purple-900 to-blue-900 h-full text-white p-4 flex flex-col items-center">
+   <h1 className="text-4xl mb-8 text-green-500">Matchmaking Game</h1>
    {user && (
      <div className="flex flex-col items-center">
-     <p className="text-red-500 mb-5">Connected as: {user.displayname}</p>
-     {!room && (
-          <div className="flex flex-col items-center">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={handleInputChange}
-              className="border border-red-500 bg-darkGrey px-4 py-2 rounded-md text-white mb-4 focus:outline-none focus:border-red-600 transition-colors duration-300"
-              placeholder="Enter your name"
-            />
-            <button
-              onClick={joinQueue}
-              className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md transition-colors duration-300"
-            >
-              Join Queue
-            </button>
-          </div>
-          )}
-          {room && (
-            <div>
-              <p>Room: {room.code}</p>
-              {!gameStarted && (
-                <div>
-                  <button onClick={ready}>Ready</button>
-                  <button >Start Game</button>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
-      {gameStarted && gameDetails && (
-        <div>
-          <h2>Game Started!</h2>
-          {/* Render game details */}
-        </div>
-      )}
-    </div>)
+       <p className="text-green-500 mb-5">Connected as: {user.displayname}</p>
+       {!room && (
+         <div className="flex flex-col items-center">
+           <button
+             onClick={joinQueue}
+             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors duration-300 transform hover:scale-105"
+           >
+             Join Queue
+           </button>
+         </div>
+       )}
+     </div>
+   )}
+ </div>) : <> <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+      <h1 className="text-4xl font-bold mb-8">Game Over</h1>
+      <img
+        src={winner.avatarurl}// Replace with your game over image path
+        alt="Game Over"
+        className="mb-8"
+      />
+      <p className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Winner:  {winner.displayname}
+      </p>
+    </div></>)
   );
 };
 
