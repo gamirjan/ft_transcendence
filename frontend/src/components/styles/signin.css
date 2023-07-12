@@ -19,6 +19,7 @@
   padding: 3rem;
   height: 200px;
   width: 200px;
+  pointer-events: all;
   position: absolute;
   border-radius: 50%;
 }
@@ -52,6 +53,7 @@
   }
 }
 
+
 @keyframes circleUp {
   0% {
     bottom: 0%;
@@ -65,6 +67,50 @@
     bottom: 0%;
     background: radial-gradient(circle at 80% 20%, white, black 20px, #0e2b09 3%, #000 60%, black 100%);
   }
+}
+
+.link3D{
+  position: relative;
+  display: inline-flex;
+  width: 180px;
+  height: 55px;
+  margin: 0 15px;
+  perspective: 1000px;
+}
+.link3D .link3DItem{
+  font-size: 19px;
+  letter-spacing: 1px;
+  transform-style: preserve-3d;
+  transform: translateZ(-25px);
+  transition: transform .25s;
+  font-family: 'Montserrat', sans-serif;
+  
+}
+.link3D .link3DItem:before,
+.link3D .link3DItem:after{
+  position: absolute;
+  content: attr(link-name);
+  height: 55px;
+  width: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border-radius: 5px;
+}
+.link3D .link3DItem:before{
+  transform: rotateY(0deg) translateZ(25px);
+}
+.link3D .link3DItem:after{
+  border: 5px solid #6a6130;
+  transform: rotateX(90deg) translateZ(25px);
+}
+/* .link3D .link3DItem:after:hover,.link3D .link3DItem:before:hover{
+ 
+} */
+.link3D .link3DItem:hover{
+  transform: translateZ(-25px) rotateX(-90deg);
+  
 }
 
 @keyframes circleDown {
@@ -222,3 +268,4 @@ button {
 .social div:hover {
   background-color: rgba(255, 255, 255, 0.47);
 }
+

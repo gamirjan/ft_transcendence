@@ -1,112 +1,101 @@
-import React, { useEffect, useState } from "react"
-import  Layout  from "./Layout";
-import profile from '@SRC_DIR/assets/images/profile.svg';
+import React, { useEffect, useState } from "react";
+import Layout from "./Layout";
+import profile from "@SRC_DIR/assets/images/profile.svg";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { store } from "./redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 
-const get_game_info =async (param:object)=>{
-     let res  = await fetch(`${ip}:7000/game/user/${param.id}`)
-     console.log(res);
-     
-    return res;
-}
+const get_game_info = async (param: object) => {
+  let res = await fetch(`${ip}:7000/game/user/${param.id}`);
+  console.log(res);
+
+  return res;
+};
 
 const Profile = () => {
-    const user = useSelector((state: AppState) => state.user);
-    const [TFA, setTFA] = useState(user.istwofactorenabled)
-    const [TFAEmail, setTFAEmail] = useState(user.twofactoremail)
-    const navigate = useNavigate();
-    let games = []
-    const fetchTFA = async ()=> {
-        if (!user)
-        {
-            navigate("/",{replace:true}) 
-            return ;
-        }
-        if (TFA)
-        {
-            const params = {
-                userid: user.id,
-                email: TFAEmail
-            };
-            console.log(JSON.stringify(params));
-            
-            fetch(`${ip}:7000/twofactor/enable`, {
-            method: 'POST',
-            // mode:'no-cors',
-            body: JSON.stringify(params),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            })
-            .then(response => {
-                console.log("enabled?");
-                console.log(response);
-                
-                return response.json()
-            
-            })
-            .then(data => {
-                console.log("enabled?");
-                console.log(data);
-                
-            })
-            .catch(error => {
-                console.log("TWOFACTORERR");
-                
-                // Handle any errors that occur during the request
-                console.log(error);
-            });
-        }
-        else
-        {
-            const params = {
-                userid: user.id
-            };
-            fetch(`${ip}:7000/twofactor/disable`, {
-                method: 'POST',
-                // mode:'no-cors',
-                body: JSON.stringify(params),
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                })
-                .then(response => {
-                    console.log("enabled?");
-                    console.log(response);
-                    
-                    return response.json()
-                
-                })
-                .then(data => {
-                    console.log("enabled?");
-                    console.log(data);
-                    
-                })
-                .catch(error => {
-                    console.log("TWOFACTORERR");
-                    
-                    // Handle any errors that occur during the request
-                    console.log(error);
-                });
-        }
-
+  const user = useSelector((state: AppState) => state.user);
+  const [TFA, setTFA] = useState(user.istwofactorenabled);
+  const [TFAEmail, setTFAEmail] = useState(user.twofactoremail);
+  const navigate = useNavigate();
+  let games = [];
+  const fetchTFA = async () => {
+    if (!user) {
+      navigate("/", { replace: true });
+      return;
     }
-    useEffect(()=>{
+    if (TFA) {
+      const params = {
+        userid: user.id,
+        email: TFAEmail,
+      };
+      console.log(JSON.stringify(params));
 
-        console.log("TFA: ", TFA);
-        
-    }, [TFA]);
-    // useEffect(()=>{
-    //     if(user == null)
-    //     {
-    //         navigate("/",{replace:true}) 
-    //         //return null
-    //     }
-    //     else{
+      fetch(`${ip}:7000/twofactor/enable`, {
+        method: "POST",
+        // mode:'no-cors',
+        body: JSON.stringify(params),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          console.log("enabled?");
+          console.log(response);
+
+          return response.json();
+        })
+        .then((data) => {
+          console.log("enabled?");
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log("TWOFACTORERR");
+
+          // Handle any errors that occur during the request
+          console.log(error);
+        });
+    } else {
+      const params = {
+        userid: user.id,
+      };
+      fetch(`${ip}:7000/twofactor/disable`, {
+        method: "POST",
+        // mode:'no-cors',
+        body: JSON.stringify(params),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => {
+          console.log("enabled?");
+          console.log(response);
+
+          return response.json();
+        })
+        .then((data) => {
+          console.log("enabled?");
+          console.log(data);
+        })
+        .catch((error) => {
+          console.log("TWOFACTORERR");
+
+          // Handle any errors that occur during the request
+          console.log(error);
+        });
+    }
+  };
+  useEffect(() => {
+    console.log("TFA: ", TFA);
+  }, [TFA]);
+  // useEffect(()=>{
+  //     if(user == null)
+  //     {
+  //         navigate("/",{replace:true})
+  //         //return null
+  //     }
+  //     else{
 
     //         fetch(`${ip}:7000/game/user/${user.id}`)
     //         .then(response => {
@@ -183,7 +172,7 @@ const Profile = () => {
                                 required
                             />
                             <button 
-                            type="submit"
+                            // type="submit"
                             className="m-2 py-2 text-sm bg-[#212121] hover:bg-[#313131] rounded-xl text-[#aaaaaa]"
                             style={{width:"50%"}}
                             onClick={fetchTFA}
