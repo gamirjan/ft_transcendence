@@ -3,13 +3,16 @@ import { useSelector } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { ip } from '../utils/ip';
 import { useNavigate } from 'react-router-dom';
-
+import './style.css';
 import {store} from "../redux"
 
+
 function Game({socket,name1,name2}) {
-    let width  =600;
-    let height = 300;
-    let paddleHeight = ((200 * height) / 1080) /2;
+    
+    const [width,setWidth] = useState((window.innerWidth / 2));
+    const [height,setheight] = useState((window.innerHeight /2));
+    const[paddleHeight,setPaddleHeight] = useState(((200 * height) / 1080))
+    // let paddleHeight = ((200 * height) / 1080);
  const [room, setRoom] = useState(null);
  const [gameStarted, setGameStarted] = useState(false);
  const [gameDetails, setGameDetails] = useState(null);
@@ -143,15 +146,15 @@ function Game({socket,name1,name2}) {
       drawBall(ctx, ballX, ballY);
     },50);
   
-  },[ballX,ballY,paddleLeftY,paddleRightY,trayy]);
+  },[ballX,ballY,paddleLeftY,paddleRightY,trayy,width,height,paddleHeight]);
     useEffect(() => {
         socket.onopen = function(event) {
-            // console.log('Connected to the server');
-            
-            // Send data to the server
-            const data = user;
-            socket.send(data);
-          };
+          // console.log('Connected to the server');
+          
+          // Send data to the server
+          const data = user;
+          socket.send(data);
+        };
         socket.on('connect', () => {
            console.log('Connected to server');
         });
@@ -163,9 +166,15 @@ function Game({socket,name1,name2}) {
         });
     
             // Set up keyboard listeners
+            window.addEventListener('resize',()=>{
+              setWidth((window.innerWidth / 2));
+              setheight((window.innerHeight / 2));
+            })
             document.addEventListener('keydown', handleKeyDown);
             document.addEventListener('keyup', handleKeyUp);
             document.addEventListener('mousemove',handleMouseMove);
+            // document.addEventListener('mousedown',handleMouseMove);
+            document.addEventListener('touchmove',handleMouseMove);
             document.addEventListener('mouseleave',handleMouseMove);
             socket.on('ball', (data)=>{
                 setBallX(((data.x * width)/1920))
@@ -222,36 +231,18 @@ function Game({socket,name1,name2}) {
       
   return (
     <div className="flex flex-col items-center bg-gray-800">
-        <h2 className="text-white text-3xl py-4">Score: {who} </h2> {/* Add a score section */}
-        <h3 className="text-white text-2xl py-2">{name1} vs {name2}</h3> {/* Add player names */}
+        <h2 className="text-white text-3xl py-4">Score: {who} </h2>
+        <h3 className="text-white text-2xl py-2">{name1} vs {name2}</h3> 
         <div className="flex justify-center items-center h-screen">
-        <div className="flex flex-col h-screen">
-        Chat Content 
-        <div className="flex-1 p-4 overflow-y-auto">
-            Chat Messages 
-            <div className="space-y-4">
-            </div>
-        </div>
-
-        Chat Input and Send Button 
-        <div className="p-4 bg-gray-100">
-            <div className="flex space-x-2">
-            Input field 
-            <input type="text" className="flex-1 p-2 border border-gray-300 rounded" placeholder="Type your message"/>
-
-            Send button 
-            <button className="px-4 py-2 text-white bg-blue-500 rounded">Send</button>
-            </div>
-        </div>
-        </div>
             <canvas
             ref={canvasRef}
             className="border-2 border-white"
             width={width}
             height={height}
             />
+          </div>
         </div>
-</div>
+
   )
 }
 

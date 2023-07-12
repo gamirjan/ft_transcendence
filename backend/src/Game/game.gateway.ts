@@ -139,7 +139,7 @@ import { createServer, ServerOptions } from 'http';
         
         if (!player || !player.room) return;
         ////console.log("pplplplplll--------------------------------------------------------p");
-        RoomService.emit(player.room,'playerinfo',player.room.players[0].user,player.room.players[1].user);
+        RoomService.emit(player.room,'playerinfo',player.room.players[0].user,player.room.players[1].user,player.room.options);
         this.roomService.startCalc(player.room);
       } catch {}
     }
