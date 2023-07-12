@@ -2,23 +2,54 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { setUser, store } from "./redux";
 import { useDispatch } from "react-redux";
+import "./styles/signin.css";
 const del = () => {};
 const Layout = ({ children, auth = true, scrollable = false }) => {
   return (
-    <div className={`flex flex-col h-full ${!scrollable ? "overflow-hidden" : ""} min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}>
-      <div className="flex flex-row sticky shadow bg-[#212121] top-0 z-[2] border-2 border-[#0f0f0f] justify-around py-3">
-        <div className="flex text-2xl font-bold  self-start">My App</div>
-        <div className={`flex flex-row justify-between text-2xl space-x-4 font-bold self-end ${!auth ? "hidden" : ""}`}>
-          <NavLink to="/home">Home</NavLink>
-          <NavLink to="/profile">Profile</NavLink>
-          <NavLink to="/contacts">Contacts</NavLink>
-          <NavLink to="/chat">Chat</NavLink>
-          <NavLink to="/channels">Channels</NavLink>
+    <div
+      className={`flex flex-col h-full ${
+        !scrollable ? "overflow-hidden" : ""
+      } min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}
+    >
+      <div className="flex flex-row sticky shadow bg-[#212121] top-0 z-[2] border-b-2 border-[#585858] justify-around py-3">
+        <div className="flex text-2xl font-bold justify-center items-center h-full self-start">My App</div>
+        <div
+          className={`flex flex-row justify-between text-2xl space-x-4 font-bold self-end ${
+            !auth ? "hidden" : ""
+          }`}
+        >
+          <NavLink to="/home">
+            <span className="link3D">
+              <span className="link3DItem" link-name="Home"></span>
+            </span>
+          </NavLink>
+          <NavLink to="/profile">
+            <span className="link3D">
+              <span className="link3DItem" link-name="Profile"></span>
+            </span>
+          </NavLink>
+          <NavLink to="/contacts">
+            <span className="link3D">
+              <span className="link3DItem" link-name="Contacts"></span>
+            </span>
+          </NavLink>
+          <NavLink to="/chat">
+            <span className="link3D">
+              <span className="link3DItem" link-name="Chat"></span>
+            </span>
+          </NavLink>
+          <NavLink to="/channels">
+            <span className="link3D">
+              <span className="link3DItem" link-name="Channels"></span>
+            </span>
+          </NavLink>
           <Link
             to="/out"
             className="text-lg font-medium text-[#aaaaaa] hover:text-white transition duration-150 ease-in-out"
           >
-            sign out
+            <span className="link3D">
+              <span className="link3DItem" link-name="Sign Out"></span>
+            </span>
           </Link>
         </div>
       </div>

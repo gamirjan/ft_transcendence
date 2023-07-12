@@ -11,14 +11,16 @@ import { Field, Form, Formik, FormikProps } from "formik";
 import ChatInfo from "./Chat/ChatInfo";
 import ModalBox from "./Chat/ModalBox";
 import LayoutProvider from "./LayoutProvider";
+import background from "@SRC_DIR/assets/images/chat.jpg";
+import chatContent from "@SRC_DIR/assets/images/chatContent.jpg";
+
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
-  const [contacts, setContacts] = useState([]);
+  const [channels, setChannels] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedUser, setSelectedUser] = useState({});
-  const [selectedUserName, setSelectedUserName] = useState("");
+  const [selectedChannel, setSelectedChannel] = useState({});
   const [messages, setMessages] = useState([]);
   const [allChannels, setAllChannels] = useState([]);
   const [dmMessage, setDMMessage] = useState("");
@@ -27,7 +29,7 @@ const ChannelComponent = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const toggleSidebar = () => {
-    Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
+    Object.keys(selectedChannel).length != 0 && setOpenSidebar(!openSidebar);
   };
 
   const joinChannel = (channel) => {
@@ -60,8 +62,7 @@ const ChannelComponent = () => {
     // console.log("hhhhhhhhhhhhhh");
 
     // joinChannel(e)
-    setSelectedUser(e);
-    setSelectedUserName(selectedUser.channelname);
+    setSelectedChannel(e);
   };
   useEffect(() => {
     const onConnect = () => {
@@ -98,7 +99,7 @@ const ChannelComponent = () => {
   const fetchMessages = () => {
     if (user == null) navigate("/", { replace: true });
     else {
-      fetch(`${ip}:7000/channelmessages/${selectedUser.id}`)
+      fetch(`${ip}:7000/channelmessages/${selectedChannel.id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");
@@ -148,21 +149,21 @@ const ChannelComponent = () => {
           return response.json(); // assuming the server returns JSON data
         })
         .then((data) => {
-          setContacts(data);
+          setChannels(data);
           // console.log(data);
         })
         .catch((error) => {
           console.log(error);
         });
-      // console.log(selectedUser);
+      // console.log(selectedChannel);
 
       fetchChannels();
-      if (Object.keys(selectedUser).length) {
+      if (Object.keys(selectedChannel).length) {
         fetchMessages();
         // console.log(messages);
       }
     }
-  }, [selectedUserName, sended, openModal]);
+  }, [sended, openModal]);
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -181,10 +182,10 @@ const ChannelComponent = () => {
     );
   };
   // const selectedChat = (e)=>{
-  //   setSelectedUser((e)=>{e.user})
+  //   setSelectedChannel((e)=>{e.user})
   //   let user_ = e.user
-  //    setSelectedUser(user_);
-  //   //console.log(selectedUser);
+  //    setSelectedChannel(user_);
+  //   //console.log(selectedChannel);
   // }
 
   const [textMessages, setTextMessages] = useState<IMassage[] | undefined>(
@@ -216,15 +217,16 @@ const ChannelComponent = () => {
     }
   };
   const sendDMMessage = () => {
-    if (!dmMessage.length) return;
-    // console.log(user, selectedUser);
+    const msg = dmMessage.trim();
+    if (!msg.length) return;
+    // console.log(user, selectedChannel);
     // console.log(dmMessage);
     // console.log(typeof(user.id));
 
     const values = {
-      channel: selectedUser,
+      channel: selectedChannel,
       user: user,
-      message: dmMessage,
+      message: msg,
     };
     /* method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -258,9 +260,11 @@ const ChannelComponent = () => {
   const createChannel = (data) => {
     // console.log("createChan");
 
-    // console.log(user, selectedUser);
+    // console.log(user, selectedChannel);
     // console.log(dmMessage);
     // console.log(typeof(user.id));
+    console.log("data: ", data);
+    
 
     const values = {
       channelName: data.channelName,
@@ -294,23 +298,49 @@ const ChannelComponent = () => {
         console.log(error);
       });
   };
+
+  const getType = (param) => {
+    switch(param) {
+      case "2":
+        return 'protected';
+      case "3":
+          return 'private';
+      default:
+        return 'public';
+    }
+  }
+
   return (
     <LayoutProvider>
-      <div className="relative flex flex-col h-full bg-[#181818]">
-            <img
-              className="absolute w-full h-full object-cover mix-blend-overlay"
-              style={{ opacity: "0.5" }}
-              src="https://fiverr-res.cloudinary.com/images/q_auto,f_auto/gigs/129325364/original/afaddcb9d7dfaaf5bff7ef04101935814665ac16/design-an-attractive-background-for-your-website.png"
-              alt=""
-            />
-        <div className="container mx-auto h-full flex flex-col text-white shadow-lg bg-[#212121] border-x-2 border-[#0f0f0f] rounded-lg" style={{minWidth: "80vw"}}>
+      <div className="relative flex flex-col h-full">
+        <div
+          className="container mx-auto h-full flex flex-col text-white shadow-lg border-x-2 border-[#0f0f0f] rounded-lg"
+          style={{
+            backgroundImage: `url(${chatContent})`,
+            backgroundRepeat: "repeat",
+            backgroundBlendMode: "multiply",
+            minWidth: "80vw",
+          }}
+        >
           <div className=" flex flex-col h-full justify-center">
             {/* <img className="absolute w-full h-full object-cover mix-blend-overlay" src={photo} alt="" /> */}
             <div className="flex flex-col h-full">
-              <div className="flex flex-row h-full justify-between bg-transparent" style={{zIndex: 1000}}>
+              <div
+                className="flex flex-row h-full justify-between border-x-2 border-[#585858]"
+                style={{ zIndex: 1000 }}
+              >
                 {/* <!-- chat list --> */}
-                <div className="flex flex-col h-full w-2/5  border-r-2 border-[#0f0f0f]">
-                  <div className="bg-[#212121] p-2 z-[4]">
+                <div
+                  className="flex flex-col h-full w-2/5  border-r-2 border-[#585858]"
+                  style={{
+                    backgroundImage: `url(${background})`,
+                    backgroundRepeat: "no-repeat",
+                    backgroundSize: "cover",
+                    backgroundBlendMode: "multiply",
+                    maxWidth: "20vw"
+                  }}
+                >
+                  <div className="p-2 z-[4] border-b-2 border-[#585858]">
                     <div className=" flex flex-row justify-between font-semibold text-2xl px-2">
                       <ModalBox create={true} createChannel={createChannel} />
                     </div>
@@ -320,7 +350,7 @@ const ChannelComponent = () => {
                       <input
                         type="text"
                         placeholder="search chatting"
-                        className="py-4 px-4 text-[#707579] outline-none border-2 bg-[#181818] border-[#2f2f2f] rounded-2xl w-full hover:border-[#707579]"
+                        className="py-4 px-4 text-[#707579] backdrop-blur-sm outline-none border-2 border-[#2f2f2f] rounded-2xl w-full hover:border-[#707579]"
                         value={searchQuery}
                         onChange={handleSearch}
                       />
@@ -341,19 +371,19 @@ const ChannelComponent = () => {
                     </div>
                   )}
                   <div
-                    className="flex flex-col px-4 bg-[#181818] overflow-y-scroll"
+                    className="flex flex-col p-4 w-full overflow-y-scroll"
                     style={{ maxHeight: "75vh" }}
                   >
                     {/* <!-- end search compt -->
             <!-- user list --> */}
                     {!(searchQuery && searchQuery.length != 0) &&
-                      contacts &&
-                      contacts.map((elem, key) => (
+                      channels &&
+                      channels.map((elem, key) => (
                         // <div>
                         //     {console.log(elem)}
                         //   </div>
                         <div
-                          className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                          className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#36323270] hover:rounded-xl"
                           key={key}
                         >
                           {/* {console.log(elem.channel)} */}
@@ -391,9 +421,9 @@ const ChannelComponent = () => {
                               contentClassName={"bg-[#212121]"}
                               selectChat={() => {
                                 const isOpen =
-                                  !selectedUser ||
-                                  Object.keys(selectedUser).length == 0 ||
-                                  selectedUser.id != elem.channel.id
+                                  !selectedChannel ||
+                                  Object.keys(selectedChannel).length == 0 ||
+                                  selectedChannel.id != elem.channel.id
                                     ? true
                                     : !openSidebar;
                                 handleSelectUser(elem.channel);
@@ -411,13 +441,19 @@ const ChannelComponent = () => {
                 </div>
                 {/* <!-- end chat list --> */}
                 {/* <!-- message --> */}
-                <div className="w-full flex flex-row justify-between bg-[#181818]">
+                <div
+                  className={`w-full flex flex-row justify-between ${
+                    !(selectedChannel && Object.keys(selectedChannel).length != 0)
+                      ? "hidden"
+                      : ""
+                  }`}
+                >
                   {/* <div className="flex flex-row"> */}
-                  <div className="flex flex-col w-full ">
-                    <div className="px-4 flex justify-between items-center z-[1] bg-[#212121] border-b-2 border-[#0f0f0f]">
+                  <div className={`flex flex-col w-full  `}>
+                    <div className="px-4 flex justify-between items-center backdrop-blur-md bg-[#36323270] z-[1] border-b-2 border-[#585858]">
                       <div
                         className={`w-full ${
-                          Object.keys(selectedUser).length != 0
+                          Object.keys(selectedChannel).length != 0
                             ? "hover:cursor-pointer"
                             : ""
                         }`}
@@ -425,34 +461,33 @@ const ChannelComponent = () => {
                       >
                         <div className="flex px-4 pt-3 rounded-xl justify-start">
                           <div className="flex flex-col py-2">
-                            {selectedUser && selectedUser.channelpictureurl ? (
+                            {selectedChannel && selectedChannel.channelpictureurl ? (
                               <img
-                                src={selectedUser.channelpictureurl}
+                                src={selectedChannel.channelpictureurl}
                                 alt=""
                                 srcSet=""
                                 className="object-cover h-12 w-12 rounded-full"
                               />
                             ) : (
-                              selectedUser &&
-                              selectedUser.channelname && (
+                              selectedChannel &&
+                              selectedChannel.channelname && (
                                 <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
-                                  {selectedUser.channelname
+                                  {selectedChannel.channelname
                                     .charAt(0)
                                     .toUpperCase()}
                                 </div>
                               )
                             )}
                             {/* <img
-                          src={selectedUser.channelpictureurl ?? user.channelpictureurl}
+                          src={selectedChannel.channelpictureurl ?? user.channelpictureurl}
                           className="object-cover h-10 self-center w-10 rounded-full"
                           alt=""
                         /> */}
                           </div>
                           <div className="flex flex-col">
                             <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
-                              {selectedUser.channelname ??
-                                (user ? user.displayname :
-                                "Saved Message")}
+                              {selectedChannel.channelname ??
+                                (user ? user.displayname : "Saved Message")}
                             </div>
                           </div>
                         </div>
@@ -462,7 +497,7 @@ const ChannelComponent = () => {
                         className={
                           "p-2 rounded-full text-white font-semibold relative"
                         }
-                        isSelectedUser={Object.keys(selectedUser).length != 0}
+                        isSelectedUser={Object.keys(selectedChannel).length != 0}
                       />
                     </div>
 
@@ -472,11 +507,11 @@ const ChannelComponent = () => {
                           <div className="overflow-y-scroll  flex justify-center">
                             <div
                               className="w-1/2 flex flex-col"
-                              style={{ height: "70vh" }}
+                              style={{ height: "65vh" }}
                             >
                               {messages &&
                                 messages.map((msg, key) =>
-                                  (user && user.id != msg.user.id) ? (
+                                  user && user.id != msg.user.id ? (
                                     <div
                                       className="flex justify-start mb-4"
                                       key={key}
@@ -486,7 +521,7 @@ const ChannelComponent = () => {
                                         className="object-cover h-8 w-8 rounded-full"
                                         alt=""
                                       />
-                                      <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#212121] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
+                                      <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#1b1a10] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
                                         {msg.message}
                                       </div>
                                     </div>
@@ -495,7 +530,7 @@ const ChannelComponent = () => {
                                       className="flex justify-end mb-4"
                                       key={key}
                                     >
-                                      <div className="mr-2 py-3 px-4 bg-[#707579] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                                      <div className="mr-2 py-3 px-4 bg-[#1f2937] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
                                         {msg.message}
                                       </div>
                                       <img
@@ -513,13 +548,13 @@ const ChannelComponent = () => {
                               <input
                                 disabled={
                                   !(
-                                    selectedUser &&
-                                    Object.keys(selectedUser).length
+                                    selectedChannel &&
+                                    Object.keys(selectedChannel).length
                                   )
                                 }
-                                className={`w-1/2 bg-[#212121] py-5 px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
+                                className={`w-1/2 bg-[#36323270] backdrop-blur-sm py-5 px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
                 ${
-                  selectedUser && Object.keys(selectedUser).length
+                  selectedChannel && Object.keys(selectedChannel).length
                     ? "hover:border-[#707579] focus:border-[#707579]"
                     : ""
                 }`}
@@ -538,9 +573,9 @@ const ChannelComponent = () => {
                   </div>
                   {openSidebar && (
                     <div
-                      className={`flex flex-col bg-[#212121] h-full w-full border-2 border-[#0f0f0f]`}
+                      className={`flex flex-col h-full w-full  border-l-2 border-[#585858]`}
                     >
-                      <div className="flex flex-row justify-start py-5 w-full px-5">
+                      <div className="flex flex-row justify-start bg-[#36323270] py-5 w-full px-5">
                         <div className="flex flex-row">
                           <div
                             className="flex justify-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-full p-2 w-10 h-10"
@@ -549,36 +584,36 @@ const ChannelComponent = () => {
                             X
                           </div>
                           <div className=" flex justify-end font-semibold text-2xl px-10">
-                            Profile
+                            Chat
                           </div>
                         </div>
                       </div>
                       <div className="flex flex-col">
                         <div className="flex flex-row">
                           <div className="flex flex-row h-auto w-full relative">
-                            {selectedUser && selectedUser.channelpictureurl ? (
+                            {selectedChannel && selectedChannel.channelpictureurl ? (
                               <img
-                                src={selectedUser.channelpictureurl}
+                                src={selectedChannel.channelpictureurl}
                                 alt=""
                                 className="object-cover h-52 w-full"
                               />
                             ) : (
                               <div className="object-cover h-52 w-full bg-gray-800 flex justify-center items-center">
-                                {selectedUser.channelname
+                                {selectedChannel.channelname
                                   .charAt(0)
                                   .toUpperCase()}
                               </div>
                             )}
                             <div className="absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]">
-                              {selectedUser.channelname}
+                              {selectedChannel.channelname}
                             </div>
                           </div>
                         </div>
                       </div>
                       <div className="flex p-5 flex-col">
-                        <div className="rounded-xl hover:bg-[#181818] p-5 text-white">
+                        <div className="rounded-xl hover:bg-[#36323270] p-5 text-white">
                           <pre>
-                            {"Type: " + (selectedUser.type ?? "Hidden")}
+                          {"Type: " + getType(selectedChannel.channeltype)}
                           </pre>
                         </div>
                       </div>

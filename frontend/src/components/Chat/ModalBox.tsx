@@ -24,7 +24,8 @@ const handleSubmit = (values, {resetForm}) =>{
     setOpenModal(false);
 
     handleSelectUser && handleSelectUser(channel)
-    setSearchQuery('')
+    
+    setSearchQuery && setSearchQuery('')
 
 }
     return (
@@ -36,7 +37,7 @@ const handleSubmit = (values, {resetForm}) =>{
 
             </div>
             <div className="flex justify-end">
-                <button className="flex justify-center mt-0 bg-[#181818] text-white hover:bg-[#313131] px-3 py-1" onClick={()=>setOpenModal(true)}>+</button>
+                <button className="flex justify-center mt-0 bg-transparent text-white hover:bg-[#36323270] px-3 py-1" onClick={()=>setOpenModal(true)}>+</button>
             </div>
             </>
         ) : (join ? (
@@ -47,7 +48,7 @@ const handleSubmit = (values, {resetForm}) =>{
                       //   {console.log(elem)}
                       // </div>
                       <div 
-                      className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#181818] hover:rounded-xl"
+                      className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#36323270] hover:rounded-xl"
                       key={key}
                       >
                         <div
@@ -67,9 +68,9 @@ const handleSubmit = (values, {resetForm}) =>{
                           }}
                         >
                           <div className="w-1/4">
-                            {elem.avatarurl ? (
+                            {elem.channelpictureurl ? (
                             <img
-                              src={elem.avatarurl}
+                              src={elem.channelpictureurl}
                               alt=""
                               srcSet=""
                               className="object-cover h-12 w-12 rounded-full"
@@ -95,9 +96,9 @@ const handleSubmit = (values, {resetForm}) =>{
     }
         <Modal
         open={openModal}
-        className={null}
+        className={"backdrop-blur"}
         onClose={()=>setOpenModal(false)}
-        contentClassName={"bg-[#212121] "}
+        contentClassName={"bg-[#2d232330] backdrop-blur-2xl max-w-fit"}
         
         
         >
@@ -132,7 +133,6 @@ const handleSubmit = (values, {resetForm}) =>{
                     className="p-2 outline-none"
                     name="channelName"
                     placeholder="Channel Name"
-                    // value={join ? (channel ? channel.channelname : values.channelName) : values.channelName}
                     type="text"
                 >
                 </Field>
@@ -140,7 +140,6 @@ const handleSubmit = (values, {resetForm}) =>{
                     disabled={join}
                     name="type" as="select"
                     className="mt-2 bg-[#181818] p-2 rounded "
-                    // value={channel ? channel.channeltype : values.type}
                 >
                     <option value="1" >Public</option>
                     <option value="2" >Protected</option>

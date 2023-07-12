@@ -27,7 +27,7 @@ const Modal = ({open, onClose = null, contentClassName = null, className = null,
             onClick={handleOutsideClick}
         >
             <div 
-            className={`flex flex-col min-w-[50%] min-h-[50%] rounded-xl items-center shadow-[#212121] shadow ${contentClassName ? contentClassName : "bg-white"}`}
+            className={`flex flex-col min-w-[2%] min-h-[20%] rounded-xl items-center shadow-[#212121] shadow ${contentClassName ? contentClassName : "bg-white"}`}
             ref={modalRef}
             >
                 {children}
