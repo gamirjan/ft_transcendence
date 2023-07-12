@@ -246,7 +246,10 @@ export class RoomService {
   loop(): void {
 
     for (const room of this.rooms.values())
+    {
       if (room.state == State.INGAME) this.pong.update(room);
+      if(room.state == State.END) return;
+    }
   }
 
   async stopGame(room: Room, player: Player): Promise<void> {
@@ -270,6 +273,9 @@ export class RoomService {
     }
 
     RoomService.emit(room, 'stop', player.user);
+    for (const player of room.players) {
+        this.removeSocket(player.socket);
+   }
   }
 
   getRoomForUser(userId: number): Room {

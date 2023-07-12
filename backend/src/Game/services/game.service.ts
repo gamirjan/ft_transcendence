@@ -72,7 +72,7 @@ export class PongService {
         );
 
       for (const player of room.players)
-        if (player.score == 5)
+        if (player.score == player.room.options.score.max)
           return this.roomService.stopGame(room, player);
 
       this.resetBall(
