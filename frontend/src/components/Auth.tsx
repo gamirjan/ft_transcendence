@@ -15,7 +15,7 @@ const Auth = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const login = (params:object) => {
-	
+		
 		fetch(`${ip}:7000/auth/google/login`, {
 		method: 'POST',
 		// mode:'no-cors',
@@ -95,7 +95,7 @@ const Auth = () => {
 		  })
 		  .catch(error => {
 			// Handle any errors
-			console.log(error);
+			console.log("errrrrrrrrror",error);
 		  });
 	  }, [currentUser]);
   return (
