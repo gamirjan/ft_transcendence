@@ -19,9 +19,9 @@ export class RoomService {
   ) {}
   static options: Option = Object.freeze({
     display: { width: 1920, height: 1080 },
-    ball: { speed: 20, radius: 20 },
+    ball: { speed: 10, radius: 5 },
     tray: { width: 20, height: 200, x: 50 },
-    score: { y: 15, max: 10 },
+    score: { y: 15, max: 5 },
     input: { plan: Plan.DEFAULT, mode: Mode.NONE },
   });
 

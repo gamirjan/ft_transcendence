@@ -77,9 +77,11 @@ useEffect(() => {
     socket.on('info', (data) => {
         console.log("info",data);
         
+        
     });
 
     socket.on('playerinfo',(data,data1)=>{
+      
       console.log("sddsddsdsdsdsd",data,data1);
       setPlayer1(data.displayname);
       setPlayer2(data1.displayname);
@@ -99,6 +101,7 @@ useEffect(() => {
         {
           socket.emit('start');
           setIsStart(true);
+          
         }
     });
 
