@@ -64,7 +64,7 @@ export class UsersController {
       },
     }),
   }))
-  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Body() payload: { userid: number }, @Res() res): Promise<void> {
+  async uploadUserAvatar(@UploadedFile() file: Express.Multer.File, @Body() payload: { userid: number }, @Res() res): Promise<any> {
     const { userid } = payload;
     var user = await this.usersService.findOneByPKId(userid);
     if (!user)
@@ -74,8 +74,12 @@ export class UsersController {
     if (!file)
     {
       res.status(400).send('No avatar found in the request');
-    } else {
-      const avatarUrl = `${ip}:7000/img/${file.filename}`;
+    }
+    else
+    {
+      const avatarUrl = `${process.env.IP}:7000/img/${file.filename}`;
+      user.avatarurl = avatarUrl;
+      this.usersService.updateUserInfo(user);
       res.status(200).send({ avatarUrl });
     }
   }
