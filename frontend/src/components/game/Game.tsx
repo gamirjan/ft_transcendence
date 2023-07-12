@@ -72,7 +72,7 @@ function Game({socket,name1,name2}) {
       // console.log(tray);
         
         socket.emit('tray', tray);
-      }, 100);
+      }, 40);
       };
   
       const movePaddle = (deltaY: number) => {
