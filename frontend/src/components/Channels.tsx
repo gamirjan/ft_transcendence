@@ -25,7 +25,8 @@ const ChannelComponent = () => {
   const [channels, setChannels] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedChannel, setSelectedChannel] = useState({});
+  const [selectedChannel, setSelectedChannel] = useState(null);
+  const [selectedRole, setSelectedRole] = useState("user");
   const [messages, setMessages] = useState([]);
   const [allChannels, setAllChannels] = useState([]);
   const [dmMessage, setDMMessage] = useState("");
@@ -34,7 +35,7 @@ const ChannelComponent = () => {
   const [openModal, setOpenModal] = useState(false);
 
   const toggleSidebar = () => {
-    Object.keys(selectedChannel).length != 0 && setOpenSidebar(!openSidebar);
+    selectedChannel && setOpenSidebar(!openSidebar);
   };
 
   const joinChannel = (channel) => {
@@ -68,7 +69,14 @@ const ChannelComponent = () => {
     console.log(e);
 
     // joinChannel(e)
-    setSelectedChannel(e);
+    setSelectedChannel(e.channel);
+    setSelectedRole(getRole(e.role));
+    console.log(e.channel.id);
+
+    // if (Object.keys(selectedChannel).length) {
+    // console.log(selectedChannel.id);
+    // console.log(messages);
+    // }
   };
   useEffect(() => {
     const onConnect = () => {
@@ -105,6 +113,7 @@ const ChannelComponent = () => {
   const fetchMessages = () => {
     if (user == null) navigate("/", { replace: true });
     else {
+      if (!selectedChannel) return;
       fetch(`${ip}:7000/channelmessages/${selectedChannel.id}`)
         .then((response) => {
           if (!response.ok) {
@@ -114,7 +123,6 @@ const ChannelComponent = () => {
         })
         .then((data) => {
           // console.log("messages: ", data);
-
           setMessages(data);
         })
         .catch((error) => {
@@ -155,8 +163,8 @@ const ChannelComponent = () => {
           return response.json(); // assuming the server returns JSON data
         })
         .then((data) => {
+          // console.log("channelll: ", data);
           setChannels(data);
-          // console.log(data);
         })
         .catch((error) => {
           console.log(error);
@@ -164,12 +172,13 @@ const ChannelComponent = () => {
       // console.log(selectedChannel);
 
       fetchChannels();
-      if (Object.keys(selectedChannel).length) {
-        fetchMessages();
-        // console.log(messages);
-      }
     }
-  }, [sended, openModal]);
+  }, []);
+
+  useEffect(() => {}, [sended, openModal]);
+  useEffect(() => {
+    if (selectedChannel) fetchMessages();
+  }, [selectedChannel]);
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -224,10 +233,11 @@ const ChannelComponent = () => {
   };
   const sendDMMessage = () => {
     const msg = dmMessage.trim();
-    if (!msg.length) return;
+    if (!msg.length || !selectedChannel) return;
     // console.log(user, selectedChannel);
     // console.log(dmMessage);
     // console.log(typeof(user.id));
+    console.log(msg);
 
     const values = {
       channel: selectedChannel,
@@ -314,6 +324,16 @@ const ChannelComponent = () => {
         return "public";
     }
   };
+  const getRole = (param) => {
+    switch (param) {
+      case 0:
+        return "owner";
+      case 1:
+        return "admin";
+      default:
+        return "user";
+    }
+  };
 
   return (
     <LayoutProvider>
@@ -368,7 +388,7 @@ const ChannelComponent = () => {
                     >
                       <ModalBox
                         join={true}
-                        handleSelectUser={handleSelectChat}
+                        // handleSelectUser={handleSelectChat}
                         suggestions={suggestions}
                         setSearchQuery={setSearchQuery}
                         joinChannel={joinChannel}
@@ -395,7 +415,7 @@ const ChannelComponent = () => {
                           <div
                             className="flex w-full  justify-start"
                             onClick={() => {
-                              handleSelectChat(elem.channel);
+                              handleSelectChat(elem);
                               // console.log("okkkkkk");
                             }}
                           >
@@ -427,11 +447,10 @@ const ChannelComponent = () => {
                               selectChat={() => {
                                 const isOpen =
                                   !selectedChannel ||
-                                  Object.keys(selectedChannel).length == 0 ||
                                   selectedChannel.id != elem.channel.id
                                     ? true
                                     : !openSidebar;
-                                handleSelectChat(elem.channel);
+                                handleSelectChat(elem);
                                 setOpenSidebar(isOpen);
                               }}
                               isSelectedUser={true}
@@ -448,12 +467,7 @@ const ChannelComponent = () => {
                 {/* <!-- message --> */}
                 <div
                   className={`w-full flex flex-row justify-between ${
-                    !(
-                      selectedChannel &&
-                      Object.keys(selectedChannel).length != 0
-                    )
-                      ? "hidden"
-                      : ""
+                    !selectedChannel ? "hidden" : ""
                   }`}
                 >
                   {/* <div className="flex flex-row"> */}
@@ -461,9 +475,7 @@ const ChannelComponent = () => {
                     <div className="px-4 flex justify-between items-center backdrop-blur-md bg-[#36323270] z-[1] border-b-2 border-[#585858]">
                       <div
                         className={`w-full ${
-                          Object.keys(selectedChannel).length != 0
-                            ? "hover:cursor-pointer"
-                            : ""
+                          selectedChannel ? "hover:cursor-pointer" : ""
                         }`}
                         onClick={toggleSidebar}
                       >
@@ -495,8 +507,11 @@ const ChannelComponent = () => {
                           </div>
                           <div className="flex flex-col">
                             <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
-                              {selectedChannel.channelname ??
-                                (user ? user.displayname : "Saved Message")}
+                              {selectedChannel
+                                ? selectedChannel.channelname
+                                : user
+                                ? user.displayname
+                                : "Saved Message"}
                             </div>
                           </div>
                         </div>
@@ -506,9 +521,7 @@ const ChannelComponent = () => {
                         className={
                           "p-2 rounded-full text-white font-semibold relative"
                         }
-                        isSelectedUser={
-                          Object.keys(selectedChannel).length != 0
-                        }
+                        isSelectedUser={Boolean(selectedChannel)}
                       />
                     </div>
 
@@ -528,8 +541,8 @@ const ChannelComponent = () => {
                                       key={key}
                                     >
                                       <img
-                                        src={user.avatarurl}
-                                        className="object-cover h-64 w-64 rounded-full"
+                                        src={msg.user.avatarurl}
+                                        className="object-cover h-8 w-8 rounded-full"
                                         alt=""
                                       />
                                       <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#1b1a10] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
@@ -557,15 +570,10 @@ const ChannelComponent = () => {
                           {
                             <div className="flex py-5 justify-around">
                               <input
-                                disabled={
-                                  !(
-                                    selectedChannel &&
-                                    Object.keys(selectedChannel).length
-                                  )
-                                }
+                                disabled={!selectedChannel}
                                 className={`w-1/2 bg-[#36323270] backdrop-blur-sm py-5 px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
                 ${
-                  selectedChannel && Object.keys(selectedChannel).length
+                  selectedChannel
                     ? "hover:border-[#707579] focus:border-[#707579]"
                     : ""
                 }`}
@@ -627,6 +635,7 @@ const ChannelComponent = () => {
                           <pre>
                             {"Type: " + getType(selectedChannel.channeltype)}
                           </pre>
+                          <pre>{"Role: " + getRole(selectedChannel.role)}</pre>
                         </div>
                         <div className="flex flex-col">
                           <div className="flex flex-col">Members</div>
@@ -644,9 +653,7 @@ const ChannelComponent = () => {
                                   key={key}
                                 >
                                   {/* {console.log(elem.channel)} */}
-                                  <div
-                                    className="flex w-full  justify-start"
-                                  >
+                                  <div className="flex w-full  justify-start">
                                     <div className="w-1/4">
                                       {elem.channel.channelpictureurl ? (
                                         <img
@@ -670,7 +677,9 @@ const ChannelComponent = () => {
                                     </div>
                                   </div>
                                   <div className="flex w-full justify-end">
-                                    <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">X</button>
+                                    <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
+                                      X
+                                    </button>
                                     {/* <button className="bg-green">toADMIN</button> */}
                                     {/* <button className="bg-blue"></button> */}
                                   </div>
