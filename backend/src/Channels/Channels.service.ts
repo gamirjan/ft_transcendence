@@ -13,6 +13,7 @@ import { NotFoundException } from '@nestjs/common';
 import { BadRequestException, UnauthorizedException } from '@nestjs/common/exceptions';
 import * as bcrypt from 'bcrypt';
 import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
+import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
 
 @Injectable()
 export class ChannelsService {
@@ -29,11 +30,23 @@ export class ChannelsService {
     return this.channelRepository.find({ where: { channeltype: In([1, 2]) }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
   }
 
-  async getChannelUsers(id: number): Promise<User[]> {
-    var owner = await this.getChannelOwner(id);
-    var admins = await this.getChannelAdmins(id);
-    var users = (await this.channelUsersRepository.find({ where: { channelid: id }, relations: ['user'] })).map(cu => cu.user);
-    return [owner].concat(admins, users);
+  async getChannelUsers(id: number): Promise<ChannelUserDto[]> {
+    var ownerUser = (await this.getChannelOwner(id));
+    var ownerModel = new ChannelUserDto();
+    ownerModel.role = ChannelRole.OWNER;
+    ownerModel.user = ownerUser;
+    var admins = (await this.getChannelAdmins(id))
+                            .map(ca =>
+                            ({
+                              role: ChannelRole.ADMIN,
+                              user: ca
+                            }));
+    var users = (await this.channelUsersRepository.find({ where: { channelid: id }, relations: ['user'] }))
+                                                  .map(cu => ({
+                                                    role: ChannelRole.USER,
+                                                    user: cu.user
+                                                  }));
+    return [ownerModel].concat(admins, users);
   }
 
   async getChannelOwner(id: number): Promise<User> {
