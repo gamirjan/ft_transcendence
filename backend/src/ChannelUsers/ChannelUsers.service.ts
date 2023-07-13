@@ -8,6 +8,7 @@ import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common/exceptions';
 import { Channel } from '../Channels/Channel.entity';
 import { ChannelsService } from '../Channels/Channels.service';
+import { UsersService } from '../Users/user.service';
 
 @Injectable()
 export class ChannelUsersService {
@@ -18,7 +19,8 @@ export class ChannelUsersService {
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(Channel)
     private channelsRepository: Repository<Channel>,
-    private readonly channelsService: ChannelsService
+    private readonly channelsService: ChannelsService,
+    private readonly usersService: UsersService
   ) {}
 
   async getChannelUsers(channelid: number): Promise<ChannelUserModel[]> {
@@ -53,14 +55,35 @@ export class ChannelUsersService {
     return this.channelUsersRepository.save(channelUser);
   }
 
-  async removeUser(channeluserid: number, userid: number): Promise<void> {
-    var channel = (await this.channelUsersRepository.findOne({ relations: ['channel'], where: { id: channeluserid } })).channel;
-    var ownerid = (await this.channelsRepository.findOne({ relations: ['owner'], where: { id: channel.id } })).owner.id
-    var admin = await this.channelAdminsRepository.findOne({ where: { channelid: channel.id, adminid: userid } });
-    if (!admin && ownerid != userid)
+  async removeUser(callinguserid: number, channelid: number, userid: number): Promise<void> {
+    await this.usersService.findOneByPKId(callinguserid);
+    await this.usersService.findOneByPKId(userid);
+    var channel = await this.channelsService.getChannelById(channelid);
+    var owner = (await this.channelsRepository.findOne({ relations: ['owner'], where: { id: channelid } })).owner;
+    var admin = await this.channelAdminsRepository.findOne({ where: { channelid: channel.id, adminid: callinguserid } });
+    if (!admin && owner.id != callinguserid)
     {
       throw new ForbiddenException('You do not have access to kick users from this channel.');
     }
-    await this.channelUsersRepository.delete({ id: channeluserid });
+
+    if (userid == owner.id)
+    {
+      throw new BadRequestException("Owner can't be kicked from channel");
+    }
+
+    var user = await this.channelUsersRepository.findOne({ where: { channelid: channelid, userid: userid } });
+    var adminUser = await this.channelAdminsRepository.findOne({ where: { channelid: channelid, adminid: userid } });
+    if (!user && !adminUser)
+    {
+      throw new BadRequestException("User is not in channel");
+    }
+
+    if (admin && adminUser)
+    {
+      throw new BadRequestException("Only owner can kick admins from channel");
+    }
+
+    user ? await this.channelUsersRepository.delete({ channelid: channelid, userid: userid }) :
+           await this.channelAdminsRepository.delete({ channelid: channelid, adminid: userid });
   }
 }

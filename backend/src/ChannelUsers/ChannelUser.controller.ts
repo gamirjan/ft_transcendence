@@ -19,8 +19,8 @@ export class ChannelUsersController {
     return res.send(await this.channelUsersService.addUser(callinguserid, channelid, userid));
   }
 
-  @Delete('/:channeluserid/:userid')
-  async removeUserFromChannel(@Param('channeluserid') channeluserid: number, @Param('userid') userid: number, @Res() res): Promise<void> {
-    return res.send(await this.channelUsersService.removeUser(channeluserid, userid));
+  @Delete('/:callinguserid/:channelid/:userid')
+  async removeUserFromChannel(@Param('callinguserid') callinguserid: number, @Param('channelid') channelid: number, @Param('userid') userid: number, @Res() res): Promise<void> {
+    return res.send(await this.channelUsersService.removeUser(callinguserid, channelid, userid));
   }
 }

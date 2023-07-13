@@ -57,8 +57,8 @@ export class ChannelsService {
     return (await this.channelAdminsRepository.find({ where: { channelid: id }, relations: ['admin'] })).map(a => a.admin);
   } 
 
-  async getChannelById(id: number): Promise<Channel> {
-    var channel = await this.channelRepository.findOne({ where: { id: id }, relations: ["owner", "channelusers.user", "channeladmins.admin"], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
+  async getChannelById(channelid: number): Promise<Channel> {
+    var channel = await this.channelRepository.findOne({ where: { id: channelid }, relations: ["owner", "channelusers.user", "channeladmins.admin"], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
     if (!channel)
       throw new NotFoundException("Channel not found");
     return channel;
