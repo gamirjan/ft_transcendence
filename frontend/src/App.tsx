@@ -32,6 +32,7 @@ import GameMatch from "./components/game/Pong";
 import { Store } from "redux";
 import { io } from "socket.io-client";
 import { ip } from "./components/utils/ip";
+import FileUploadForm from "./components/file/fileUpload";
 
 
 
@@ -67,6 +68,7 @@ function App() {
       {/* <Route path="/main" element={<PingPong width={800} height={300}/>}/> */}
       <Route path="/pin" element={<Pin/>}/>
       <Route path="/gg" element={<MatchmakingGame/>}/>
+      <Route path="/test" element={<FileUploadForm/>}/>
       {/* <Route path="/aa" element={<GameMatch/>}/> */}
           </Routes>
        </Router>

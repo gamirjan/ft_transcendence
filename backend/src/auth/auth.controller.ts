@@ -32,29 +32,29 @@ export class AuthController {
         console.log("========================");
 
         try {
-            const is_user = await this.userService.findOneById(body.id);
-          await console.log("fiiinddd",is_user);
-          console.log(!is_user,is_user == null);
-          return res.status(201).send(is_user)
           
         } catch (error) {
           
+        }
+        
+        const is_user = await this.userService.findOneById(body.id);
+        await console.log("fiiinddd",is_user);
+        console.log(!is_user,is_user == null);
+        if(!is_user)
+        {
           const user = await this.addUserService.create({
-              ID_42:body.id,
+            ID_42:body.id,
             displayName: body.name,
             avatarUrl: body.picture,
             email:body.email,
-          isTwoFactorEnabled: false,
+            isTwoFactorEnabled: false,
             wins: 0,
-           losses: 0
+            losses: 0
           })
           return res.status(208).send(user);
         }
+        return res.status(201).send(is_user)
         
-        // if(!is_user)
-        // {
-        // }
-
         // return res.status(201).send(is_user)
    
         

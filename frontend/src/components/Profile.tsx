@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { store } from "./redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
+import FileUploadForm from "./file/fileUpload";
 
 const get_game_info = async (param: object) => {
   let res = await fetch(`${ip}:7000/game/user/${param.id}`);
@@ -19,6 +20,7 @@ const Profile = () => {
   const userByID = user;
   const [TFA, setTFA] = useState(user.istwofactorenabled);
   const [TFAEmail, setTFAEmail] = useState(user.twofactoremail);
+  const [modal,setmodal] = useState(false);
   const navigate = useNavigate();
   let games = [];
   const fetchTFA = async () => {
@@ -111,7 +113,9 @@ const Profile = () => {
 
   useEffect(() => {
     console.log("TFA: ", TFA);
-  }, [TFA]);
+    console.log("modddalll",modal);
+    
+  }, [TFA,modal]);
   // useEffect(()=>{
   //     if(user == null)
   //     {
@@ -143,15 +147,25 @@ const Profile = () => {
     //     console.log("game info",game_info); */
     // },[])
     // console.log("useerrrrprofile",store.getState());
+    const handleModalOpen = ()=>{
+      setmodal(true);
+    }
     return (
         <LayoutProvider>
         <div className="">
-
+        {modal && <FileUploadForm/>}
         <div className="flex flex-row justify-center">
             <div className="flex flex-col items-center" style={{width:"30%", height:"100%"}}>
                 <p className="text-sm text-gray-500 py-2"> Created 7 June 2023</p>
                 <img src={user.avatarurl} className="border-4 border-white rounded-full" style={{width:"80%", height:"80%"}}/>   
                 <p className="text-2xl text-center">{user.displayname}</p>
+                <button
+                    type="submit"
+                    onClick={() => setmodal(prevModal => !prevModal)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 ml-4"
+                  >
+                    Change Photo
+                  </button>
             </div>
             
             <div className="flex flex-col" style={{width:"30%"}}>

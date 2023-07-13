@@ -4,7 +4,6 @@
   import { ShutdownService} from './signal.service'
   import { ConfigModule } from '@nestjs/config';
   import { TypeOrmModule } from '@nestjs/typeorm';
-  import config from './ormconfig'
   import { UsersController } from './Users/user.controller';
   import { UsersService } from './Users/user.service';
   import { ChatServer } from './chat.server';
@@ -49,7 +48,7 @@ import { GameServer } from './Game/Game.server';
 import { GameModule } from './Game/game.module';
 import { GameService } from './GameHistory/GameHistory.service';
 import { ImageController } from './ImageService/image.controller';
-
+import configg from './ormconfig';
 
 
 
@@ -58,7 +57,7 @@ import { ImageController } from './ImageService/image.controller';
   @Module({
     imports: [
       ConfigModule.forRoot({isGlobal:true}),
-      TypeOrmModule.forRoot(config),
+      TypeOrmModule.forRoot(configg),
       ChannelUsersModule,
       ChannelAdminsModule,
       ChannelsModule,
@@ -81,7 +80,7 @@ import { ImageController } from './ImageService/image.controller';
     constructor(){
       console.log("app module called");
       console.log("============================");
-      console.log(config);
+      console.log(configg);
       console.log("============================");
     /*   // createPostgreSQLConnection();
      let  UID = "Your application uid"
