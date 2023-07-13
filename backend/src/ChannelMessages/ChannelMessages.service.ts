@@ -44,6 +44,7 @@ export class ChannelMessagesService {
     channelmessage.message = addMessageToChannelDto.message;
     channelmessage.user = addMessageToChannelDto.user;
     channelmessage.channel = addMessageToChannelDto.channel;
-    return this.channelMessagesRepository.save(channelmessage);
+    channelmessage.publishdate = new Date();
+    return await this.channelMessagesRepository.save(channelmessage);
   }
 }
