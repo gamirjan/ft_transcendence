@@ -10,12 +10,15 @@ import { PongService } from './game.service';
 import { CreateGameDto } from '../../GameHistory/CreateGameDto';
 import { ConnectedSocket } from '@nestjs/websockets';
 import { json } from 'node:stream/consumers';
+import { UsersService } from '../../Users/user.service';
+
 
 @Injectable()
 export class RoomService {
   constructor(
     private readonly pong: PongService,
-    // private readonly gameHistoryService: GameService
+     private readonly gameHistoryService: GameService,
+     private readonly userService: UsersService
   ) {}
   static options: Option = Object.freeze({
     display: { width: 1920, height: 1080 },
@@ -265,13 +268,22 @@ export class RoomService {
       const score = room.players.map((player) => player.score);
 
       const game = new CreateGameDto();
-      game.user1 = winner;
-      game.user2 = loser;
+      game.user1 = room.players[0].user;
+      game.user2 = room.players[1].user;
       game.user1Score = score[0];
       game.user2Score = score[1];
+      const gg = {
+        user1:game.user1,
+        user2:game.user2,
+        user1Score:game.user1Score,
+        user2Score:game.user2Score
+      }
       // await this.gameHistoryService.createGame(game);
+      this.gameHistoryService.createGame(gg)
+      this.userService.updateGameStats(winner, true)
+      this.userService.updateGameStats(loser, false)
+      
     }
-
     RoomService.emit(room, 'stop', player.user);
     for (const player of room.players) {
         this.removeSocket(player.socket);
