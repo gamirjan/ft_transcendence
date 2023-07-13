@@ -5,8 +5,9 @@ import { ChannelUser } from './ChannelUser.entity';
 import { User } from '../Users/user.entity';
 import { ChannelUserModel } from './ChannelUserModel';
 import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
-import { ForbiddenException } from '@nestjs/common/exceptions';
+import { BadRequestException, ForbiddenException } from '@nestjs/common/exceptions';
 import { Channel } from '../Channels/Channel.entity';
+import { ChannelsService } from '../Channels/Channels.service';
 
 @Injectable()
 export class ChannelUsersService {
@@ -16,7 +17,8 @@ export class ChannelUsersService {
     @InjectRepository(ChannelAdmin)
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(Channel)
-    private channelsRepository: Repository<Channel>
+    private channelsRepository: Repository<Channel>,
+    private readonly channelsService: ChannelsService
   ) {}
 
   async getChannelUsers(channelid: number): Promise<ChannelUserModel[]> {
@@ -30,11 +32,20 @@ export class ChannelUsersService {
   }
 
   async addUser(callinguserid: number, channelid: number, userid: number): Promise<ChannelUser> {
+    if (!callinguserid || !channelid || !userid)
+    {
+      throw new BadRequestException("Invalid parameters");
+    }
     var ownerid = (await this.channelsRepository.findOne({ relations: ['owner'], where: { id: channelid } })).owner.id
     var admin = await this.channelAdminsRepository.findOne({ where: { channelid: channelid, adminid: callinguserid } });
     if (!admin && ownerid != callinguserid)
     {
       throw new ForbiddenException('You do not have access to add users in this channel.');
+    }
+    var allUsers = await this.channelsService.getChannelUsers(channelid);
+    if (allUsers.find(cu => cu.user.id == userid))
+    {
+      throw new BadRequestException("User is already in channel");
     }
     const channelUser = new ChannelUser();
     channelUser.channelid = channelid;

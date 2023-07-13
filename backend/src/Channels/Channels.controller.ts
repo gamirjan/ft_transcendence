@@ -7,12 +7,12 @@ import { User } from '../Users/user.entity';
 import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 import { JoinPublicChannelDto } from './JoinPublicChannelDto';
 import { JoinProtectedChannelDto } from './JoinProtectedChannelDto';
-import { PropertyMetadata } from '@nestjs/core/injector/instance-wrapper';
 import { UserJoinedChannelDto } from './UserJoinedChannelDto';
 import { extname } from 'path';
 import { ApiConsumes, ApiBody } from '@nestjs/swagger';
 import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
+import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
 
 @Controller('channels')
 export class ChannelsController {
@@ -39,7 +39,7 @@ export class ChannelsController {
   }
   
   @Get('users/:id')
-  async getChannelUsersById(@Param('id') id: number, @Res() res): Promise<User[]> {
+  async getChannelUsersById(@Param('id') id: number, @Res() res): Promise<ChannelUserDto[]> {
     return res.send(await this.channelService.getChannelUsers(id));
   }
   
