@@ -28,7 +28,7 @@ export class User {
   @Column("character varying", {
     name: "displayname",
     nullable: true,
-    unique: true,
+    unique: false,///ddddd
     length: 50,
   })
   displayname: string | null;
