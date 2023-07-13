@@ -16,6 +16,7 @@ const get_game_info = async (param: object) => {
 
 const Profile = () => {
   const user = useSelector((state: AppState) => state.user);
+  const userByID = user;
   const [TFA, setTFA] = useState(user.istwofactorenabled);
   const [TFAEmail, setTFAEmail] = useState(user.twofactoremail);
   const navigate = useNavigate();
@@ -86,6 +87,28 @@ const Profile = () => {
         });
     }
   };
+  let scores = {
+    "ScoreWins": 10,
+    "ScoreLoses": 5
+  };
+  // fetch(`${ip}:7000/game/${user.id}/scores`, {
+  //   method: "POST",
+  //   headers: { "Content-Type": "application/json" },
+  //   body: JSON.stringify(scores),
+  // })
+  // .then((response) => {
+  //   if (!response.ok) {
+  //     throw new Error("Request failed");
+  //   }
+  //   return response.json(); // assuming the server returns JSON data
+  // })
+  // .then((data) => {
+  //   scores = data;
+  // })
+  // .catch((error) => {
+  //   console.log(error);
+  // });
+
   useEffect(() => {
     console.log("TFA: ", TFA);
   }, [TFA]);
@@ -207,23 +230,19 @@ const Profile = () => {
                     <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Birthday:</span>
-                            <span className="text-gray-300">2 Nov, 1984</span>
+                            <span className="text-gray-300">Hidden</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Mobile:</span>
-                            <span className="text-gray-300">(123) 123-1234</span>
+                            <span className="text-gray-300">Hidden</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Email:</span>
-                            <span className="text-gray-300">mikhayil.arzumanyan@gmail.com</span>
+                            <span className="text-gray-300">{userByID.twofactoremail}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Location:</span>
                             <span className="text-gray-300">Yerevan, Armenia</span>
-                        </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Languages:</span>
-                            <span className="text-gray-300">Arminian, Russian, English</span>
                         </li>
                     </ul>
                 </div>
@@ -235,19 +254,19 @@ const Profile = () => {
                     <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Total:</span>
-                            <span className="text-gray-300">{Object.keys(games).length}</span>
+                            <span className="text-gray-300">{`${scores.ScoreWins + scores.ScoreLoses}`}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Wins:</span>
-                            <span className="text-gray-300">6</span>
+                            <span className="text-gray-300">{scores.ScoreWins}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Loses:</span>
-                            <span className="text-gray-300">7</span>
+                            <span className="text-gray-300">{scores.ScoreLoses}</span>
                         </li>
                         <li className="flex border-b py-2">
                             <span className="font-bold w-24">Win Ratio:</span>
-                            <span className="text-gray-300">47%</span>
+                            <span className="text-gray-300">{Math.round(scores.ScoreWins / (scores.ScoreWins + scores.ScoreLoses) * 100)}%</span>
                         </li>
                     </ul>
                 </div>
