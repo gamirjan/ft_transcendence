@@ -7,6 +7,7 @@ import { store } from "./redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 import FileUploadForm from "./file/fileUpload";
+import { FaPen } from 'react-icons/fa';
 
 const get_game_info = async (param: object) => {
   let res = await fetch(`${ip}:7000/game/user/${param.id}`);
@@ -154,20 +155,22 @@ const Profile = () => {
         <LayoutProvider>
         <div className="">
         {modal && <FileUploadForm/>}
-        <div className="flex flex-row justify-center">
-            <div className="flex flex-col items-center" style={{width:"30%", height:"100%"}}>
-                <p className="text-sm text-gray-500 py-2"> Created 7 June 2023</p>
-                <img src={user.avatarurl} className="border-4 border-white rounded-full" style={{width:"80%", height:"80%"}}/>   
-                <p className="text-2xl text-center">{user.displayname}</p>
-                <button
-                    type="submit"
+        <div className="flex flex-row justify-center z-[-1]" style={{zIndex:-1111111111}}>
+                  <div className="flex flex-col items-center" style={{ width: "30%", height: "100%" }}>
+                <p className="text-sm text-gray-500 py-2">Created 7 June 2023</p>
+                <div className="">
+                  <img src={user.avatarurl} className="border-4 border-white rounded-full" style={{ width: "80%", height: "80%" ,zIndex:-1000}} />
+                  <button
+                    className=" w-10  bottom-0 right-0 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
                     onClick={() => setmodal(prevModal => !prevModal)}
-                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-4 ml-4"
                   >
-                    Change Photo
+                    <FaPen size={16} color="#000" />
                   </button>
-            </div>
+                </div>
+                <p className="text-2xl text-center">{user.displayname}</p>
+              </div>
             
+                    {/* onClick={() => setmodal(prevModal => !prevModal)} */}
             <div className="flex flex-col" style={{width:"30%"}}>
                 <div 
                     className="flex items-center hover:cursor-pointer"
