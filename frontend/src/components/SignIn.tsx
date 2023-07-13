@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import photo from "@SRC_DIR/assets/images/pong.jpg";
 import { Link, useNavigate } from "react-router-dom";
 import "./styles/signin.css"; // Import the CSS file for styling
@@ -55,6 +55,14 @@ function getUrl() {
 const SignIn = () => {
   const user = useSelector(state=>state.user)
   const navigate = useNavigate();
+  const [ftStyle, setFtStyle] = useState({
+    top: 50,
+    left: 20
+  })
+  const [googleStyle, setGoogleStyle] = useState({
+    top: 60,
+    left: 30
+  })
   const handleGoogleSignIn = () => {
     // if (user) navigate("/home", {replace: true});
     // Implement the logic for Google sign-in here
@@ -64,9 +72,52 @@ const SignIn = () => {
   //   if (user) navigate("/twofactor", {replace: true});
   //   // Implement the logic for 42 sign-in here
   // };
+  function getRandom(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  
+  const runAway42 = ()=> {
+    console.log('42 runs');
+    let left =  getRandom(-500, 500) + ftStyle.top;
+    let top = getRandom(-500, 500) + ftStyle.left;
+    top = (top - ftStyle.top) < 200 ? top + 100 : top;
+    left = (left - ftStyle.left) < 200 ? left + 100 : left;
+
+    top = (top < 0) ? 0 : top;
+    top = (top > 500) ? 500 : top;
+    left = (left < 0) ? 0 : left;
+    left = (left > 500) ? 500 : left;
+    const newStyle = {
+      top: top,
+      left: left
+    }
+    setFtStyle(newStyle);
+  }
+  const runAwayGoogle = ()=> {
+    console.log('Google runs');
+    let left =  getRandom(-500, 500) + ftStyle.top;
+    let top = getRandom(-500, 500) + ftStyle.left;
+    top = (top - ftStyle.top) < 200 ? top + 100 : top;
+    left = (left - ftStyle.left) < 200 ? left + 100 : left;
+
+    top = (top < 0) ? 0 : top;
+    top = (top > 500) ? 500 : top;
+    left = (left < 0) ? 0 : left;
+    left = (left > 500) ? 500 : left;
+    const newStyle = {
+      top: top,
+      left: left
+    }
+    setGoogleStyle(newStyle);
+    // const newStyle = {
+    //   top: googleStyle.top + getRandom(-10, 10) + '%',
+    //   left: googleStyle.left + getRandom(-10, 10) + '%'
+    // }
+    // setGoogleStyle(newStyle);
+  }
  useEffect(()=>{
   if (user) navigate("/home", {replace: true});
- })
+ }, [ftStyle])
   const ft_link =
     process.env.redirect_link ??
     "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-ba3aea4480c6fd2f33eb1c38078b70eb56bfc32316df9eed3ce24c731b6b48c1&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fft_auth&response_type=code";
@@ -88,8 +139,12 @@ const SignIn = () => {
               <div className="signin">
                 <div className="background">
                   <form onSubmit={handleGoogleSignIn}>
-                    <div className="shape">
-                      <Link to={getUrl()}>
+                    <div className="shape" style={{top: googleStyle.top + 'px', left: googleStyle.left + 'px'}}
+                      onMouseEnter={runAwayGoogle}
+                    >
+                      <Link
+                        to={getUrl()}
+                        >
                         {" "}
                         <img
                           src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg"
@@ -104,8 +159,13 @@ const SignIn = () => {
                     <div className="eye shape-1 text-slate-500 text-3xl flex justify-center items-center">
                       Here
                     </div>
-                    <div className="shape">
-                      <Link to={ft_link}>
+                    <div className="shape"
+                        style={{top: ftStyle.top + 'px', left: ftStyle.left + "px"}}
+                        onMouseEnter={runAway42}
+                    >
+                      <Link
+                        to={ft_link}
+                      >
                         <img
                           src="https://upload.wikimedia.org/wikipedia/commons/8/8d/42_Logo.svg"
                           alt=""

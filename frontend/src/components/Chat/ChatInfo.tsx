@@ -6,7 +6,7 @@ const ChatInfo = (props) => {
   return (
     <div
       className={`${props.className} ${
-        props.isSelectedUser ? "hover:bg-[#181818] hover:cursor-pointer" : ''
+        props.isSelectedUser ? "hover:bg-[#36323270] hover:cursor-pointer" : ''
       }`}
       onClick={props.selectChat}
     >
