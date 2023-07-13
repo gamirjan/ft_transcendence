@@ -63,8 +63,9 @@ const ChannelComponent = () => {
         });
     }
   };
-  const handleSelectUser = (e) => {
+  const handleSelectChat = (e) => {
     // console.log("hhhhhhhhhhhhhh");
+    console.log(e);
 
     // joinChannel(e)
     setSelectedChannel(e);
@@ -269,7 +270,6 @@ const ChannelComponent = () => {
     // console.log(dmMessage);
     // console.log(typeof(user.id));
     console.log("data: ", data);
-    
 
     const values = {
       channelName: data.channelName,
@@ -305,15 +305,15 @@ const ChannelComponent = () => {
   };
 
   const getType = (param) => {
-    switch(param) {
+    switch (param) {
       case "2":
-        return 'protected';
+        return "protected";
       case "3":
-          return 'private';
+        return "private";
       default:
-        return 'public';
+        return "public";
     }
-  }
+  };
 
   return (
     <LayoutProvider>
@@ -342,7 +342,7 @@ const ChannelComponent = () => {
                     backgroundRepeat: "no-repeat",
                     backgroundSize: "cover",
                     backgroundBlendMode: "multiply",
-                    maxWidth: "20vw"
+                    maxWidth: "20vw",
                   }}
                 >
                   <div className="p-2 z-[4] border-b-2 border-[#585858]">
@@ -368,7 +368,7 @@ const ChannelComponent = () => {
                     >
                       <ModalBox
                         join={true}
-                        handleSelectUser={handleSelectUser}
+                        handleSelectUser={handleSelectChat}
                         suggestions={suggestions}
                         setSearchQuery={setSearchQuery}
                         joinChannel={joinChannel}
@@ -395,7 +395,7 @@ const ChannelComponent = () => {
                           <div
                             className="flex w-full  justify-start"
                             onClick={() => {
-                              handleSelectUser(elem.channel);
+                              handleSelectChat(elem.channel);
                               // console.log("okkkkkk");
                             }}
                           >
@@ -431,7 +431,7 @@ const ChannelComponent = () => {
                                   selectedChannel.id != elem.channel.id
                                     ? true
                                     : !openSidebar;
-                                handleSelectUser(elem.channel);
+                                handleSelectChat(elem.channel);
                                 setOpenSidebar(isOpen);
                               }}
                               isSelectedUser={true}
@@ -448,7 +448,10 @@ const ChannelComponent = () => {
                 {/* <!-- message --> */}
                 <div
                   className={`w-full flex flex-row justify-between ${
-                    !(selectedChannel && Object.keys(selectedChannel).length != 0)
+                    !(
+                      selectedChannel &&
+                      Object.keys(selectedChannel).length != 0
+                    )
                       ? "hidden"
                       : ""
                   }`}
@@ -466,7 +469,8 @@ const ChannelComponent = () => {
                       >
                         <div className="flex px-4 pt-3 rounded-xl justify-start">
                           <div className="flex flex-col py-2">
-                            {selectedChannel && selectedChannel.channelpictureurl ? (
+                            {selectedChannel &&
+                            selectedChannel.channelpictureurl ? (
                               <img
                                 src={selectedChannel.channelpictureurl}
                                 alt=""
@@ -502,7 +506,9 @@ const ChannelComponent = () => {
                         className={
                           "p-2 rounded-full text-white font-semibold relative"
                         }
-                        isSelectedUser={Object.keys(selectedChannel).length != 0}
+                        isSelectedUser={
+                          Object.keys(selectedChannel).length != 0
+                        }
                       />
                     </div>
 
@@ -596,7 +602,8 @@ const ChannelComponent = () => {
                       <div className="flex flex-col">
                         <div className="flex flex-row">
                           <div className="flex flex-row h-auto w-full relative">
-                            {selectedChannel && selectedChannel.channelpictureurl ? (
+                            {selectedChannel &&
+                            selectedChannel.channelpictureurl ? (
                               <img
                                 src={selectedChannel.channelpictureurl}
                                 alt=""
@@ -618,8 +625,58 @@ const ChannelComponent = () => {
                       <div className="flex p-5 flex-col">
                         <div className="rounded-xl hover:bg-[#36323270] p-5 text-white">
                           <pre>
-                          {"Type: " + getType(selectedChannel.channeltype)}
+                            {"Type: " + getType(selectedChannel.channeltype)}
                           </pre>
+                        </div>
+                        <div className="flex flex-col">
+                          <div className="flex flex-col">Members</div>
+                          <div
+                            className="flex flex-col w-full overflow-y-scroll"
+                            style={{ maxHeight: "30vh" }}
+                          >
+                            {channels &&
+                              channels.map((elem, key) => (
+                                // <div>
+                                //     {console.log(elem)}
+                                //   </div>
+                                <div
+                                  className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#36323270] hover:rounded-xl"
+                                  key={key}
+                                >
+                                  {/* {console.log(elem.channel)} */}
+                                  <div
+                                    className="flex w-full  justify-start"
+                                  >
+                                    <div className="w-1/4">
+                                      {elem.channel.channelpictureurl ? (
+                                        <img
+                                          src={elem.channel.channelpictureurl}
+                                          alt=""
+                                          srcSet=""
+                                          className="object-cover h-12 w-12 rounded-full"
+                                        />
+                                      ) : (
+                                        <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
+                                          {elem.channel.channelname
+                                            .charAt(0)
+                                            .toUpperCase()}
+                                        </div>
+                                      )}
+                                    </div>
+                                    <div className="flex flex-row">
+                                      <div className="ml-3 text-lg font-semibold">
+                                        {elem.channel.channelname}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex w-full justify-end">
+                                    <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">X</button>
+                                    {/* <button className="bg-green">toADMIN</button> */}
+                                    {/* <button className="bg-blue"></button> */}
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
                         </div>
                       </div>
                     </div>

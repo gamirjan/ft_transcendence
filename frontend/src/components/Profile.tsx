@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import profile from "@SRC_DIR/assets/images/profile.svg";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { store } from "./redux";
+import { setUser, store } from "./redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 import FileUploadForm from "./file/fileUpload";
@@ -49,15 +49,21 @@ const Profile = () => {
         .then((response) => {
           console.log("enabled?");
           console.log(response);
-
-          return response.json();
+          if (!response.ok)
+            return ;
         })
         .then((data) => {
+          dispatch(setUser({
+            ...user,
+            istwofactorenabled: true
+          }))
           console.log("enabled?");
           console.log(data);
+          console.log("user: ", user);
+          
         })
         .catch((error) => {
-          console.log("TWOFACTORERR");
+          console.log("error: ", error);
 
           // Handle any errors that occur during the request
           console.log(error);
@@ -78,14 +84,20 @@ const Profile = () => {
           console.log("enabled?");
           console.log(response);
 
-          return response.json();
+          if (!response.ok)
+            return ;
         })
         .then((data) => {
-          console.log("enabled?");
+          dispatch(setUser({
+            ...user,
+            istwofactorenabled: false
+          }))
+          console.log("disabled?");
           console.log(data);
+          console.log("user: ", user);
         })
         .catch((error) => {
-          console.log("TWOFACTORERR");
+          console.log("error: ", error);
 
           // Handle any errors that occur during the request
           console.log(error);
@@ -116,6 +128,8 @@ const Profile = () => {
 
   useEffect(() => {
     console.log("TFA: ", TFA);
+    fetchTFA();
+  }, [TFA, user]);
     console.log("modddalll",modal);
     
   }, [TFA,modal,nick]);
@@ -221,7 +235,7 @@ const Profile = () => {
                             // type="submit"
                             className="m-2 py-2 text-sm bg-[#212121] hover:bg-[#313131] rounded-xl text-[#aaaaaa]"
                             style={{width:"50%"}}
-                            onClick={fetchTFA}
+                            onClick={()=>setTFA(prevstate => !prevstate)}
                             >
                                 Save changes
                             </button>
@@ -238,7 +252,9 @@ const Profile = () => {
                 <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                     Chat
                 </button>
-                <button className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
+                <button   
+                onClick={()=>alert("Comming Soon")}
+                className="mr-2 mt-3 bg-white hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 border border-gray-400 rounded shadow">
                     Black
                 </button>
             </div>
@@ -246,9 +262,9 @@ const Profile = () => {
 
         </div>
 
-        <div className="text-xs md:text-sm bg-[#414141] border-2 border-transparent flex-1 rounded-t-lg shadow-xl grid grid-cols-2 flex justify-center mt-10">
-            <div className="flex flex-col">
-                <div className=" p-8">
+        <div className="text-xs md:text-sm bg-[#8a828236] backdrop-blur border-2 border-[#585858] rounded-t-lg shadow-xl flex justify-center mt-10" style={{maxHeight: "40vh", minWidth: '50vw'}}>
+            <div className="flex flex-col w-full">
+                <div className=" p-8 w-full flex flex-col justify-center items-center">
                     <h4 className="text-xs md:text-lg text-white font-bold">Personal Info</h4>
                     <ul className="mt-2 text-gray-400">
                         <li className="flex border-b py-2">
@@ -263,9 +279,9 @@ const Profile = () => {
                             <span className="font-bold w-24">Email:</span>
                             <span className="text-gray-300">{userByID.twofactoremail}</span>
                         </li>
-                        <li className="flex border-b py-2">
-                            <span className="font-bold w-24">Location:</span>
-                            <span className="text-gray-300">Yerevan, Armenia</span>
+                        <li className="flex border-b py-2 flex-row justify-between ">
+                            <span className="font-bold w-24 self-start">Loses:</span>
+                            <span className="text-gray-300 self-end">7</span>
                         </li>
                     </ul>
                 </div>
