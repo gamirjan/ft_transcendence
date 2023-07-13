@@ -14,7 +14,6 @@ import { Mutelist } from "../MuteList/MuteList.entity";
 import { UserFriend } from "../UserFriend/UserFriend.entity";
 import { Directmessage } from "../DirectMessages/DirectMessage.entity";
 
-@Index("users_displayname_key", ["displayname"], { unique: true })
 @Index("users_pkey", ["id"], { unique: true })
 @Index("users_42Id_key", ["id_42"], { unique: true })
 @Entity("users", { schema: "public" })
@@ -28,7 +27,7 @@ export class User {
   @Column("character varying", {
     name: "displayname",
     nullable: true,
-    unique: false,///ddddd
+    unique: false,
     length: 50,
   })
   displayname: string | null;

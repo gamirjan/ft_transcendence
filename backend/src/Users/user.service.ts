@@ -14,7 +14,7 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findOneById(userId: number): Promise<User | undefined> {
+  async findOneById(userId: number): Promise<User> {
     var user = await this.userRepository.findOne({ where: { id_42: userId } });
     if (!user)
       return null;
@@ -22,14 +22,14 @@ export class UsersService {
     throw new NotFoundException("User not found");
   }
   
-  async findOneByDisplayName(displayName: string): Promise<User | undefined> {
+  async findOneByDisplayName(displayName: string): Promise<User> {
     var user = this.userRepository.findOne({ where: { displayname: displayName } });
     if (!user)
       throw new NotFoundException("User not found");
     return user;
   }
 
-  async findOneByPKId(userid: number): Promise<User | undefined> {
+  async findOneByPKId(userid: number): Promise<User> {
     var user = await this.userRepository.findOne({ where: { id: userid } });
     if (!user)
       throw new NotFoundException("User not found");
