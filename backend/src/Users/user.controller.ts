@@ -14,8 +14,6 @@ export class UsersController {
 
   @Get()
   async findAll(@Res() res): Promise<User[]> {
-    console.log("/user request");
-    
     return res.send(await this.usersService.findAll());
   }
 
@@ -82,5 +80,11 @@ export class UsersController {
       this.usersService.updateUserInfo(user);
       res.status(200).send({ avatarUrl });
     }
+  }
+
+  @Post('nickname')
+  async updateDisplayName(@Body() payload: { userid: number, nickname: string }, @Res() res): Promise<void> {
+    const { userid, nickname } = payload;
+    return res.send(await this.usersService.updateDisplayName(userid, nickname));
   }
 }

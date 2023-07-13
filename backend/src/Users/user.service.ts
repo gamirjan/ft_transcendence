@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
 import { User } from './user.entity';
 import { InternalServerErrorException } from '@nestjs/common/exceptions';
+import { Raw } from 'typeorm';
 
 @Injectable()
 export class UsersService {
@@ -47,6 +48,23 @@ export class UsersService {
     if (updated.affected == 0)
     {
       throw new InternalServerErrorException();
+    }
+  }
+
+  async updateDisplayName(userid: number, nickname: string): Promise<void> {
+    const lowercaseNickname = nickname.toLowerCase();
+
+    const checkNick = await this.userRepository.findOne({
+      where: { displayname: Raw(alias => `LOWER(${alias}) = '${lowercaseNickname}'`) },
+    });
+
+    if (checkNick)
+    {
+      throw new BadRequestException("Display name already exists");
+    }
+    if ((await this.userRepository.update(userid, { displayname: nickname })).affected == 0)
+    {
+      throw new BadRequestException("User not found");
     }
   }
 }
