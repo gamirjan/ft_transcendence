@@ -7,11 +7,13 @@ import { Channel } from '../Channels/Channel.entity';
 import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { MuteListService } from './MuteList.service';
+import { ChannelsService } from '../Channels/Channels.service';
+import { UsersService } from '../Users/user.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User, Channel, Mutelist, ChannelAdmin, ChannelUser])],
   controllers: [MuteListController],
-  providers: [MuteListService],
+  providers: [MuteListService, ChannelsService, UsersService],
   exports: [MuteListService]
 })
 export class MuteListModule {}
