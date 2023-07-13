@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
 import { User } from './user.entity';
+import { InternalServerErrorException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class UsersService {
@@ -38,5 +39,14 @@ export class UsersService {
 
   async updateUserInfo(user: User): Promise<User> {
     return await this.userRepository.save(user);
+  }
+
+  async updateGameStats(user: User, isWinner:boolean): Promise<void> {
+    var updated = isWinner ? await this.userRepository.update(user.id, { wins: user.wins + 1 })
+             : await this.userRepository.update(user.id, { losses: user.losses + 1 }); 
+    if (updated.affected == 0)
+    {
+      throw new InternalServerErrorException();
+    }
   }
 }
