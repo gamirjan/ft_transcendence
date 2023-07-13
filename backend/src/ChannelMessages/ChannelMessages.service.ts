@@ -25,7 +25,7 @@ export class ChannelMessagesService {
   ) {}
 
   async getChannelMessages(id: number): Promise<Channelmessage[]> {
-    return this.channelMessagesRepository.find({ relations: ['user'], where: { channel: { id: id } } });
+    return this.channelMessagesRepository.find({ relations: ['user'], where: { channel: { id: id } }, order: { id: "ASC" } });
   }
 
   async addMessageToChannel(addMessageToChannelDto: AddChannelMessageDto): Promise<Channelmessage> {
@@ -44,6 +44,7 @@ export class ChannelMessagesService {
     channelmessage.message = addMessageToChannelDto.message;
     channelmessage.user = addMessageToChannelDto.user;
     channelmessage.channel = addMessageToChannelDto.channel;
-    return this.channelMessagesRepository.save(channelmessage);
+    channelmessage.publishdate = new Date();
+    return await this.channelMessagesRepository.save(channelmessage);
   }
 }
