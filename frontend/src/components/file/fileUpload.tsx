@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../redux';
 
 function FileUploadForm() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(true);
+	const user = useSelector((state: AppState) => state.user);
+  const dispatch = useDispatch();
+
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -26,15 +31,28 @@ function FileUploadForm() {
     if (selectedFile) {
       const formData = new FormData();
       formData.append('image', selectedFile);
+      formData.append('userid',user.id);
 
-      fetch('http://localhost:7000/images', {
+      fetch('http://transendence.net:7000/users/avatar', {
         method: 'POST',
         body: formData,
+        
       })
-        .then(response => response.json())
+        .then(response => {
+          if(response.ok)
+            return response.json()
+          throw new Error('file upload failed')
+        })
         .then(data => {
           // Handle the response from the server
-          console.log(data);
+          dispatch(setUser(
+            {...user,
+              avatarurl:data.avatarUrl,
+            },
+            
+          ))
+          console.log(data.avatarUrl,"lllllllllllllllll",user);
+          closeModal()
         })
         .catch(error => {
           // Handle any error that occurred
@@ -60,48 +78,49 @@ function FileUploadForm() {
     <div>
       {isModalOpen && (
         <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75">
-          <div className="bg-white rounded p-8 max-w-md">
-            <h2 className="text-2xl mb-4">Upload a File</h2>
-            {selectedFile ? (
-              <div className="mb-4">
-                <h3 className="text-lg mb-2">Selected File:</h3>
-                {previewUrl ? (
-                  <img src={previewUrl} alt="Selected File" className="mb-2 max-h-60" />
-                ) : null}
-                <div className="p-4 border border-gray-300">
-                  <span className="font-bold">{selectedFile.name}</span>
-                  <span className="text-gray-500"> ({selectedFile.size} bytes)</span>
-                </div>
+        <div className="bg-gray-800 rounded p-8 max-w-md border-4 border-red-500 animate-pulse shadow-lg z-[100]">
+          <h2 className="text-3xl mb-6 text-white">Upload a File</h2>
+          {selectedFile ? (
+            <div className="mb-6">
+              <h3 className="text-xl mb-4 text-white">Selected File:</h3>
+              {previewUrl ? (
+                <img src={previewUrl} alt="Selected File" className="mb-4 max-h-60" />
+              ) : null}
+              <div className="bg-gray-700 p-4 rounded">
+                <span className="font-bold text-white">{selectedFile.name}</span>
+                <span className="text-gray-500"> ({selectedFile.size} bytes)</span>
               </div>
-            ) : (
-              <div className="mb-4">
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="mb-2"
-                />
-                <p className="text-gray-500">No file selected</p>
-              </div>
-            )}
-
-            <div className="flex justify-end">
-              <button
-                type="button"
-                className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
-                onClick={closeModal}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className="bg-blue-800 hover:bg-blue-900 text-white font-bold py-2 px-4 rounded"
-                disabled={!selectedFile}
-              >
-                Upload
-              </button>
             </div>
+          ) : (
+            <div className="mb-6">
+              <input
+                type="file"
+                onChange={handleFileChange}
+                className="mb-2 bg-gray-700 text-white py-2 px-4 rounded"
+              />
+              <p className="text-gray-500">No file selected</p>
+            </div>
+          )}
+      
+          <div className="flex justify-end">
+            <button
+              type="button"
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
+              onClick={closeModal}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSubmit}
+              disabled={!selectedFile}
+            >
+              Upload
+            </button>
           </div>
         </div>
+      </div>
       )}
     </div>
   );

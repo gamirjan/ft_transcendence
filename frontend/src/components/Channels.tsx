@@ -16,6 +16,11 @@ import chatContent from "@SRC_DIR/assets/images/chatContent.jpg";
 
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
+  console.log("-----------------------------------------------------------------");
+  console.log(user);
+  
+  console.log("-----------------------------------------------------------------");
+  
   const navigate = useNavigate();
   const [channels, setChannels] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -517,8 +522,8 @@ const ChannelComponent = () => {
                                       key={key}
                                     >
                                       <img
-                                        src={msg.user.channelpictureurl}
-                                        className="object-cover h-8 w-8 rounded-full"
+                                        src={user.avatarurl}
+                                        className="object-cover h-64 w-64 rounded-full"
                                         alt=""
                                       />
                                       <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#1b1a10] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
@@ -534,7 +539,7 @@ const ChannelComponent = () => {
                                         {msg.message}
                                       </div>
                                       <img
-                                        src={user.channelpictureurl}
+                                        src={user.avatarurl}
                                         className="object-cover h-8 w-8 rounded-full"
                                         alt=""
                                       />
