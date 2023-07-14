@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux";
 import Modal from "../Chat/Modal";
+import { ip } from "../utils/ip";
 
 function Nick({ open, onClose }) {
   const [inputValue, setInputValue] = useState("");
@@ -17,7 +18,7 @@ function Nick({ open, onClose }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     try {
-      const response = fetch("http://localhost:7000/users/nickname", {
+      const response = fetch(`${ip}/users/nickname`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
