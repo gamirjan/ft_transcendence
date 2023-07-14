@@ -7,7 +7,6 @@ import { setUser, store } from "./redux";
 import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 import FileUploadForm from "./file/fileUpload";
-import { FaPen } from "react-icons/fa";
 import Nick from "./nickname/nickname";
 
 const get_game_info = async (param: object) => {
@@ -188,15 +187,15 @@ const Profile = () => {
                 className=" w-10  bottom-0 right-0 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
                 onClick={() => setmodal(true)}
               >
-                <FaPen size={16} color="#000" />
+              
               </button>
             </div>
             <p className="text-2xl text-center">{user.displayname}</p>
-            <FaPen
+            <div
               onClick={() => {
                 setNick(!nick);
               }}
-            />
+            > edit</div>
             <div></div>
           </div>
           <FileUploadForm open={modal} onClose={() => setmodal(false)} />
