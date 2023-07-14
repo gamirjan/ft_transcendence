@@ -65,7 +65,7 @@ function App() {
         {/* <Route path="/main" element={<PingPong width={800} height={300}/>}/> */}
         <Route path="/pin" element={<Pin />} />
         <Route path="/gg" element={<MatchmakingGame />} />
-        <Route path="/test" element={<FileUploadForm />} />
+        <Route path="/test" element={<FileUploadForm  />} />
         <Route path="/test2" element={<Nick />} />
         {/* <Route path="/aa" element={<GameMatch/>}/> */}
       </Routes>
