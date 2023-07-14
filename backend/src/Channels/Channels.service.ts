@@ -16,6 +16,7 @@ import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
 import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
 import { ChannelMessagesService } from '../ChannelMessages/ChannelMessages.service';
 import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
+import { Mutelist } from '../MuteList/MuteList.entity';
 
 @Injectable()
 export class ChannelsService {
@@ -27,7 +28,9 @@ export class ChannelsService {
     @InjectRepository(ChannelAdmin)
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(ChannelUser)
-    private channelUsersRepository: Repository<ChannelUser>
+    private channelUsersRepository: Repository<ChannelUser>,
+    @InjectRepository(Mutelist)
+    private muteListRepository: Repository<Mutelist>
   ) {}
 
   async getAllChannels(): Promise<Channel[]> {
@@ -156,6 +159,8 @@ export class ChannelsService {
       await this.channelUsersRepository.delete({ channelid: channelid });
       await this.channelMsgRepository.delete({ channelid: channelid });
       await this.channelRepository.delete({ id: channelid });
+      console.log(await this.muteListRepository.find({ where: { channelid: channelid } }));
+      await this.muteListRepository.delete({ channelid: channelid });
     }
     else
     {
