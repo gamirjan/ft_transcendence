@@ -13,6 +13,7 @@ import ModalBox from "./Chat/ModalBox";
 import LayoutProvider from "./LayoutProvider";
 import background from "@SRC_DIR/assets/images/chat.jpg";
 import chatContent from "@SRC_DIR/assets/images/chatContent.jpg";
+import ToggleMenu from "./Chat/ToggleMenu";
 
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
@@ -756,9 +757,10 @@ const ChannelComponent = () => {
                                       </div> */}
                                     {/* <ChatInfo/> */}
                                     <div className="ml-2 flex w-10 justify-end">
-                                      <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
+                                    <ToggleMenu user={user} other={elem} role={selectedRole} getRole={getRole}/>
+                                      {/* <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
                                         X
-                                      </button>
+                                      </button> */}
                                       {/* <button className="bg-green">toADMIN</button> */}
                                       {/* <button className="bg-blue"></button> */}
                                     </div>

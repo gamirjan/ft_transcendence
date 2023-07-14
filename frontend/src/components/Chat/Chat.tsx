@@ -263,7 +263,7 @@ useEffect(() => {
       }
       console.log(obj.username + ": " + obj.msg);
     });
-
+    fetchAllUsers();
     return () => {
       socket.off("connect", onConnect);
       socket.off("online", onOnline);
@@ -375,9 +375,11 @@ useEffect(() => {
 
     setMessage("");
   };
-  useEffect(()=>{
-    fetchAllUsers();
-  }, [])
+  // useEffect(()=>{
+  //   console.log();
+    
+  //   fetchAllUsers();
+  // }, [])
   const handleKeyDown = (e) => {
     if (e.key == "Enter") {
       sendDMMessage();
