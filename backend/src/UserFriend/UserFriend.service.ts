@@ -30,7 +30,7 @@ export class UserFriendService {
         return this.friendRepository.save(userFriend);
       }
     
-      async removeFriend(userFriendId: number): Promise<void> {
-        await this.friendRepository.delete({ id: userFriendId });
+      async removeFriend(userid: number, friendid: number): Promise<void> {
+        await this.friendRepository.delete({ userid: userid, friendid: friendid });
       }
 }
