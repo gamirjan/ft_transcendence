@@ -29,7 +29,7 @@ export class DirectMessagesService {
     {
       directmessage.hidden = true;
     }
-    return this.directMessagesRepository.save(directmessage);
+    return await this.directMessagesRepository.save(directmessage);
   }
 
   async getUserAllChats(userid: number): Promise<User[]> {

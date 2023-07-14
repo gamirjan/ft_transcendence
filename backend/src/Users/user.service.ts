@@ -21,7 +21,6 @@ export class UsersService {
     if (!user)
       return null;
     return user;
-    throw new NotFoundException("User not found");
   }
   
   async findOneByDisplayName(displayName: string): Promise<User> {

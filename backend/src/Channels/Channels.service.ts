@@ -14,8 +14,8 @@ import { BadRequestException, UnauthorizedException, ForbiddenException, Interna
 import * as bcrypt from 'bcrypt';
 import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
 import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
-import { ChannelMessagesService } from '../ChannelMessages/ChannelMessages.service';
 import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
+import { Mutelist } from '../MuteList/MuteList.entity';
 
 @Injectable()
 export class ChannelsService {
@@ -27,7 +27,9 @@ export class ChannelsService {
     @InjectRepository(ChannelAdmin)
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(ChannelUser)
-    private channelUsersRepository: Repository<ChannelUser>
+    private channelUsersRepository: Repository<ChannelUser>,
+    @InjectRepository(Mutelist)
+    private muteListRepository: Repository<Mutelist>
   ) {}
 
   async getAllChannels(): Promise<Channel[]> {
@@ -72,7 +74,7 @@ export class ChannelsService {
   }
 
   async getUserChannels(userId: number): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
+    return await this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
   }
 
   async getUserJoinedChannels(userId: number): Promise<UserJoinedChannelDto[]> {
@@ -149,12 +151,12 @@ export class ChannelsService {
   }
 
   async deleteChannel(userid: number, channelid: number): Promise<void> {
-    console.log(userid);
     if ((await this.getChannelOwner(channelid)).id == userid)
     {
       await this.channelAdminsRepository.delete({ channelid: channelid });
       await this.channelUsersRepository.delete({ channelid: channelid });
       await this.channelMsgRepository.delete({ channelid: channelid });
+      await this.muteListRepository.delete({ channelid: channelid });
       await this.channelRepository.delete({ id: channelid });
     }
     else

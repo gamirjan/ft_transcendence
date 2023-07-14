@@ -3,9 +3,9 @@ import ChatInfo from "./ChatInfo";
 import Modal from "./Modal";
 import { ip } from "../utils/ip";
 
-const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) => {
+const ToggleMenu = ({ className = null, role, user, other, otherMuted, setOtherMuted, getRole, channel }) => {
   const [open, setOpen] = useState(false);
-  const [updateAdmin, setUpdateAdmin] = useState(false)
+  const [muted, setMuted] = useState(false)
 
   useEffect(() => {
     console.log("user: ", user);
@@ -38,6 +38,32 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
           // console.log(error);
         });
   };
+
+  const fetchMuted = ()=>{
+    if (!other.user) return;
+    if (!channel) return;
+
+    // console.log("oooooo: ", other);
+    fetch(`${ip}:7000/mutelist/${channel.id}/${other.user.id}`, {
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        console.log("mutedOth: ", data);
+        
+        setMuted(data.muted);
+        // setSended(!sended);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
   const setToAdmin = () => {
     console.log(other);
     
@@ -89,6 +115,11 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
         });
         removeAdmin();
   };
+  useEffect(()=>{
+    fetchMuted();
+  })
+
+
   const muteUser = () => {
     const values = {
         userid: other.user.id,
@@ -115,9 +146,67 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
         .catch((error) => {
           // console.log(error);
         });
-        removeAdmin();
   };
-  const leave = () => {};
+  const unMuteUser = () => {
+    const values = {
+        userid: other.user.id,
+        channelid: channel.id,
+        callinguserid: user.id
+    };
+    console.log("val: ", values);
+    
+    fetch(`${ip}:7000/mutelist/unmute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values)
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          
+          return; // assuming the server returns JSON data
+        })
+        .then((data) => {
+            // console.log("dtaa: ", data);
+            
+            window.location.reload();
+        //   setUpdateAdmin(!updateAdmin);
+          // console.log(data);
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+  };
+  const leave = () => {
+    console.log(other);
+    
+    const values = {
+        userid: user.id,
+        channelid: channel.id,
+    };
+    fetch(`${ip}:7000/channels/leave`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          
+          return; // assuming the server returns JSON data
+        })
+        .then((data) => {
+            window.location.reload();
+        //   setUpdateAdmin(!updateAdmin);
+          // console.log(data);
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+  };
+
   return (
     <div className="flex">
       {(user && other) && ((role != "owner" && getRole(other.role) == "owner") ||
@@ -207,18 +296,24 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
                         >
                           Kick User
                         </li>
+                        {!muted ? (
                         <li
                           className="mt-2 bg-red-900 p-2 w-full rounded-xl border-2 border-transparent hover:border-[#585858]"
                           onClick={muteUser}
                         >
                           Mute User
                         </li>
+
+                        ) : (
+
                         <li
                           className="mt-2 bg-red-900 p-2 w-full rounded-xl border-2 border-transparent hover:border-[#585858]"
-                          onClick={muteUser}
+                          onClick={unMuteUser}
                         >
                           Unmute User
                         </li>
+                        )}
+
                       </>
                     ) : (
                       <></>
