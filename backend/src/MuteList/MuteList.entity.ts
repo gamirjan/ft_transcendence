@@ -24,9 +24,9 @@ import {
     @Column("integer", { name: "userid", nullable: true, unique: true })
     userid: number | null;
   
-    // @ManyToOne(() => Channel, (channels) => channels.mutelists)
-    // @JoinColumn([{ name: "channelid", referencedColumnName: "id" }])
-    // channel: Channel;
+    @ManyToOne(() => Channel, (channels) => channels.mutelists)
+    @JoinColumn([{ name: "channelid", referencedColumnName: "id" }])
+    channel: Channel;
   
     @ManyToOne(() => User, (users) => users.mutelists)
     @JoinColumn([{ name: "userid", referencedColumnName: "id" }])

@@ -1,16 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Directmessage } from './DirectMessage.entity';
 import { AddDirectMessageDto } from './AddDirectMessageDto';
 import { User } from '../Users/user.entity';
 import { DirectMessageDto } from './DirectMessageDto';
+import { Mutechat } from '../MuteChats/MuteChat.entity';
 
 @Injectable()
 export class DirectMessagesService {
   constructor(
     @InjectRepository(Directmessage)
     private directMessagesRepository: Repository<Directmessage>,
+    @InjectRepository(Mutechat)
+    private muteChatsRepository: Repository<Mutechat>
   ) {}
 
   async addDirectMessage(addDirectMessageDto: AddDirectMessageDto): Promise<Directmessage> {
@@ -21,6 +24,11 @@ export class DirectMessagesService {
     directmessage.user1id = addDirectMessageDto.id1;
     directmessage.user2id = addDirectMessageDto.id2;
     directmessage.publishdate = new Date();
+    directmessage.hidden = false;
+    if (await this.muteChatsRepository.exist({ where: { userid: addDirectMessageDto.id2, muteduserid: addDirectMessageDto.id1 } }))
+    {
+      directmessage.hidden = true;
+    }
     return this.directMessagesRepository.save(directmessage);
   }
 
@@ -36,10 +44,13 @@ export class DirectMessagesService {
   }
 
   async getChatMessages(user1id: number, user2id: number): Promise<DirectMessageDto[]> {
-    return (await this.directMessagesRepository.find({ where: [ { user1id: user1id, user2id: user2id }, { user1id: user2id, user2id: user1id } ], order: { id: 'ASC' } })).map(dm => ({
-      senderid: dm.user1id,
-      message: dm.message,
-      publishdate: dm.publishdate
-    }));
+    return (await this.directMessagesRepository.find({ where: [
+                                                    { user1id: user1id, user2id: user2id },
+                                                    { user1id: user2id, user2id: user1id, hidden: false } ],
+                                                    order: { id: 'ASC' } })).map(dm => ({
+                                                                              senderid: dm.user1id,
+                                                                              message: dm.message,
+                                                                              publishdate: dm.publishdate
+                                                                            }));
   }
 }

@@ -5,7 +5,7 @@ import React from "react";
 const ChatInfo = ({className = null, isSelectedUser = null, selectChat = null}) => {
   return (
     <div
-      className={`${className} ${
+      className={`${className ? className : ""} ${
         isSelectedUser ? "hover:bg-[#36323270] hover:cursor-pointer" : ''
       }`}
       onClick={selectChat}

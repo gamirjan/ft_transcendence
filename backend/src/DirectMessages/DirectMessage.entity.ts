@@ -23,6 +23,9 @@ import {
     })
     publishdate: Date | null;
 
+    @Column("boolean", { name: "hidden", nullable: false })
+    hidden: boolean;
+
     @Column("integer", { name: "user1id", nullable: true, unique: true })
     user1id: number | null;
   

@@ -19,7 +19,7 @@ const Home = () => {
 
 
   return (
-    <LayoutProvider>
+    <LayoutProvider zIndex={4}>
       <div className=" eye shape-1 text-slate-700 text-3xl flex justify-center items-center"></div>
       <div className="eye shape-2 text-slate-800 text-3xl flex justify-center items-center"></div>
       <div className=" eye shape-3 text-slate-700 text-3xl flex justify-center items-center"></div>

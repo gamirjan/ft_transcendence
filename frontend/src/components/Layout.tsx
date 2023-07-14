@@ -8,7 +8,7 @@ const Layout = ({ children, auth = true, scrollable = false }) => {
   return (
     <div
       className={`flex flex-col h-full ${
-        !scrollable ? "overflow-hidden" : ""
+        !scrollable ? "overflow-hidden" : "overflow-y-scroll"
       } min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}
     >
       <div className="flex flex-row sticky shadow bg-[#181923] top-0 z-[2] border-b-2 border-[#585858] justify-around py-3">
