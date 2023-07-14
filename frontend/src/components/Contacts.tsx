@@ -91,14 +91,13 @@ const Contacts = () => {
     elem.user.displayname.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const addFriend = ()=>{
+  const addFriend = () => {
     if (!selectedUser) return;
     const values = {
       userid: user.id,
-      friendid: selectedUser.id
+      friendid: selectedUser.id,
     };
- 
-    
+
     fetch(`${ip}:7000/friends`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -116,17 +115,21 @@ const Contacts = () => {
       })
       .catch((error) => {
         console.log(error);
-        alert("The user is already in your friend list just refresh the page")
+        alert("The user is already in your friend list just refresh the page");
         window.location.reload();
       });
-  }
+  };
 
-  const removeFriend = ()=>{
+  const removeFriend = () => {
     if (!selectedUser) return;
-    console.log("friendif: ", selectedUser);
-    
-    
-    fetch(`${ip}:7000/friends/${selectedUser.id}`, {
+    console.log(filteredContacts);
+
+    // console.log("friendif: ", selectedUser);
+
+    // console.log(selectedUser.id);
+    // console.log(user.id);
+
+    fetch(`${ip}:7000/friends/${user.id}/${selectedUser.id}`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     })
@@ -134,18 +137,18 @@ const Contacts = () => {
         if (!response.ok) {
           throw new Error("Request failed");
         }
+        console.log(response);
         return; // assuming the server returns JSON data
       })
       .then((data) => {
         // console.log(data);
-        
         // window.location.reload();
         // console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
-  }
+  };
 
   return (
     <LayoutProvider scrollable={true}>
@@ -205,7 +208,7 @@ const Contacts = () => {
                   <>
                     {suggestions.map((elem, key) => (
                       <div
-                      key={key}
+                        key={key}
                         className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
                         onClick={() => {
                           setSelectedUser(elem);
@@ -236,7 +239,7 @@ const Contacts = () => {
                   <>
                     {allUsers.map((elem, key) => (
                       <div
-                      key={key}
+                        key={key}
                         className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
                         onClick={() => {
                           setSelectedUser(elem);
@@ -274,7 +277,7 @@ const Contacts = () => {
           <Modal
             open={open}
             onClose={() => setOpen(false)}
-            contentClassName={"bg-[#46464636] backdrop-blur w-[50%] h-[50%]"}
+            contentClassName={"bg-[#46464636] backdrop-blur w-[40%] h-[30%]"}
           >
             <div className="flex flex-row p-5 w-full justify-between rounded-xl">
               <div key={selectedUser.id} className="flex flex-col self-start">
@@ -296,18 +299,24 @@ const Contacts = () => {
               </div>
               <div className="flex flex-col self-end h-full">
                 <div className="flex flex-col w-full ">
-                  <button 
-                  className="mt-5 flex justify-end items-center m-0 px-10 py-3 bg-green-900"
-                  onClick={addFriend}
-                  >
-                    Add Friend
-                  </button>
-                  <button 
-                  className="mt-5 flex justify-end m-0 items-center px-10 py-3 bg-red-900"
-                  onClick={removeFriend}
-                  >
-                    Remove Friend
-                  </button>
+                  {!(selectedUser &&
+                  filteredContacts.find(
+                    (obj) => obj.user.id == selectedUser.id)
+                  ) ? (
+                    <button
+                      className="mt-5 flex justify-end items-center m-0 px-10 py-3 bg-green-900"
+                      onClick={addFriend}
+                    >
+                      Add Friend
+                    </button>
+                  ) : (
+                    <button
+                      className="mt-5 flex justify-end m-0 items-center px-10 py-3 bg-red-900"
+                      onClick={removeFriend}
+                    >
+                      Remove Friend
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

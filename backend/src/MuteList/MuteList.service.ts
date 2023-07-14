@@ -39,7 +39,7 @@ export class MuteListService {
     mutedUser.channelid = channelid;
     mutedUser.userid = userid;
     mutedUser.muteddate = new Date();
-    return this.muteListRepository.save(mutedUser);
+    return await this.muteListRepository.save(mutedUser);
   }
 
   async UnMuteUserInChannel(callinguserid: number, channelid: number, userid: number): Promise<Mutelist> {
@@ -49,7 +49,7 @@ export class MuteListService {
     {
         throw new BadRequestException('User is not muted');
     }
-    return this.muteListRepository.remove(mutedUser);
+    return await this.muteListRepository.remove(mutedUser);
   }
 
   private async checkPermissions(callinguserid: number, channelid: number, userid: number): Promise<boolean> {

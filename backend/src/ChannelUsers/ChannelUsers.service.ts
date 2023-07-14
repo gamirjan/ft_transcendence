@@ -52,7 +52,7 @@ export class ChannelUsersService {
     const channelUser = new ChannelUser();
     channelUser.channelid = channelid;
     channelUser.userid = userid;
-    return this.channelUsersRepository.save(channelUser);
+    return await this.channelUsersRepository.save(channelUser);
   }
 
   async removeUser(callinguserid: number, channelid: number, userid: number): Promise<void> {

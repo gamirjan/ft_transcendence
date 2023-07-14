@@ -2,7 +2,7 @@
   {
     "name": "default",
     "type": "postgres",
-    "host": "postgresqltransendence.postgres.database.azure.com",
+    "host": "postgres",
     "port": 5432,
     "username": "admin2",
     "password": "MekDad!89!",
