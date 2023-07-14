@@ -33,6 +33,7 @@ import { Store } from "redux";
 import { io } from "socket.io-client";
 import { ip } from "./components/utils/ip";
 import FileUploadForm from "./components/file/fileUpload";
+import Nick from "./components/nickname/nickname";
 
 
 
@@ -69,6 +70,7 @@ function App() {
       <Route path="/pin" element={<Pin/>}/>
       <Route path="/gg" element={<MatchmakingGame/>}/>
       <Route path="/test" element={<FileUploadForm/>}/>
+      <Route path="/test2" element={<Nick/>}/>
       {/* <Route path="/aa" element={<GameMatch/>}/> */}
           </Routes>
        </Router>

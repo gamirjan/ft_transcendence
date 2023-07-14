@@ -8,6 +8,7 @@ import { ip } from "./utils/ip";
 import LayoutProvider from "./LayoutProvider";
 import FileUploadForm from "./file/fileUpload";
 import { FaPen } from 'react-icons/fa';
+import Nick from "./nickname/nickname";
 
 const get_game_info = async (param: object) => {
   let res = await fetch(`${ip}:7000/game/user/${param.id}`);
@@ -23,6 +24,7 @@ const Profile = () => {
   const [TFAEmail, setTFAEmail] = useState(user.twofactoremail);
   const [modal,setmodal] = useState(false);
   const navigate = useNavigate();
+  const [nick,setNick] = useState(false);
   let games = [];
   const fetchTFA = async () => {
     if (!user) {
@@ -116,7 +118,7 @@ const Profile = () => {
     console.log("TFA: ", TFA);
     console.log("modddalll",modal);
     
-  }, [TFA,modal]);
+  }, [TFA,modal,nick]);
   // useEffect(()=>{
   //     if(user == null)
   //     {
@@ -155,6 +157,7 @@ const Profile = () => {
         <LayoutProvider>
         <div className="">
         {modal && <FileUploadForm/>}
+        {nick && <Nick/>}
         <div className="flex flex-row justify-center z-[-1]" style={{zIndex:-1111111111}}>
                   <div className="flex flex-col items-center" style={{ width: "30%", height: "100%" }}>
                 <p className="text-sm text-gray-500 py-2">Created 7 June 2023</p>
@@ -167,7 +170,10 @@ const Profile = () => {
                     <FaPen size={16} color="#000" />
                   </button>
                 </div>
-                <p className="text-2xl text-center">{user.displayname}</p>
+                <p className="text-2xl text-center" >{user.displayname}</p>
+                <FaPen onClick={()=>{setNick(prevprop => !prevprop)}}/>
+                <div >
+                </div>
               </div>
             
                     {/* onClick={() => setmodal(prevModal => !prevModal)} */}
