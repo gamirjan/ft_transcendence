@@ -68,9 +68,15 @@ export class ChannelsController {
     return res.send(await this.channelService.joinUserToProtectedChannel(joinProtectedChannelDto));
   }
   
-  @Delete(':id')
-  async deleteChannel(@Param('id') id: number, @Res() res): Promise<void> {
-    return res.send(await this.channelService.deleteChannel(id));
+  @Delete('/:userid/:channelid')
+  async deleteChannel(@Param('userid') userid: number, @Param('channelid') channelid: number, @Res() res): Promise<void> {
+    return res.send(await this.channelService.deleteChannel(userid, channelid));
+  }
+
+  @Post('leave')
+  async leaveChannel(@Body() payload: { userid: number, channelid: number }, @Res() res): Promise<void> {
+    const { userid, channelid } = payload;
+    return res.send(await this.channelService.leaveChannel(userid, channelid));
   }
 
   @Post('picture')

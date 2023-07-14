@@ -10,14 +10,18 @@ import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 import { JoinPublicChannelDto } from './JoinPublicChannelDto';
 import { JoinProtectedChannelDto } from './JoinProtectedChannelDto';
 import { NotFoundException } from '@nestjs/common';
-import { BadRequestException, UnauthorizedException } from '@nestjs/common/exceptions';
+import { BadRequestException, UnauthorizedException, ForbiddenException, InternalServerErrorException } from '@nestjs/common/exceptions';
 import * as bcrypt from 'bcrypt';
 import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
 import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
+import { ChannelMessagesService } from '../ChannelMessages/ChannelMessages.service';
+import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
 
 @Injectable()
 export class ChannelsService {
   constructor(
+    @InjectRepository(Channelmessage)
+    private channelMsgRepository: Repository<Channelmessage>,
     @InjectRepository(Channel)
     private channelRepository: Repository<Channel>,
     @InjectRepository(ChannelAdmin)
@@ -50,6 +54,9 @@ export class ChannelsService {
   }
 
   async getChannelOwner(id: number): Promise<User> {
+    console.log(id);
+    const c = await this.channelRepository.findOne({ where: { id: id }, relations: ['owner'] });
+    console.log(c);
     return (await this.channelRepository.findOne({ where: { id: id }, relations: ['owner'] })).owner;
   }
 
@@ -138,12 +145,74 @@ export class ChannelsService {
     const channelUser = new ChannelUser();
     channelUser.userid = joinProtectedChannelDto.userid;
     channelUser.channelid = joinProtectedChannelDto.channelid;
-    console.log("adding");
     return await this.channelUsersRepository.save(channelUser);
   }
 
-  async deleteChannel(id: number): Promise<void> {
-    await this.channelRepository.delete(id);
+  async deleteChannel(userid: number, channelid: number): Promise<void> {
+    console.log(userid);
+    if ((await this.getChannelOwner(channelid)).id == userid)
+    {
+      await this.channelAdminsRepository.delete({ channelid: channelid });
+      await this.channelUsersRepository.delete({ channelid: channelid });
+      await this.channelMsgRepository.delete({ channelid: channelid });
+      await this.channelRepository.delete({ id: channelid });
+    }
+    else
+    {
+      throw new ForbiddenException('Only channel owner can delete the channel');
+    }
+  }
+
+  async leaveChannel(userid: number, channelid: number): Promise<void> {
+    var users = await this.getChannelUsers(channelid);
+    const member = users.find((cu) => cu.user.id === userid);
+    if (!member)
+    {
+      throw new BadRequestException("User is not in channel");
+    }
+    if (member.role == ChannelRole.USER)
+    {
+      await this.channelUsersRepository.delete({ channelid: channelid, userid: userid });
+      return;
+    }
+    else if (member.role == ChannelRole.ADMIN)
+    {
+      await this.channelAdminsRepository.delete({ channelid: channelid, adminid: userid });
+      return;
+    }
+    else
+    {
+      const admins = users.filter((cu) => cu.role === ChannelRole.ADMIN);
+      if (admins.length > 0)
+      {
+        const newOwner = admins[0].user;
+        await this.channelAdminsRepository.delete({ channelid: channelid, adminid: newOwner.id });
+        if ((await this.channelRepository.update(channelid, { owner: newOwner })).affected == 0)
+        {
+          throw new InternalServerErrorException();
+        }
+        return;
+      }
+
+      const usersInChannel = users.filter((cu) => cu.role === ChannelRole.USER);
+      if (usersInChannel.length > 0)
+      {
+        const newOwner = usersInChannel[0].user;
+        await this.channelUsersRepository.delete({ channelid: channelid, userid: newOwner.id });
+        if ((await this.channelRepository.update(channelid, { owner: newOwner })).affected == 0)
+        {
+          throw new InternalServerErrorException();
+        }
+        return;
+      }
+      else
+      {
+        await this.channelAdminsRepository.delete({ channelid: channelid });
+        await this.channelUsersRepository.delete({ channelid: channelid });
+        await this.channelMsgRepository.delete({ channelid: channelid });
+        await this.channelRepository.delete({ id: channelid });
+      }
+    }
   }
 
   async updateChannelInfo(channel: Channel): Promise<Channel> {

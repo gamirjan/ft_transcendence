@@ -23,7 +23,10 @@ import {
       nullable: true,
     })
     publishdate: Date | null;
-  
+    
+    @Column("integer", { name: "channelid", nullable: true, unique: true })
+    channelid: number | null;
+
     @ManyToOne(() => Channel, (channels) => channels.channelmessages)
     @JoinColumn([{ name: "channelid", referencedColumnName: "id" }])
     channel: Channel;

@@ -1,7 +1,7 @@
-import { Controller, Get, NotFoundException, Param, Res, Post, Body, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param, Res, Post, Patch, Body, UploadedFile, UseInterceptors, BadRequestException } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './user.service';
-import { User } from './user.entity';
+import { User, UserStatus } from './user.entity';
 import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
 import { extname } from 'path';
@@ -82,9 +82,15 @@ export class UsersController {
     }
   }
 
-  @Post('nickname')
+  @Patch('nickname')
   async updateDisplayName(@Body() payload: { userid: number, nickname: string }, @Res() res): Promise<void> {
     const { userid, nickname } = payload;
     return res.send(await this.usersService.updateDisplayName(userid, nickname));
   }
+
+  @Patch('status')
+  async updateStatus(@Body() payload: { userid: number, status: UserStatus }, @Res() res): Promise<void> {
+    const { userid, status } = payload;
+    return res.send(await this.usersService.updateStatus(userid, status));
+  }  
 }
