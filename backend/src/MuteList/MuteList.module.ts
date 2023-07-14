@@ -9,9 +9,10 @@ import { ChannelAdmin } from '../ChannelAdmins/ChannelAdmin.entity';
 import { MuteListService } from './MuteList.service';
 import { ChannelsService } from '../Channels/Channels.service';
 import { UsersService } from '../Users/user.service';
+import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Channel, Mutelist, ChannelAdmin, ChannelUser])],
+  imports: [TypeOrmModule.forFeature([User, Channel, Mutelist, ChannelAdmin, ChannelUser, Channelmessage])],
   controllers: [MuteListController],
   providers: [MuteListService, ChannelsService, UsersService],
   exports: [MuteListService]

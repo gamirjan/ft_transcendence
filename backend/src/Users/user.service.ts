@@ -1,7 +1,7 @@
 import { BadGatewayException, BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, getRepository } from 'typeorm';
-import { User } from './user.entity';
+import { User, UserStatus } from './user.entity';
 import { InternalServerErrorException } from '@nestjs/common/exceptions';
 import { Raw } from 'typeorm';
 
@@ -63,6 +63,16 @@ export class UsersService {
       throw new BadRequestException("Display name already exists");
     }
     if ((await this.userRepository.update(userid, { displayname: nickname })).affected == 0)
+    {
+      throw new BadRequestException("User not found");
+    }
+  }
+
+  async updateStatus(userid: number, status: UserStatus): Promise<void> {
+    if (!Object.values(UserStatus).includes(status)) {
+      throw new BadRequestException("Invalid status value");
+    }
+    if ((await this.userRepository.update(userid, { status: status })).affected == 0)
     {
       throw new BadRequestException("User not found");
     }

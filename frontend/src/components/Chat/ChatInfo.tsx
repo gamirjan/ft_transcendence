@@ -2,13 +2,13 @@
 import React from "react";
 
 
-const ChatInfo = (props) => {
+const ChatInfo = ({className = null, isSelectedUser = null, selectChat = null}) => {
   return (
     <div
-      className={`${props.className} ${
-        props.isSelectedUser ? "hover:bg-[#36323270] hover:cursor-pointer" : ''
+      className={`${className} ${
+        isSelectedUser ? "hover:bg-[#36323270] hover:cursor-pointer" : ''
       }`}
-      onClick={props.selectChat}
+      onClick={selectChat}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

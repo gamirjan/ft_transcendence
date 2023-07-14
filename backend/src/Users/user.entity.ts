@@ -14,6 +14,12 @@ import { Mutelist } from "../MuteList/MuteList.entity";
 import { UserFriend } from "../UserFriend/UserFriend.entity";
 import { Directmessage } from "../DirectMessages/DirectMessage.entity";
 
+export enum UserStatus {
+  ONLINE,
+  OFFLINE,
+  INGAME,
+}
+
 @Index("users_pkey", ["id"], { unique: true })
 @Index("users_42Id_key", ["id_42"], { unique: true })
 @Entity("users", { schema: "public" })
@@ -47,6 +53,14 @@ export class User {
     length: 50,
   })
   twofactoremail: string | null;
+
+  @Column({
+    type: "enum",
+    enum: UserStatus,
+    default: UserStatus.OFFLINE,
+    nullable: true,
+  })
+  status: UserStatus;
 
   @Column("text", { name: "avatarurl", nullable: true })
   avatarurl: string | null;
