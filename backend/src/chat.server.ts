@@ -7,8 +7,10 @@ import {
     OnGatewayInit,
     OnGatewayConnection
  } from '@nestjs/websockets';
+import { UsersService } from './Users/user.service';
 import { Server } from "socket.io";
 import { Socket } from "socket.io";
+import { RoomService } from './Game/services/room.service';
 
 let sockets = [];
 @WebSocketGateway(4001, { 
@@ -19,7 +21,10 @@ let sockets = [];
 export class ChatServer implements OnGatewayInit, OnGatewayConnection{
     @WebSocketServer()
     server: Server;
-
+    constructor(
+        // private readonly userService: UsersService,
+        // private readonly roomService: RoomService,
+      ) {}
     afterInit(server: Server){
       }
     handleConnection(client: Socket){
