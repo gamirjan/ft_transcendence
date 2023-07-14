@@ -18,6 +18,7 @@ const Chat = () => {
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
+  const [allUsers, setAllUsers] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedUser, setSelectedUser] = useState({});
@@ -286,10 +287,27 @@ useEffect(() => {
         console.log(error);
       });
   };
+  const fetchAllUsers = () => {
+    fetch(`${ip}:7000/users`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        console.log(data);
+
+        setAllUsers(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   useEffect(() => {
     if (user) {
-      fetch(`${ip}:7000/friends/${user.id}`)
+      fetch(`${ip}:7000/directmessages/chats/${user.id}`)
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");
@@ -309,7 +327,8 @@ useEffect(() => {
         // console.log(messages);
       }
     }
-  }, [selectedUserName, sended]);
+    // fetchAllUsers();
+  }, [selectedUserName, sended, allUsers]);
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -322,8 +341,8 @@ useEffect(() => {
     const regex = new RegExp(".*" + e.target.value + ".*", "i");
 
     setSuggestions(
-      contacts.filter((obj) => {
-        return regex.test(obj.user.displayname);
+      allUsers.filter((obj) => {
+        return regex.test(obj.displayname);
       })
     );
   };
@@ -356,10 +375,14 @@ useEffect(() => {
 
     setMessage("");
   };
+  useEffect(()=>{
+    fetchAllUsers();
+  }, [])
   const handleKeyDown = (e) => {
     if (e.key == "Enter") {
       sendDMMessage();
       setDMMessage("");
+      fetchAllUsers();
     }
   };
   const sendDMMessage = () => {
@@ -467,14 +490,14 @@ useEffect(() => {
                         <div
                           className="flex w-full  justify-start"
                           onClick={() => {
-                            handleSelectUser(elem.user);
+                            handleSelectUser(elem);
                             setSearchQuery("");
                             console.log("okkkkkk");
                           }}
                         >
                           <div className="w-1/4">
                             <img
-                              src={elem.user.avatarurl}
+                              src={elem.avatarurl}
                               alt=""
                               srcSet=""
                               className="object-cover h-12 w-12 rounded-full"
@@ -482,7 +505,7 @@ useEffect(() => {
                           </div>
                           <div className="flex flex-row">
                             <div className="ml-3 text-lg font-semibold">
-                              {elem.user.displayname}
+                              {elem.displayname}
                             </div>
                           </div>
                         </div>
@@ -507,13 +530,13 @@ useEffect(() => {
                       <div
                         className="flex w-full  justify-start"
                         onClick={() => {
-                          handleSelectUser(elem.user);
+                          handleSelectUser(elem);
                           console.log("okkkkkk");
                         }}
                       >
                         <div className="w-1/4">
                           <img
-                            src={elem.user.avatarurl}
+                            src={elem.avatarurl}
                             alt=""
                             srcSet=""
                             className="object-cover h-12 w-12 rounded-full"
@@ -521,7 +544,7 @@ useEffect(() => {
                         </div>
                         <div className="flex flex-row">
                           <div className="ml-3 text-lg font-semibold">
-                            {elem.user.displayname}
+                            {elem.displayname}
                           </div>
                         </div>
                       </div>
@@ -532,10 +555,10 @@ useEffect(() => {
                             const isOpen =
                               !selectedUser ||
                               Object.keys(selectedUser).length == 0 ||
-                              selectedUser.id != elem.user.id
+                              selectedUser.id != elem.id
                                 ? true
                                 : !openSidebar;
-                            handleSelectUser(elem.user);
+                            handleSelectUser(elem);
                             setOpenSidebar(isOpen);
                           }}
                           isSelectedUser={true}
@@ -568,7 +591,7 @@ useEffect(() => {
                     }`}
                     onClick={toggleSidebar}
                   >
-                    <div className="flex px-4 pt-3 rounded-xl justify-start">
+                    <div className="flex flex-row px-4 pt-3 rounded-xl justify-start">
                       <div className="flex flex-col">
                         <img
                           src={
@@ -584,6 +607,9 @@ useEffect(() => {
                           {selectedUser.displayname ??
                             (user ? user.displayname : "Saved Message")}
                         </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <button className="m-0 bg-[#00ff00] rounded-xl justify-center">Join Game</button>
                       </div>
                     </div>
                   </div>

@@ -82,7 +82,7 @@ const handleSubmit = (values, {resetForm}) =>{
                             )}
                           </div>
                           <div className="flex flex-row">
-                            <div className="ml-3 text-lg font-semibold">
+                            <div className="ml-3 text-lg break-all font-semibold">
                               {elem.channelname}
                             </div>
                           </div>
