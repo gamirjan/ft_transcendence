@@ -25,7 +25,7 @@ export class ChannelMessagesService {
   ) {}
 
   async getChannelMessages(id: number): Promise<Channelmessage[]> {
-    return this.channelMessagesRepository.find({ relations: ['user'], where: { channel: { id: id } }, order: { id: "ASC" } });
+    return await this.channelMessagesRepository.find({ relations: ['user'], where: { channel: { id: id } }, order: { id: "ASC" } });
   }
 
   async addMessageToChannel(addMessageToChannelDto: AddChannelMessageDto): Promise<Channelmessage> {
