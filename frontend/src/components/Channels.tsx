@@ -41,6 +41,15 @@ const ChannelComponent = () => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openModal, setOpenModal] = useState(false);
   const [updateOption, setUpdateOption] = useState("");
+  const [muted, setMuted] = useState(false);
+  const [otherMuted, setOtherMuted] = useState(false)
+
+
+  useEffect(()=>{
+
+  }, [otherMuted])
+
+
 
   const toggleSidebar = () => {
     selectedChannel && setOpenSidebar(!openSidebar);
@@ -130,15 +139,21 @@ const ChannelComponent = () => {
     if (user == null) navigate("/", { replace: true });
     else {
       if (!selectedChannel) return;
-     
+      console.log("ids: "
+      ,user.id, selectedChannel.id);
+      
       fetch(`${ip}:7000/channels/${user.id}/${selectedChannel.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       })
         .then((response) => {
           if (!response.ok) {
+            console.log(response);
+            
             throw new Error("Request failed");
           }
+          console.log(response);
+          
           return; // assuming the server returns JSON data
         })
         .then((data) => {
@@ -147,6 +162,8 @@ const ChannelComponent = () => {
           // console.log(data);
         })
         .catch((error) => {
+          console.log("errrrr");
+          
           console.log(error);
         });
     }
@@ -436,6 +453,39 @@ const ChannelComponent = () => {
     }
   };
 
+
+
+  const fetchMuted = ()=>{
+    if (!user) navigate("/", { replace: true });
+    if (!selectedChannel) return;
+    fetch(`${ip}:7000/mutelist/${selectedChannel.id}/${user.id}`, {
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        console.log("muted: ", data);
+        
+        setMuted(data.muted);
+        // setSended(!sended);
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  useEffect(()=>{
+    fetchMuted();
+  }, [selectedChannel])
+
+  useEffect(()=>{
+
+  }, [muted])
+
   return (
     <LayoutProvider>
       <div className="relative flex flex-col h-full">
@@ -671,7 +721,7 @@ const ChannelComponent = () => {
                           {
                             <div className="flex py-5 justify-around">
                               <input
-                                disabled={!selectedChannel}
+                                disabled={!selectedChannel || muted}
                                 className={`w-1/2 bg-[#36323270] backdrop-blur-sm py-5 px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
                 ${
                   selectedChannel
@@ -793,7 +843,7 @@ const ChannelComponent = () => {
                                       </div> */}
                                     {/* <ChatInfo/> */}
                                     <div className="ml-2 flex justify-end">
-                                    <ToggleMenu user={user} other={elem} role={selectedRole} getRole={getRole} channel={selectedChannel}/>
+                                    <ToggleMenu user={user} setOtherMuted={setOtherMuted} otherMuted={otherMuted} other={elem} role={selectedRole} getRole={getRole} channel={selectedChannel}/>
                                       {/* <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
                                         X
                                       </button> */}
