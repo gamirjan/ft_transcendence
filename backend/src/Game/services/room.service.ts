@@ -279,9 +279,13 @@ export class RoomService {
         user2Score:game.user2Score
       }
       // await this.gameHistoryService.createGame(game);
+      console.log("historyyyyyyyyyyyyyy");
+      console.log(gg);
       this.gameHistoryService.createGame(gg)
-      this.userService.updateGameStats(winner, true)
-      this.userService.updateGameStats(loser, false)
+      console.log(winner);
+      console.log(loser);
+      await this.userService.updateGameStats(winner, true)
+      await this.userService.updateGameStats(loser, false)
       
     }
     RoomService.emit(room, 'stop', player.user);
