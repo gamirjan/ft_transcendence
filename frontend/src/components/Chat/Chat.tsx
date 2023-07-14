@@ -13,6 +13,7 @@ import LayoutProvider from "../LayoutProvider";
 import background from "@SRC_DIR/assets/images/chat.jpg";
 import chatContent from "@SRC_DIR/assets/images/chatContent.jpg"
 import { io } from "socket.io-client";
+import Game from "../game/Game";
 
 const Chat = () => {
   const user = useSelector((state: AppState) => state.user);
@@ -269,7 +270,7 @@ useEffect(() => {
       socket.off("online", onOnline);
       socket.off("chat");
     };
-  }, []);
+  }, [isStart]);
   const fetchMessages = () => {
     fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
       .then((response) => {
@@ -431,6 +432,8 @@ useEffect(() => {
   });
 
   return (
+    <>
+      {isStart && <Game socket={socket} name1={player1} name2={player2}/>}
     <LayoutProvider>
       <div
         className="flex flex-col h-full"
@@ -591,7 +594,7 @@ useEffect(() => {
                         ? "hover:cursor-pointer"
                         : ""
                     }`}
-                    onClick={toggleSidebar}
+                    // onClick={toggleSidebar}
                   >
                     <div className="flex flex-row px-4 pt-3 rounded-xl justify-start">
                       <div className="flex flex-col">
@@ -611,7 +614,7 @@ useEffect(() => {
                         </div>
                       </div>
                       <div className="flex flex-col">
-                        <button className="m-0 bg-[#00ff00] rounded-xl justify-center">Join Game</button>
+                        <button className="m-0 bg-[#00ff00] rounded-xl justify-center" onClick={joinQueue}>Join Game</button>
                       </div>
                     </div>
                   </div>
@@ -737,7 +740,8 @@ useEffect(() => {
         </div>
       </div>
     </LayoutProvider>
-    // </div>
+     </>
+  
   );
 };
 
