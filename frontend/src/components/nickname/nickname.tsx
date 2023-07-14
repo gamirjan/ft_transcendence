@@ -1,17 +1,47 @@
 import React from 'react'
 import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../redux';
 
 function Nick() {
     const [inputValue, setInputValue] = useState('');
     const [modalOpen, setModalOpen] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
+	const user = useSelector((state: AppState) => state.user);
+    const dispatch = useDispatch()
+
   
     const handleChange = (event) => {
       setInputValue(event.target.value);
     };
   
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
       event.preventDefault();
-      // Add your logic for handling the form submission here
+      try {
+        const response = await fetch('http://localhost:7000/users/nickname', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userid:user.id,nickname: inputValue }),
+        });
+  
+        if (response.ok) {
+          dispatch(setUser(
+            {...user,
+              displayname:inputValue,
+            },
+          ))
+          //console.log(data);
+
+          setModalOpen(false);
+        } else {
+          setErrorMessage('The nickname is taken');
+        }
+      } catch (error) {
+        console.error("================>",error);
+        setErrorMessage('An error occurred');
+      }
     };
   
     const handleCancel = () => {
@@ -26,6 +56,9 @@ function Nick() {
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75">
         <div className="bg-black w-full max-w-md mx-4 px-8 py-6 rounded-lg">
           <h2 className="text-2xl text-white mb-4">Modal Title</h2>
+          {errorMessage && (
+            <p className="text-red-500 mb-4">{errorMessage}</p>
+          )}
           <form onSubmit={handleSubmit}>
             <div className="relative mb-4">
               <input
