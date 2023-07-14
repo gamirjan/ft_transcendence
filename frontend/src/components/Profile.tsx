@@ -172,24 +172,23 @@ const Profile = () => {
   return (
     <LayoutProvider>
       <div className="flex flex-col">
-        <div className="flex flex-row justify-center ">
+        <div className="flex flex-row justify-center items-center" style={{ width: "100%"}}>
           <div
             className="flex flex-col items-center"
             style={{ width: "30%", height: "100%" }}
           >
-            <p className="text-sm text-gray-500 py-2">Created 7 June 2023</p>
-            <div className="">
-              <img
-                src={user.avatarurl}
-                className="border-4 border-white rounded-full"
-                style={{ width: "80%", height: "80%" }}
-              />
+            <div className="mt-2">
               <button
-                className=" w-10  bottom-0 right-0 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
+                className=" w-10 m-0 bottom-0 right-0 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
                 onClick={() => setmodal(true)}
               >
                 <FaPen size={16} color="#000" />
               </button>
+              <img
+                src={user.avatarurl}
+                className="border-4 border-white rounded-full"
+                style={{ width: "90%", height: "80%" }}
+              />
             </div>
             <p className="text-2xl text-center">{user.displayname}</p>
             <FaPen
