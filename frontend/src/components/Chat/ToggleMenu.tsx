@@ -89,7 +89,34 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
         });
         removeAdmin();
   };
-  const muteUser = () => {};
+  const muteUser = () => {
+    const values = {
+        userid: other.user.id,
+        channelid: channel.id,
+        callinguserid: user.id
+    };
+    fetch(`${ip}:7000/mutelist/mute`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values)
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          
+          return; // assuming the server returns JSON data
+        })
+        .then((data) => {
+            window.location.reload();
+        //   setUpdateAdmin(!updateAdmin);
+          // console.log(data);
+        })
+        .catch((error) => {
+          // console.log(error);
+        });
+        removeAdmin();
+  };
   const leave = () => {};
   return (
     <div className="flex">
@@ -173,6 +200,7 @@ const ToggleMenu = ({ className = null, role, user, other, getRole, channel }) =
                         ) : (
                           <></>
                         )}
+                        {}
                         <li
                           className="mt-2 bg-red-900 p-2 w-full rounded-xl border-2 border-transparent hover:border-[#585858]"
                           onClick={kickUser}

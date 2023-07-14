@@ -46,32 +46,62 @@ const ChannelComponent = () => {
     selectedChannel && setOpenSidebar(!openSidebar);
   };
 
-  const joinChannel = (channel) => {
+  const joinChannel = (channel, value) => {
     if (user == null) navigate("/", { replace: true });
     else {
-      const values = {
-        channelid: channel.id,
-        userid: user.id,
-      };
-      fetch(`${ip}:7000/channels/join/public/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Request failed");
-          }
-          return response.json(); // assuming the server returns JSON data
+      if (getType(channel.channeltype) == 'public')
+      {
+        const values = {
+          channelid: channel.id,
+          userid: user.id,
+        };
+        fetch(`${ip}:7000/channels/join/public/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
         })
-        .then((data) => {
-          setUpdateOption("join");
-          // console.log(data);
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            setUpdateOption("join");
+            // console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      else
+      {
+        const values = {
+          channelid: channel.id,
+          userid: user.id,
+          password: value.password
+        };
+        fetch(`${ip}:7000/channels/join/password/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
         })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            setUpdateOption("join");
+            // console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      }
   };
 
   const fetchMembers = () => {
@@ -101,7 +131,7 @@ const ChannelComponent = () => {
     else {
       if (!selectedChannel) return;
      
-      fetch(`${ip}:7000/channels/${selectedChannel.id}`, {
+      fetch(`${ip}:7000/channels/${user.id}/${selectedChannel.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       })
@@ -712,7 +742,9 @@ const ChannelComponent = () => {
                           <div className="flex flex-col">
                             <div className="flex flex-row justify-between">
                               <div className="flex flex-row justify-start p-2">Members</div>
-                              <ModalSearch channel={selectedChannel} user={user} />                              
+                              {selectedRole != 'user' ? (
+                                <ModalSearch channel={selectedChannel} user={user} />                              
+                              ) : (<></>)}
                             </div>
                             </div>
                           <div

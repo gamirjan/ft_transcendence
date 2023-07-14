@@ -46,7 +46,7 @@ const ModalSearch = ({channel, user}) => {
     const values = {
         callinguserid: user.id,
         channelid: channel.id,
-        user: other.id
+        userid: other.id
     };
     console.log("val: ", other);
     
@@ -68,6 +68,7 @@ const ModalSearch = ({channel, user}) => {
           // console.log(data);
         })
         .catch((error) => {
+            alert("User already is in channel")
           // console.log(error);
         });
   }
@@ -89,6 +90,7 @@ const ModalSearch = ({channel, user}) => {
       <Modal
         open={open}
         onClose={() => setOpen(false)}
+        className={"backdrop-blur"}
         contentClassName={"p-2 backdrop-blur bg-transparent max-h-[50%] w-[30%]"}
       >
         <div className="flex flex-col w-full">
@@ -118,8 +120,6 @@ const ModalSearch = ({channel, user}) => {
                         className="flex w-full  justify-start"
                         onClick={() => {
                             addUser(elem);
-                        //   setSearchQuery("");
-                        //   setOpen(false);
                           console.log("okkkkkk");
                         }}
                       >
