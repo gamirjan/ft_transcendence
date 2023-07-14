@@ -325,16 +325,16 @@ const Profile = () => {
               <li className="flex border-b py-2">
                 <span className="font-bold w-24">Total:</span>
                 <span className="text-gray-300">{`${
-                  scores.ScoreWins + scores.ScoreLoses
+                  user.wins + user.losses
                 }`}</span>
               </li>
               <li className="flex border-b py-2">
                 <span className="font-bold w-24">Wins:</span>
-                <span className="text-gray-300">{scores.ScoreWins}</span>
+                <span className="text-gray-300">{user.wins}</span>
               </li>
               <li className="flex border-b py-2">
                 <span className="font-bold w-24">Loses:</span>
-                <span className="text-gray-300">{scores.ScoreLoses}</span>
+                <span className="text-gray-300">{user.losses}</span>
               </li>
               <li className="flex border-b py-2">
                 <span className="font-bold w-24">Win Ratio:</span>
