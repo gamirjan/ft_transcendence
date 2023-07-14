@@ -16,23 +16,29 @@ import chatContent from "@SRC_DIR/assets/images/chatContent.jpg";
 
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
-  console.log("-----------------------------------------------------------------");
+  console.log(
+    "-----------------------------------------------------------------"
+  );
   console.log(user);
-  
-  console.log("-----------------------------------------------------------------");
-  
+
+  console.log(
+    "-----------------------------------------------------------------"
+  );
+
   const navigate = useNavigate();
   const [channels, setChannels] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selectedChannel, setSelectedChannel] = useState(null);
   const [selectedRole, setSelectedRole] = useState("user");
+  const [members, setMembers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [allChannels, setAllChannels] = useState([]);
   const [dmMessage, setDMMessage] = useState("");
   const [sended, setSended] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
   const [openModal, setOpenModal] = useState(false);
+  const [updateOption, setUpdateOption] = useState("");
 
   const toggleSidebar = () => {
     selectedChannel && setOpenSidebar(!openSidebar);
@@ -57,6 +63,57 @@ const ChannelComponent = () => {
           return response.json(); // assuming the server returns JSON data
         })
         .then((data) => {
+          setUpdateOption("join");
+          // console.log(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const fetchMembers = () => {
+    if (user == null) navigate("/", { replace: true });
+    else {
+      if (!selectedChannel) return;
+      fetch(`${ip}:7000/channels/users/${selectedChannel.id}`, {
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          return response.json(); // assuming the server returns JSON data
+        })
+        .then((data) => {
+          setMembers(data);
+          console.log("members: ", data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+  const deleteChannel = () => {
+    if (user == null) navigate("/", { replace: true });
+    else {
+      if (!selectedChannel) return;
+      const values = {
+        id: selectedChannel.id,
+      };
+      fetch(`${ip}:7000/channels/`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          return response.json(); // assuming the server returns JSON data
+        })
+        .then((data) => {
+          setUpdateOption("delete");
           // console.log(data);
         })
         .catch((error) => {
@@ -134,27 +191,6 @@ const ChannelComponent = () => {
   const fetchChannels = () => {
     if (user == null) navigate("/", { replace: true });
     else {
-      fetch(`${ip}:7000/channels/all`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Request failed");
-          }
-          return response.json(); // assuming the server returns JSON data
-        })
-        .then((data) => {
-          // console.log("all: ", data);
-
-          setAllChannels(data);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
-  };
-
-  useEffect(() => {
-    if (user == null) navigate("/", { replace: true });
-    else {
       fetch(`${ip}:7000/channels/user/all/${user.id}`)
         .then((response) => {
           if (!response.ok) {
@@ -170,15 +206,48 @@ const ChannelComponent = () => {
           console.log(error);
         });
       // console.log(selectedChannel);
-
-      fetchChannels();
     }
+  };
+  const fetchAllChannels = () => {
+    if (user == null) navigate("/", { replace: true });
+    else {
+      fetch(`${ip}:7000/channels/all`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Request failed");
+          }
+          return response.json(); // assuming the server returns JSON data
+        })
+        .then((data) => {
+          console.log("all: ", data);
+
+          setAllChannels(data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  useEffect(() => {
+    fetchAllChannels();
+    fetchChannels();
   }, []);
 
-  useEffect(() => {}, [sended, openModal]);
   useEffect(() => {
+    console.log(messages);
     if (selectedChannel) fetchMessages();
-  }, [selectedChannel]);
+  }, [sended, selectedChannel]);
+  useEffect(() => {}, [openModal, allChannels]);
+  useEffect(() => {
+    console.log("update: ", updateOption);
+
+    if (updateOption != "") fetchChannels();
+  }, [updateOption]);
+  useEffect(() => {
+    fetchMembers();
+  }, [selectedChannel, messages]);
+  useEffect(() => {}, [allChannels]);
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -306,12 +375,14 @@ const ChannelComponent = () => {
       })
       .then((data) => {
         setOpenModal(false);
+        setUpdateOption("create");
         // setSended(!sended);
         // console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
+    fetchChannels();
   };
 
   const getType = (param) => {
@@ -436,7 +507,7 @@ const ChannelComponent = () => {
                               )}
                             </div>
                             <div className="flex flex-row">
-                              <div className="ml-3 text-lg font-semibold">
+                              <div className="ml-3 text-lg break-all font-semibold">
                                 {elem.channel.channelname}
                               </div>
                             </div>
@@ -624,7 +695,7 @@ const ChannelComponent = () => {
                                   .toUpperCase()}
                               </div>
                             )}
-                            <div className="absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]">
+                            <div className="absolute flex justify-start bottom-0 p-3 break-all w-full bg-[#3d3c4096]">
                               {selectedChannel.channelname}
                             </div>
                           </div>
@@ -635,7 +706,7 @@ const ChannelComponent = () => {
                           <pre>
                             {"Type: " + getType(selectedChannel.channeltype)}
                           </pre>
-                          <pre>{"Role: " + getRole(selectedChannel.role)}</pre>
+                          <pre>{"Role: " + selectedRole}</pre>
                         </div>
                         <div className="flex flex-col">
                           <div className="flex flex-col">Members</div>
@@ -643,49 +714,71 @@ const ChannelComponent = () => {
                             className="flex flex-col w-full overflow-y-scroll"
                             style={{ maxHeight: "30vh" }}
                           >
-                            {channels &&
-                              channels.map((elem, key) => (
+                            {members &&
+                              members.map((elem, key) => (
                                 // <div>
                                 //     {console.log(elem)}
                                 //   </div>
-                                <div
-                                  className="flex flex-row py-4 px-4 justify-center items-center hover:cursor-pointer hover:bg-[#36323270] hover:rounded-xl"
-                                  key={key}
-                                >
-                                  {/* {console.log(elem.channel)} */}
-                                  <div className="flex w-full  justify-start">
-                                    <div className="w-1/4">
-                                      {elem.channel.channelpictureurl ? (
-                                        <img
-                                          src={elem.channel.channelpictureurl}
-                                          alt=""
-                                          srcSet=""
-                                          className="object-cover h-12 w-12 rounded-full"
-                                        />
-                                      ) : (
-                                        <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
-                                          {elem.channel.channelname
-                                            .charAt(0)
-                                            .toUpperCase()}
-                                        </div>
-                                      )}
-                                    </div>
-                                    <div className="flex flex-row">
-                                      <div className="ml-3 text-lg font-semibold">
-                                        {elem.channel.channelname}
+                                <div className="flex flex-col w-full hover:cursor-pointer hover:bg-[#36323270] hover:rounded-xl py-3">
+                                  <div
+                                    className="flex flex-row py-4 px-4 justify-center items-center"
+                                    key={key}
+                                  >
+                                    {/* {console.log(elem.channel)} */}
+                                    <div className="flex flex-row w-full  justify-start">
+                                      <div className="w-1/4">
+                                        {elem.user.avatarurl ? (
+                                          <img
+                                            src={elem.user.avatarurl}
+                                            alt=""
+                                            srcSet=""
+                                            className="object-cover h-12 w-12 rounded-full"
+                                          />
+                                        ) : (
+                                          <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
+                                            {elem.user.displayname
+                                              .charAt(0)
+                                              .toUpperCase()}
+                                          </div>
+                                        )}
                                       </div>
+                                      <div className="ml-2 flex flex-row w-full">
+                                        <div className="text-lg break-all font-semibold">
+                                          {elem.user.displayname}
+                                        </div>
+                                      </div>
+                                    <div className="flex justify-center items-center">
+                                      {getRole(elem.role)}
                                     </div>
-                                  </div>
-                                  <div className="flex w-full justify-end">
-                                    <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
-                                      X
-                                    </button>
-                                    {/* <button className="bg-green">toADMIN</button> */}
-                                    {/* <button className="bg-blue"></button> */}
+                                    </div>
+                                    {/* <div className="ml-3 w-full text-lg break-all font-semibold">
+                                        {getRole(elem.role)}
+                                      </div> */}
+                                    <ChatInfo/>
+                                    <div className="ml-2 flex w-10 justify-end">
+                                      <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
+                                        X
+                                      </button>
+                                      {/* <button className="bg-green">toADMIN</button> */}
+                                      {/* <button className="bg-blue"></button> */}
+                                    </div>
                                   </div>
                                 </div>
                               ))}
                           </div>
+                          {selectedRole == "admin" ||
+                          selectedRole == "owner" ? (
+                            <div className="flex flex-col">
+                              <button
+                                className="flex justify-center items-center w-full bg-[#ff0000] text-white"
+                                onClick={deleteChannel}
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          ) : (
+                            <></>
+                          )}
                         </div>
                       </div>
                     </div>
