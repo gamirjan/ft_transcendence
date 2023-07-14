@@ -49,6 +49,10 @@ import { GameModule } from './Game/game.module';
 import { GameService } from './GameHistory/GameHistory.service';
 import { ImageController } from './ImageService/image.controller';
 import configg from './ormconfig';
+import { ChatModule } from './chat/chat.module';
+import { ChatGetway } from './chat/chat.getway';
+import { RoomService } from './Game/services/room.service';
+import { PongService } from './Game/services/game.service';
 
 
 
@@ -69,12 +73,13 @@ import configg from './ormconfig';
       GameModule,
       MailModule,
       UsersModule,
-      TypeOrmModule.forFeature([User, UserRepository,UserFriend]),  
+      TypeOrmModule.forFeature([User, UserRepository,UserFriend]),
+      ChatModule,
     ],
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
       ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController, ImageController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatServer, GoogleService,Ft_AuthService,GameServer],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatGetway, GoogleService,Ft_AuthService,GameServer,RoomService,PongService],
   })
   export class AppModule {
     constructor(){
