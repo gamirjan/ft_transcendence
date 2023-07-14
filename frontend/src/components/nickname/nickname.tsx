@@ -56,7 +56,7 @@ function Nick({ open, onClose }) {
           <div className="relative mb-4">
             <input
               type="text"
-              className="bg-gray-800 text-white py-2 px-4 w-full rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-gray-800 text-white py-2 px-4 w-full rounded-lg focus:outline-none  focus:ring-2 focus:ring-green-500"
               placeholder="Enter a value"
               value={inputValue}
               onChange={handleChange}

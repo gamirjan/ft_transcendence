@@ -184,9 +184,8 @@ const ToggleMenu = ({ className = null, role, user, other, otherMuted, setOtherM
     const values = {
         userid: user.id,
         channelid: channel.id,
-        adminid: other.user.id
     };
-    fetch(`${ip}:7000/channeladmins`, {
+    fetch(`${ip}:7000/channels/leave`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(values),
@@ -196,7 +195,7 @@ const ToggleMenu = ({ className = null, role, user, other, otherMuted, setOtherM
             throw new Error("Request failed");
           }
           
-          return response.json(); // assuming the server returns JSON data
+          return; // assuming the server returns JSON data
         })
         .then((data) => {
             window.location.reload();

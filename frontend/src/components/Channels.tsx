@@ -139,15 +139,21 @@ const ChannelComponent = () => {
     if (user == null) navigate("/", { replace: true });
     else {
       if (!selectedChannel) return;
-     
+      console.log("ids: "
+      ,user.id, selectedChannel.id);
+      
       fetch(`${ip}:7000/channels/${user.id}/${selectedChannel.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
       })
         .then((response) => {
           if (!response.ok) {
+            console.log(response);
+            
             throw new Error("Request failed");
           }
+          console.log(response);
+          
           return; // assuming the server returns JSON data
         })
         .then((data) => {
@@ -156,6 +162,8 @@ const ChannelComponent = () => {
           // console.log(data);
         })
         .catch((error) => {
+          console.log("errrrr");
+          
           console.log(error);
         });
     }
