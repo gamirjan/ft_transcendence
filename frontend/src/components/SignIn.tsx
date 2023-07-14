@@ -113,25 +113,21 @@ const SignIn = () => {
     }
 
     console.log('Google runs');
-    // let left =  getRandom(-500, 500) + ftStyle.top;
-    // let top = getRandom(-500, 500) + ftStyle.left;
-    // top = (top - ftStyle.top) < 200 ? top + 100 : top;
-    // left = (left - ftStyle.left) < 200 ? left + 100 : left;
+    let left =  getRandom(-500, 500) + ftStyle.top;
+    let top = getRandom(-500, 500) + ftStyle.left;
+    top = (top - ftStyle.top) < 200 ? top + 100 : top;
+    left = (left - ftStyle.left) < 200 ? left + 100 : left;
 
-    // top = (top < 0) ? 0 : top;
-    // top = (top > 500) ? 500 : top;
-    // left = (left < 0) ? 0 : left;
-    // left = (left > 500) ? 500 : left;
-    // const newStyle = {
-    //   top: top,
-    //   left: left
-    // }
-    // setGoogleStyle(newStyle);
-    // const newStyle = {
-    //   top: googleStyle.top + getRandom(-10, 10) + '%',
-    //   left: googleStyle.left + getRandom(-10, 10) + '%'
-    // }
-    // setGoogleStyle(newStyle);
+    top = (top < 0) ? 0 : top;
+    top = (top > 500) ? 500 : top;
+    left = (left < 0) ? 0 : left;
+    left = (left > 500) ? 500 : left;
+    const newStyle = {
+      top: top,
+      left: left
+    }
+
+    setGoogleStyle(newStyle);
   }
   useEffect(()=>{
     window.addEventListener("keydown", ()=>{
