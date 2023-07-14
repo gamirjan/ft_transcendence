@@ -11,6 +11,7 @@ import { ChannelAdmin } from "../ChannelAdmins/ChannelAdmin.entity";
 import { Channelmessage } from "../ChannelMessages/ChannelMessage.entity";
 import { User } from "../Users/user.entity";
 import { ChannelUser} from "../ChannelUsers/ChannelUser.entity";
+import { Mutelist } from "../MuteList/MuteList.entity";
 
 @Index("channels_pkey", ["id"], { unique: true })
 @Entity("channels", { schema: "public" })
@@ -60,6 +61,6 @@ export class Channel {
   @OneToMany(() => ChannelUser, (channelusers) => channelusers.channel)
   channelusers: ChannelUser[];
 
-  // @OneToMany(() => Mutelist, (mutelist) => mutelist.channel)
-  // mutelists: Mutelist[];
+  @OneToMany(() => Mutelist, (mutelist) => mutelist.channel)
+  mutelists: Mutelist[];
 }

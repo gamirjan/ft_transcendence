@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { ChannelAdmin } from './ChannelAdmin.entity';
 import { ChannelAdminModel } from './ChannelAdminModel';
 import { User } from '../Users/user.entity';
-import { ForbiddenException } from '@nestjs/common/exceptions';
+import { BadRequestException, ForbiddenException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class ChannelAdminsService {
@@ -40,12 +40,16 @@ export class ChannelAdminsService {
     return this.channelAdminsRepository.save(channelAdmin);
   }
 
-  async removeAdmin(userid: number, channeladminid: number): Promise<void> {
-    var channelid = (await this.channelAdminsRepository.findOne({ where: { id: channeladminid } })).channelid
-    var user = await this.usersRepository.findOne({ relations: ['channels'], where: { id: userid } })
+  async removeAdmin(callinguserid: number, channelid: number, userid: number): Promise<void> {
+    var admin = (await this.channelAdminsRepository.findOne({ where: { channelid: channelid, adminid: userid } }));
+    if (!admin)
+    {
+      throw new BadRequestException("Channel doesn't have such admin");
+    }
+    var user = await this.usersRepository.findOne({ relations: ['channels'], where: { id: callinguserid } })
     if (!user || !user.channels.some(channel => channel.id == channelid)) {
       throw new ForbiddenException('You do not have access to remove admins from this channel.');
     }
-    await this.channelAdminsRepository.delete({ id: channeladminid });
+    await this.channelAdminsRepository.remove(admin);
   }
 }
