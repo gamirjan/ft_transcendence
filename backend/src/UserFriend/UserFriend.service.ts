@@ -27,7 +27,7 @@ export class UserFriendService {
         const userFriend = new UserFriend();
         userFriend.userid = userid;
         userFriend.friendid = friendid;
-        return this.friendRepository.save(userFriend);
+        return await this.friendRepository.save(userFriend);
       }
     
       async removeFriend(userid: number, friendid: number): Promise<void> {

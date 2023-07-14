@@ -14,11 +14,11 @@ export class GameService {
   ) {}
 
   async getGameById(id: number): Promise<Gamehistory> {
-    return this.gameRepository.findOne({ relations: ['user', 'user2'], where: { id: id } });
+    return await this.gameRepository.findOne({ relations: ['user', 'user2'], where: { id: id } });
   }
 
   async findAllGamesByUserId(userid: number): Promise<Gamehistory[]> {
-    return this.gameRepository.find({ relations: ['user', 'user2'], where: { user: { id: userid } } });
+    return await this.gameRepository.find({ relations: ['user', 'user2'], where: { user: { id: userid } } });
   }
 
   async createGame(createGameDto: CreateGameDto): Promise<Gamehistory> {
@@ -28,7 +28,7 @@ export class GameService {
     game.user2 = createGameDto.user2;
     game.user1point = createGameDto.user1Score;
     game.user2point = createGameDto.user2Score;
-    return this.gameRepository.save(game);
+    return await this.gameRepository.save(game);
   }
 
   async updateGameScore(gameId: number, updateScoresDto: UpdateScoresDto): Promise<Gamehistory> {
@@ -40,6 +40,6 @@ export class GameService {
     game.user1point = updateScoresDto.user1Score;
     game.user2point = updateScoresDto.user2Score;
 
-    return this.gameRepository.save(game);
+    return await this.gameRepository.save(game);
   }
 }

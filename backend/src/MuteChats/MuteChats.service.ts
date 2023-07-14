@@ -27,7 +27,7 @@ export class MuteChatsService {
     var mutedchat = new Mutechat();
     mutedchat.userid = callinguserid;
     mutedchat.muteduserid = userid;
-    return this.muteChatsRepository.save(mutedchat);
+    return await this.muteChatsRepository.save(mutedchat);
   }
 
   async UnMuteUser(callinguserid: number, userid: number): Promise<Mutechat> {
@@ -40,6 +40,6 @@ export class MuteChatsService {
     {
         throw new BadRequestException("The specified user is not muted");
     }
-    return this.muteChatsRepository.remove(mutedchat);
+    return await this.muteChatsRepository.remove(mutedchat);
   }
 }

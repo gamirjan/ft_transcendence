@@ -14,7 +14,6 @@ import { BadRequestException, UnauthorizedException, ForbiddenException, Interna
 import * as bcrypt from 'bcrypt';
 import { ChannelRole, UserJoinedChannelDto } from './UserJoinedChannelDto';
 import { ChannelUserDto } from '../ChannelUsers/ChannelUserDto';
-import { ChannelMessagesService } from '../ChannelMessages/ChannelMessages.service';
 import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
 import { Mutelist } from '../MuteList/MuteList.entity';
 
@@ -75,7 +74,7 @@ export class ChannelsService {
   }
 
   async getUserChannels(userId: number): Promise<Channel[]> {
-    return this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
+    return await this.channelRepository.find({ where: { owner: { id: userId } }, relations: ['owner'], select: ["id", "channelname", "channeltype", "owner", "channelpictureurl"] });
   }
 
   async getUserJoinedChannels(userId: number): Promise<UserJoinedChannelDto[]> {
