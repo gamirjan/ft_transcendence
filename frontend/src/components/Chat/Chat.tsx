@@ -591,7 +591,7 @@ useEffect(() => {
                     }`}
                     onClick={toggleSidebar}
                   >
-                    <div className="flex px-4 pt-3 rounded-xl justify-start">
+                    <div className="flex flex-row px-4 pt-3 rounded-xl justify-start">
                       <div className="flex flex-col">
                         <img
                           src={
@@ -607,6 +607,9 @@ useEffect(() => {
                           {selectedUser.displayname ??
                             (user ? user.displayname : "Saved Message")}
                         </div>
+                      </div>
+                      <div className="flex flex-col">
+                        <button className="m-0 bg-[#00ff00] rounded-xl justify-center">Join Game</button>
                       </div>
                     </div>
                   </div>

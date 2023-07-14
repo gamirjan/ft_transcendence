@@ -21,6 +21,7 @@ const ToggleMenu = ({ className = null, role, user, current }) => {
             ) : (
               <></>
             )}
+            
             <li>Leave</li>
           </ul>
         </div>

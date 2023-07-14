@@ -754,7 +754,7 @@ const ChannelComponent = () => {
                                     {/* <div className="ml-3 w-full text-lg break-all font-semibold">
                                         {getRole(elem.role)}
                                       </div> */}
-                                    <ChatInfo/>
+                                    {/* <ChatInfo/> */}
                                     <div className="ml-2 flex w-10 justify-end">
                                       <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
                                         X

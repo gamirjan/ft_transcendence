@@ -129,7 +129,6 @@ const Profile = () => {
   useEffect(() => {
     console.log("TFA: ", TFA);
     fetchTFA();
-  }, [TFA, user]);
     console.log("modddalll",modal);
     
   }, [TFA,modal,nick]);
