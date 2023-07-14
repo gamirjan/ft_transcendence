@@ -5,6 +5,7 @@ import { ChannelAdmin } from './ChannelAdmin.entity';
 import { ChannelAdminModel } from './ChannelAdminModel';
 import { User } from '../Users/user.entity';
 import { BadRequestException, ForbiddenException } from '@nestjs/common/exceptions';
+import { ChannelUser } from '../ChannelUsers/ChannelUser.entity';
 
 @Injectable()
 export class ChannelAdminsService {
@@ -12,7 +13,9 @@ export class ChannelAdminsService {
     @InjectRepository(ChannelAdmin)
     private channelAdminsRepository: Repository<ChannelAdmin>,
     @InjectRepository(User)
-    private usersRepository: Repository<User>
+    private usersRepository: Repository<User>,
+    @InjectRepository(ChannelUser)
+    private channelUsersRepository: Repository<ChannelUser>
   ) {}
 
   async getChannelAdmins(channelid: number, userid: number): Promise<ChannelAdminModel[]> {
@@ -34,10 +37,17 @@ export class ChannelAdminsService {
     if (!user || !user.channels.some(channel => channel.id == channelid)) {
       throw new ForbiddenException('You do not have access to add admins on this channel.');
     }
+
+    var channeluser = await this.channelUsersRepository.findOne({ where: { channelid: channelid, userid: adminid } });
+    if (!channeluser)
+    {
+      throw new BadRequestException("User is not in this channel");
+    }
     const channelAdmin = new ChannelAdmin();
     channelAdmin.channelid = channelid;
     channelAdmin.adminid = adminid;
-    return this.channelAdminsRepository.save(channelAdmin);
+    await this.channelUsersRepository.remove(channeluser);
+    return await this.channelAdminsRepository.save(channelAdmin);
   }
 
   async removeAdmin(callinguserid: number, channelid: number, userid: number): Promise<void> {
