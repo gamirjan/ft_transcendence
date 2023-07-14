@@ -71,9 +71,13 @@ export class PongService {
           },
         );
 
+      console.log("beforee for");
       for (const player of room.players)
         if (player.score == player.room.options.score.max)
+        {
+          console.log("stoppppp yngerrrrr");
           return this.roomService.stopGame(room, player);
+        }
 
       this.resetBall(
         room,
