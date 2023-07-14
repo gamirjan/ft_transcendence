@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
-import profile from '@SRC_DIR/assets/images/profile.svg';
+import profile from "@SRC_DIR/assets/images/profile.svg";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { ip } from "./utils/ip";
+import LayoutProvider from "./LayoutProvider";
+import Modal from "./Chat/Modal";
 
 const Contacts = () => {
   const user = useSelector((state: AppState) => state.user);
@@ -11,8 +13,29 @@ const Contacts = () => {
   const [contacts, setContacts] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [allUsers, setAllUsers] = useState([]);
+  const [open, setOpen] = useState(false);
+  const fetchAllUsers = () => {
+    fetch(`${ip}:7000/users`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        console.log(data);
 
+        setAllUsers(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  useEffect(() => {
+    fetchAllUsers();
+  }, []);
   useEffect(() => {
     if (user == null) navigate("/", { replace: true });
     else {
@@ -30,9 +53,9 @@ const Contacts = () => {
           console.log(error);
         });
     }
-  }, [selectedUsers, contacts]);
+  }, []);
 
-  const handleSearch =  (e) => {
+  const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
 
@@ -41,7 +64,7 @@ const Contacts = () => {
       return;
     }
 
-     fetch(`${ip}:7000/users`)
+    fetch(`${ip}:7000/users`)
       .then((response) => {
         if (!response.ok) {
           throw new Error("Request failed");
@@ -49,150 +72,251 @@ const Contacts = () => {
         return response.json();
       })
       .then((data) => {
-      //  console.log(data);
-       
-        const regex = new RegExp(".*" + e.target.value + ".*", 'i');
+        //  console.log(data);
 
-         setSuggestions( data.filter((obj)=>{
-            return regex.test(obj.displayname)
-         }));
+        const regex = new RegExp(".*" + e.target.value + ".*", "i");
+
+        setSuggestions(
+          data.filter((obj) => {
+            return regex.test(obj.displayname);
+          })
+        );
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  const handleSelectUser = (user) => {
-    let users = selectedUsers
-    if (users.includes(user)) {
-      setSelectedUsers(users.filter((selected) => selected !== user));
-    } else {
-      setSelectedUsers([...users, user]);
-    }
-    // let selected = selectedUsers
-    // if (!selected.find((sel)=>sel.id == user.id))
-    // {
-    //   selectedUsers.push(user);
-    //   setSelectedUsers(selected);
-    // }
-    console.log(selectedUsers);
-    
-  };
-
-  const handleAddFriend = () => {
-    console.log(selectedUsers);
-    
-    selectedUsers && selectedUsers.map((selectedUser)=>{
-
-      const requestOptions = {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({userid:user.id,friendid:selectedUser.id}),
-      };
-  
-      fetch(`${ip}:7000/friends`, requestOptions)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Request failed");
-          }
-          // Handle success response
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.log(error);
-          alert(" the user is already in your friend list just refresh the page")
-        });
-    })
-  };
-
   const filteredContacts = contacts.filter((elem) =>
     elem.user.displayname.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  return (
-    <Layout scrollable={true}>
-      <div className="container mx-auto p-4 w-full">
-        <h1 className="text-2xl font-bold mb-4">Contacts</h1>
+  const addFriend = ()=>{
+    if (!selectedUser) return;
+    const values = {
+      userid: user.id,
+      friendid: selectedUser.id
+    };
+ 
+    
+    fetch(`${ip}:7000/friends`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(values),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return response.json(); // assuming the server returns JSON data
+      })
+      .then((data) => {
+        window.location.reload();
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert("The user is already in your friend list just refresh the page")
+        window.location.reload();
+      });
+  }
 
-        <div className="flex mb-4">
+  const removeFriend = ()=>{
+    if (!selectedUser) return;
+    console.log("friendif: ", selectedUser);
+    
+    
+    fetch(`${ip}:7000/friends/${selectedUser.id}`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Request failed");
+        }
+        return; // assuming the server returns JSON data
+      })
+      .then((data) => {
+        // console.log(data);
+        
+        // window.location.reload();
+        // console.log(data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  return (
+    <LayoutProvider scrollable={true}>
+      <div className="flex flex-col h-full p-5 w-full">
+        <div className="relative flex w-full flex-col">
+          <h1 className="text-2xl font-bold ">Contacts</h1>
+        </div>
+        <div className="flex flex-col justify-center items-center w-full px-5">
           <input
             type="text"
-            className="border border-gray-300 rounded px-4 py-2 mr-2 w-1/2"
+            className="border-2 border-transparent outline-none rounded px-4 py-2 w-1/2 hover:border-[#585858] bg-[#46464636] backdrop-blur rounded-xl"
             placeholder="Search contacts"
             value={searchQuery}
             onChange={handleSearch}
           />
         </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {filteredContacts.map((elem) => (
-            <div
-              key={elem.user.id}
-              className="bg-white shadow rounded-md p-4 flex items-center"
-            >
-              <img
-                src={elem.user.avatarurl}
-                alt="Avatar"
-                className="w-32 h-32 rounded-full mr-4"
-              />
-              <div>
-                <h2 className="text-lg font-bold">{elem.user.displayname}</h2>
-                <p className="text-gray-600">
-                  {elem.user.email ? elem.user.email : "Hidden"}
-                </p>
+        {filteredContacts.length ? (
+          <>
+            <div className="mt-5 flex flex-col w-full p-5 bg-[#46464636] justify-center shadow items-center backdrop-blur rounded-xl overflow-y-scroll">
+              <div className="flex flex-col text-3xl">Contacts</div>
+              <div
+                className="flex flex-row flex-wrap h-full justify-start items-start w-full p-5"
+                style={{ maxHeight: "70vh" }}
+              >
+                {filteredContacts.map((elem, key) => (
+                  <div
+                    key={key}
+                    className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
+                    onClick={() => {
+                      setSelectedUser(elem.user);
+                      setOpen(true);
+                    }}
+                  >
+                    <div key={elem.user.id} className="flex flex-col">
+                      <div className="flex flex-col justify-center items-center mb-2">
+                        <img
+                          src={elem.user.avatarurl}
+                          alt="Avatar"
+                          className="w-32 h-32 rounded-full"
+                        />
+                      </div>
+                      <div className="flex flex-col">
+                        <div className="text-lg font-bold  break-all text-center">
+                          {elem.user.displayname}
+                        </div>
+                        <p className="text-gray-400  break-all text-center">
+                          {elem.user.email ? elem.user.email : "Hidden"}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                <div className="flex flex-col w-full justify-center items-center py-5 text-3xl">
+                  Suggestions
+                </div>
+                {suggestions.length ? (
+                  <>
+                    {suggestions.map((elem, key) => (
+                      <div
+                      key={key}
+                        className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
+                        onClick={() => {
+                          setSelectedUser(elem);
+                          setOpen(true);
+                        }}
+                      >
+                        <div key={elem.id} className="flex flex-col">
+                          <div className="flex flex-col justify-center items-center mb-2">
+                            <img
+                              src={elem.avatarurl}
+                              alt="Avatar"
+                              className="w-32 h-32 rounded-full"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="text-lg font-bold  break-all text-center">
+                              {elem.displayname}
+                            </div>
+                            <p className="text-gray-400  break-all text-center">
+                              {elem.email ? elem.email : "Hidden"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    {allUsers.map((elem, key) => (
+                      <div
+                      key={key}
+                        className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
+                        onClick={() => {
+                          setSelectedUser(elem);
+                          setOpen(true);
+                        }}
+                      >
+                        <div key={elem.id} className="flex flex-col">
+                          <div className="flex flex-col justify-center items-center mb-2">
+                            <img
+                              src={elem.avatarurl}
+                              alt="Avatar"
+                              className="w-32 h-32 rounded-full"
+                            />
+                          </div>
+                          <div className="flex flex-col">
+                            <div className="text-lg font-bold  break-all text-center">
+                              {elem.displayname}
+                            </div>
+                            <p className="text-gray-400  break-all text-center">
+                              {elem.email ? elem.email : "Hidden"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </>
+                )}
               </div>
             </div>
-          ))}
-        </div>
-
-        <div className="mt-4">
-          <h2 className="text-lg font-bold mb-2">Suggestions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {suggestions.map((user) => { 
-              // const found = selectedUsers.find((sel)=>sel.id === user.id);
-              
-              // console.log(found ? "true" : "false");
-              // if (found)
-                // console.log("ids: ", found.id, user.id);
-              // else
-                // console.log("ids1: ", user.id);
-                
-              
-              return(
-              <div
-                key={user.id}
-                className={`bg-white shadow rounded-md p-4 flex items-center hover:cursor-pointer  
-                ${
-                    selectedUsers.includes(user) ? " border-2 border-red-500" : " border-2 border-blue-500"
-                  }
-                `}
-                onClick={() => handleSelectUser(user)}
-              >
-                <img
-                  src={user.avatarurl}
-                  alt="Avatar"
-                  className="w-32 h-32 rounded-full mr-4"
-                />
-                <div>
-                  <h2 className="text-lg font-bold">{user.displayname}</h2>
-                  <p className="text-gray-600">
-                    {user.email ? user.email : "Hidden"}
+          </>
+        ) : (
+          <></>
+        )}
+        {selectedUser ? (
+          <Modal
+            open={open}
+            onClose={() => setOpen(false)}
+            contentClassName={"bg-[#46464636] backdrop-blur w-[50%] h-[50%]"}
+          >
+            <div className="flex flex-row p-5 w-full justify-between rounded-xl">
+              <div key={selectedUser.id} className="flex flex-col self-start">
+                <div className="flex flex-col justify-center items-center p-5">
+                  <img
+                    src={selectedUser.avatarurl}
+                    alt="Avatar"
+                    className="w-32 h-32 rounded-full"
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-lg font-bold  break-all text-center">
+                    {selectedUser.displayname}
+                  </div>
+                  <p className="text-gray-400  break-all text-center">
+                    {selectedUser.email ? selectedUser.email : "Hidden"}
                   </p>
                 </div>
               </div>
-            )})}
-          </div>
-            <div className="mt-4">
-              <button
-                className="bg-blue-500 hover:bg-blue-600 text-white rounded px-4 py-2"
-                onClick={handleAddFriend}
-              >
-                Add Friend
-              </button>
+              <div className="flex flex-col self-end h-full">
+                <div className="flex flex-col w-full ">
+                  <button 
+                  className="mt-5 flex justify-end items-center m-0 px-10 py-3 bg-green-900"
+                  onClick={addFriend}
+                  >
+                    Add Friend
+                  </button>
+                  <button 
+                  className="mt-5 flex justify-end m-0 items-center px-10 py-3 bg-red-900"
+                  onClick={removeFriend}
+                  >
+                    Remove Friend
+                  </button>
+                </div>
+              </div>
             </div>
-        </div>
+          </Modal>
+        ) : (
+          <></>
+        )}
       </div>
-    </Layout>
+    </LayoutProvider>
   );
 };
 

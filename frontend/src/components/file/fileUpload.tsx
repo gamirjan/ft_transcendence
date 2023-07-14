@@ -1,14 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { setUser } from '../redux';
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux";
+import Modal from "../Chat/Modal";
 
-function FileUploadForm() {
+function FileUploadForm({ open, onClose }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(true);
-	const user = useSelector((state: AppState) => state.user);
+  const user = useSelector((state: AppState) => state.user);
   const dispatch = useDispatch();
-
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -30,99 +29,89 @@ function FileUploadForm() {
 
     if (selectedFile) {
       const formData = new FormData();
-      formData.append('image', selectedFile);
-      formData.append('userid',user.id);
+      formData.append("image", selectedFile);
+      formData.append("userid", user.id);
 
-      fetch('http://transendence.net:7000/users/avatar', {
-        method: 'POST',
+      fetch("http://transendence.net:7000/users/avatar", {
+        method: "POST",
         body: formData,
-        
       })
-        .then(response => {
-          if(response.ok)
-            return response.json()
-          throw new Error('file upload failed')
+        .then((response) => {
+          if (response.ok) return response.json();
+          throw new Error("file upload failed");
         })
-        .then(data => {
+        .then((data) => {
           // Handle the response from the server
-          dispatch(setUser(
-            {...user,
-              avatarurl:data.avatarUrl,
-            },
-            
-          ))
-          console.log(data.avatarUrl,"lllllllllllllllll",user);
-          closeModal()
+          dispatch(setUser({ ...user, avatarurl: data.avatarUrl }));
+          console.log(data.avatarUrl, "lllllllllllllllll", user);
+          closeModal();
         })
-        .catch(error => {
+        .catch((error) => {
           // Handle any error that occurred
           console.error(error);
         });
     }
   };
 
-  const openModal = () => {
-    setIsModalOpen(true);
-  };
-
   const closeModal = () => {
-    setIsModalOpen(false);
+    onClose();
     setSelectedFile(null);
     setPreviewUrl(null);
   };
-  useEffect(()=>{
-    console.log(isModalOpen);
-    
-  },[isModalOpen])
+  useEffect(() => {}, [selectedFile]);
   return (
-    <div>
-      {isModalOpen && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-75">
-        <div className="bg-gray-800 rounded p-8 max-w-md border-4 border-red-500 animate-pulse shadow-lg z-[100]">
-          <h2 className="text-3xl mb-6 text-white">Upload a File</h2>
-          {selectedFile ? (
-            <div className="mb-6">
-              <h3 className="text-xl mb-4 text-white">Selected File:</h3>
-              {previewUrl ? (
-                <img src={previewUrl} alt="Selected File" className="mb-4 max-h-60" />
-              ) : null}
-              <div className="bg-gray-700 p-4 rounded">
-                <span className="font-bold text-white">{selectedFile.name}</span>
-                <span className="text-gray-500"> ({selectedFile.size} bytes)</span>
-              </div>
-            </div>
-          ) : (
-            <div className="mb-6">
-              <input
-                type="file"
-                onChange={handleFileChange}
-                className="mb-2 bg-gray-700 text-white py-2 px-4 rounded"
-              />
-              <p className="text-gray-500">No file selected</p>
-            </div>
-          )}
-      
-          <div className="flex justify-end">
-            <button
-              type="button"
-              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
-              onClick={closeModal}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
-              onClick={handleSubmit}
-              disabled={!selectedFile}
-            >
-              Upload
-            </button>
+    <Modal
+      open={open}
+      onClose={closeModal}
+      contentClassName={
+        "bg-gray-800 rounded p-8 max-w-md border-4 border-red-500 animate-pulse shadow-lg h-30 w-30"
+      }
+    >
+      <h2 className="text-3xl mb-6 text-white">Upload a File</h2>
+      {selectedFile ? (
+        <div className="mb-6">
+          <h3 className="text-xl mb-4 text-white">Selected File:</h3>
+          {previewUrl ? (
+            <img
+              src={previewUrl}
+              alt="Selected File"
+              className="mb-4 max-h-60"
+            />
+          ) : null}
+          <div className="bg-gray-700 p-4 rounded">
+            <span className="font-bold text-white">{selectedFile.name}</span>
+            <span className="text-gray-500"> ({selectedFile.size} bytes)</span>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="mb-6">
+          <input
+            type="file"
+            onChange={handleFileChange}
+            className="mb-2 bg-gray-700 text-white py-2 px-4 rounded"
+          />
+          <p className="text-gray-500">No file selected</p>
+        </div>
       )}
-    </div>
+
+      <div className="flex justify-end">
+        <button
+          type="button"
+          className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
+          onClick={closeModal}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+          onClick={handleSubmit}
+          disabled={!selectedFile}
+        >
+          Upload
+        </button>
+      </div>
+    </Modal>
   );
 }
 

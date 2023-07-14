@@ -13,6 +13,8 @@ import ModalBox from "./Chat/ModalBox";
 import LayoutProvider from "./LayoutProvider";
 import background from "@SRC_DIR/assets/images/chat.jpg";
 import chatContent from "@SRC_DIR/assets/images/chatContent.jpg";
+import ToggleMenu from "./Chat/ToggleMenu";
+import ModalSearch from "./Chat/ModalSearch";
 
 const ChannelComponent = () => {
   const user = useSelector((state: AppState) => state.user);
@@ -44,32 +46,62 @@ const ChannelComponent = () => {
     selectedChannel && setOpenSidebar(!openSidebar);
   };
 
-  const joinChannel = (channel) => {
+  const joinChannel = (channel, value) => {
     if (user == null) navigate("/", { replace: true });
     else {
-      const values = {
-        channelid: channel.id,
-        userid: user.id,
-      };
-      fetch(`${ip}:7000/channels/join/public/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Request failed");
-          }
-          return response.json(); // assuming the server returns JSON data
+      if (getType(channel.channeltype) == 'public')
+      {
+        const values = {
+          channelid: channel.id,
+          userid: user.id,
+        };
+        fetch(`${ip}:7000/channels/join/public/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
         })
-        .then((data) => {
-          setUpdateOption("join");
-          // console.log(data);
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            setUpdateOption("join");
+            // console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+      else
+      {
+        const values = {
+          channelid: channel.id,
+          userid: user.id,
+          password: value.password
+        };
+        fetch(`${ip}:7000/channels/join/password/`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
         })
-        .catch((error) => {
-          console.log(error);
-        });
-    }
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Request failed");
+            }
+            return response.json(); // assuming the server returns JSON data
+          })
+          .then((data) => {
+            setUpdateOption("join");
+            // console.log(data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+
+      }
   };
 
   const fetchMembers = () => {
@@ -98,21 +130,19 @@ const ChannelComponent = () => {
     if (user == null) navigate("/", { replace: true });
     else {
       if (!selectedChannel) return;
-      const values = {
-        id: selectedChannel.id,
-      };
-      fetch(`${ip}:7000/channels/`, {
+     
+      fetch(`${ip}:7000/channels/${user.id}/${selectedChannel.id}`, {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
       })
         .then((response) => {
           if (!response.ok) {
             throw new Error("Request failed");
           }
-          return response.json(); // assuming the server returns JSON data
+          return; // assuming the server returns JSON data
         })
         .then((data) => {
+          window.location.reload();
           setUpdateOption("delete");
           // console.log(data);
         })
@@ -187,7 +217,6 @@ const ChannelComponent = () => {
         });
     }
   };
-
   const fetchChannels = () => {
     if (user == null) navigate("/", { replace: true });
     else {
@@ -300,6 +329,7 @@ const ChannelComponent = () => {
       setDMMessage("");
     }
   };
+
   const sendDMMessage = () => {
     const msg = dmMessage.trim();
     if (!msg.length || !selectedChannel) return;
@@ -709,7 +739,14 @@ const ChannelComponent = () => {
                           <pre>{"Role: " + selectedRole}</pre>
                         </div>
                         <div className="flex flex-col">
-                          <div className="flex flex-col">Members</div>
+                          <div className="flex flex-col">
+                            <div className="flex flex-row justify-between">
+                              <div className="flex flex-row justify-start p-2">Members</div>
+                              {selectedRole != 'user' ? (
+                                <ModalSearch channel={selectedChannel} user={user} />                              
+                              ) : (<></>)}
+                            </div>
+                            </div>
                           <div
                             className="flex flex-col w-full overflow-y-scroll"
                             style={{ maxHeight: "30vh" }}
@@ -727,7 +764,7 @@ const ChannelComponent = () => {
                                     {/* {console.log(elem.channel)} */}
                                     <div className="flex flex-row w-full  justify-start">
                                       <div className="w-1/4">
-                                        {elem.user.avatarurl ? (
+                                        {(elem.user && elem.user.avatarurl )? (
                                           <img
                                             src={elem.user.avatarurl}
                                             alt=""
@@ -736,15 +773,15 @@ const ChannelComponent = () => {
                                           />
                                         ) : (
                                           <div className="object-cover h-12 w-12 justify-center flex items-center rounded-full bg-gray-800">
-                                            {elem.user.displayname
+                                            {elem.user ? elem.user.displayname
                                               .charAt(0)
-                                              .toUpperCase()}
+                                              .toUpperCase() : ""}
                                           </div>
                                         )}
                                       </div>
                                       <div className="ml-2 flex flex-row w-full">
                                         <div className="text-lg break-all font-semibold">
-                                          {elem.user.displayname}
+                                          {elem.user ? elem.user.displayname : ''}
                                         </div>
                                       </div>
                                     <div className="flex justify-center items-center">
@@ -755,10 +792,11 @@ const ChannelComponent = () => {
                                         {getRole(elem.role)}
                                       </div> */}
                                     {/* <ChatInfo/> */}
-                                    <div className="ml-2 flex w-10 justify-end">
-                                      <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
+                                    <div className="ml-2 flex justify-end">
+                                    <ToggleMenu user={user} other={elem} role={selectedRole} getRole={getRole} channel={selectedChannel}/>
+                                      {/* <button className="bg-transparent text-white m-0 text-black px-3 py-2 w-10 hover:bg-[#36323270] rounded-full">
                                         X
-                                      </button>
+                                      </button> */}
                                       {/* <button className="bg-green">toADMIN</button> */}
                                       {/* <button className="bg-blue"></button> */}
                                     </div>

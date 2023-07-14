@@ -19,7 +19,7 @@ useEffect(()=>{
 const handleSubmit = (values, {resetForm}) =>{
     console.log(values);
     
-    createChannel ? createChannel(values) : joinChannel(channel)
+    createChannel ? createChannel(values) : joinChannel(channel, values)
     resetForm();
     setOpenModal(false);
 

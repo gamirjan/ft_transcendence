@@ -107,7 +107,7 @@ const TwoFactorProvider = ({user}) => {
     // console.log("tfo", user);
   });
   return (
-    <LayoutProvider auth={false}>
+    <LayoutProvider auth={false} zIndex={4}>
       {/* <Modal
             className={"backdrop-blur-md"}
             contentClassName={"bg-transparent"}
@@ -135,7 +135,7 @@ const TwoFactorProvider = ({user}) => {
             account. Please generate one time password.
           </div>
           <div
-            className={`flex flex-col  px-5 absolute bottom-10 ${
+            className={`flex flex-col  px-5 absolute bottom-8 ${
               open ? "self-center" : ""
             }`}
           >
