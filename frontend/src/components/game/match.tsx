@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { ip } from '../utils/ip';
 import LayoutProvider from ".././LayoutProvider";
 import { useNavigate } from 'react-router-dom';
-import {store} from "../redux"
+import {setUser, store} from "../redux"
 import Game from './Game';
 type PaddlePosition = 'left' | 'right';
 const MatchmakingGame = () => {
@@ -57,7 +57,16 @@ const MatchmakingGame = () => {
   const [player1,setPlayer1] = useState("player1");
   const [player2,setPlayer2] = useState("player2");
   const [winner,setWinner]  =useState({});
+  const dispatch = useDispatch();
 
+  async function fetchUser() 
+  {
+    fetch(`${ip}:7000/users/${user.id_42}`)
+    .then(response=> response.json())
+    .then(data=>dispatch(setUser(data)))
+    .catch(error=>{console.log(error);
+    })
+  }
   useEffect(()=>{
     console.log("wiinnn");
     
@@ -108,6 +117,7 @@ useEffect(() => {
 
     socket.on('stop', (data)=>{
       console.log("stop=>",data);
+      fetchUser();
       setWinner(data);
       setIsStart(false);
       setEnd(true);
