@@ -152,7 +152,6 @@ export class ChannelsService {
   }
 
   async deleteChannel(userid: number, channelid: number): Promise<void> {
-    console.log(userid);
     if ((await this.getChannelOwner(channelid)).id == userid)
     {
       await this.channelAdminsRepository.delete({ channelid: channelid });

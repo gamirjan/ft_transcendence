@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import io, { Socket } from 'socket.io-client';
 import { ip } from '../utils/ip';
+import LayoutProvider from ".././LayoutProvider";
 import { useNavigate } from 'react-router-dom';
 import {store} from "../redux"
 import Game from './Game';
@@ -158,25 +159,32 @@ useEffect(() => {
   const handleInputChange = (event) => {
     setInputValue(event.target.value);
   };
-  return (isStart  ? (<Game socket={socket} name1={player1} name2={player2}/>):
-   (!end ? (<div className="bg-gradient-to-br from-purple-900 to-blue-900 h-full text-white p-4 flex flex-col items-center">
-   <h1 className="text-4xl mb-8 text-green-500">Matchmaking Game</h1>
+  return (
+   
+    
+    isStart  ? (<Game socket={socket} name1={player1} name2={player2}/>):
+   (!end ? (<LayoutProvider>
+    <div className="h-full text-white p-4 flex flex-col items-center">
+     <h1 className="text-4xl mb-8 text-green-500">Matchmaking Game</h1>
    {user && (
-     <div className="flex flex-col items-center">
-       <p className="text-green-500 mb-5">Connected as: {user.displayname}</p>
-       {!room && (
-         <div className="flex flex-col items-center">
-           <button
-             onClick={joinQueue}
-             className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors duration-300 transform hover:scale-105"
-           >
-             Join Queue
-           </button>
-         </div>
-       )}
-     </div>
+      <div className="flex flex-col items-center">
+        <p className="text-green-500 mb-5">Connected as: {user.displayname}</p>
+        {!room && (
+          <div className="flex flex-col items-center">
+            <button
+              onClick={joinQueue}
+              className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md transition-colors duration-300 transform hover:scale-105"
+            >
+              Join Queue
+            </button>
+          </div>
+        )}
+      </div>
+    
    )}
- </div>) : <> <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+ </div>
+    </LayoutProvider>
+ ) : <> <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
       <h1 className="text-4xl font-bold mb-8">Game Over</h1>
       <img
         src={winner.avatarurl}// Replace with your game over image path

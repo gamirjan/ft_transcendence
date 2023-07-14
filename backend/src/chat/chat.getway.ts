@@ -115,7 +115,7 @@ export class ChatGetway {
       }
     
       @SubscribeMessage('queue')
-      joinQueue(@ConnectedSocket() client: Socket,@MessageBody() data:any): void {
+      joinQueue(@ConnectedSocket() client: Socket,@MessageBody() data:any,code?:string): void {
         
         try {
           

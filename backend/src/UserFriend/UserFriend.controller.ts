@@ -19,8 +19,8 @@ export class FriendController {
     return res.send(await this.friendService.addFriend(userid, friendid));
   }
 
-  @Delete(':userFriendId')
-  async remove(@Param('userFriendId') userFriendId: number, @Res() res): Promise<void> {
-    return res.send(await this.friendService.removeFriend(userFriendId));
+  @Delete('/:userId/:friendId')
+  async remove(@Param('userId') userId: number, @Param('friendId') friendId: number, @Res() res): Promise<void> {
+    return res.send(await this.friendService.removeFriend(userId, friendId));
   }
 }
