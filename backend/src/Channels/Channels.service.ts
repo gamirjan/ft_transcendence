@@ -157,9 +157,8 @@ export class ChannelsService {
       await this.channelAdminsRepository.delete({ channelid: channelid });
       await this.channelUsersRepository.delete({ channelid: channelid });
       await this.channelMsgRepository.delete({ channelid: channelid });
-      await this.channelRepository.delete({ id: channelid });
-      console.log(await this.muteListRepository.find({ where: { channelid: channelid } }));
       await this.muteListRepository.delete({ channelid: channelid });
+      await this.channelRepository.delete({ id: channelid });
     }
     else
     {
