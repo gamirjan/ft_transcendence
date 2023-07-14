@@ -8,9 +8,10 @@ import { Channel } from '../Channels/Channel.entity';
 import { ChannelsService } from '../Channels/Channels.service';
 import { UsersService } from '../Users/user.service';
 import { User } from '../Users/user.entity';
+import { Channelmessage } from '../ChannelMessages/ChannelMessage.entity';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ChannelUser, ChannelAdmin, Channel, User])],
+    imports: [TypeOrmModule.forFeature([ChannelUser, ChannelAdmin, Channel, User, Channelmessage])],
     controllers: [ChannelUsersController],
     providers: [ChannelUsersService, ChannelsService, UsersService],
     exports: [ChannelUsersService]
