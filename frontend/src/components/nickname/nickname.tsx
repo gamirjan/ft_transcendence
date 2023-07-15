@@ -18,8 +18,8 @@ function Nick({ open, onClose }) {
   const handleSubmit = (event) => {
     event.preventDefault();
     try {
-      const response = fetch(`${ip}:7000/users/nickname`, {
-        method: "POST",
+      const response = fetch(`${ip}/users/nickname`, {
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 // import './Chat.css'
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { socket } from "../Socket";
+
 import { ip } from "../utils/ip";
 // import { Button, Modal } from 'antd';
 import { IMassage } from "../utils";
@@ -14,8 +14,11 @@ import background from "@SRC_DIR/assets/images/chat.jpg";
 import chatContent from "@SRC_DIR/assets/images/chatContent.jpg"
 import { io } from "socket.io-client";
 import Game from "../game/Game";
+import ChatContent from "./ChatContent";
 
 const Chat = () => {
+  console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;ddd;;;;;;;");
+  
   const user = useSelector((state: AppState) => state.user);
   const navigate = useNavigate();
   const [contacts, setContacts] = useState([]);
@@ -26,251 +29,37 @@ const Chat = () => {
   const [selectedUserName, setSelectedUserName] = useState("");
   const [messages, setMessages] = useState([]);
   const [dmMessage, setDMMessage] = useState("");
-  const [sended, setSended] = useState(false);
+ const [sended, setSended] = useState(false);
   const [openSidebar, setOpenSidebar] = useState(false);
 
-
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
   const [isSocket,setIsSoket]  = useState(false);
-  const [socket,setSocket] = useState(io());
-    if(isSocket == false)
+    const [socket,setSocket] = useState(io());
+
+    async function updateMessages() 
     {
-
-      setSocket( io(`${ip}:4001/pong`,{
-        closeOnBeforeunload:true,
-        protocols:'ws',
-        secure:true,
-        randomizationFactor:0.8,
-        transports: ['websocket'],
-        autoConnect:false,
-        auth:{
-          headers:{
-              'USER':JSON.stringify({user})
-          },
-          
-      },
       
-      }));
-      setIsSoket(true);
     }
-    useEffect(()=>{
-      socket.connect()
-      socket.on("connection",(data)=>{
-        console.log("conectionnnnn");
-      })
-      return()=>{
-        socket.close();
-        socket.disconnect();
+      if(isSocket == false)
+      {
+  
+        setSocket( io(`${ip}:4001/pong`,{
+          closeOnBeforeunload:true,
+          protocols:'ws',
+          secure:true,
+          randomizationFactor:0.8,
+          transports: ['websocket'],
+          autoConnect:false,
+          auth:{
+            headers:{
+                'USER':JSON.stringify({user})
+            },
+            
+        },
+        
+        }));
+        setIsSoket(true);
       }
-    },[])
 
-     // Update the server URL and namespace
-     let width  =600;
-     let height = 300;
-     let paddleHeight = ((200 * height) / 1080) /2;
-  const [room, setRoom] = useState(null);
-  const [inputValue, setInputValue] = useState('');
-  const [isStart,setIsStart] = useState(false);
-  const [pos,setPos] = useState("");
-  const [chat,setChat] = useState([]);
-  const [end,setEnd] = useState(false);
-  const [players,setPlayers] = useState([]);
-  const [player1,setPlayer1] = useState("player1");
-  const [player2,setPlayer2] = useState("player2");
-  const [winner,setWinner]  =useState({});
-
-  useEffect(()=>{
-    console.log("wiinnn");
-    
-  },[winner])
-
-useEffect(() => {
-    socket.onopen = function(event) {
-        // console.log('Connected to the server');
-        
-        // Send data to the server
-        const data = user;
-        socket.send(data);
-      };
-    socket.on('connect', () => {
-       console.log('Connected to server');
-    });
-
-    socket.on('info', (data) => {
-        console.log("infoo");
-        
-        console.log("info",data);
-        
-        
-    });
-
-    socket.on('playerinfo',(data,data1)=>{
-      
-      console.log("sddsddsdsdsdsd",data,data1);
-      setPlayer1(data.displayname);
-      setPlayer2(data1.displayname);
-      
-    });
-
-    socket.on('room', (code) => {
-        
-        console.log("room sdgddfdggrs");
-        //console.log("ssssssssssssssssssss",data);
-
-        // if(data == user.id)
-        //   setPos("left");
-        // else
-        //   setPos("right");
-        if(!isStart)
-        {
-          socket.emit('start');
-          setIsStart(true);
-          
-        }
-    });
-
-    socket.on('stop', (data)=>{
-      console.log("stop=>",data);
-      setWinner(data);
-      setIsStart(false);
-      setEnd(true);
-     // window.location.reload();
-      //socket.close();
-      
-      
-    });
-    socket.on('disconnect', (data)=>{
-      console.log("disconnect=>",data);
-      socket.close();
-      
-    });
-    socket.on('chat',(data)=>{
-      console.log("chatt",data);
-      
-    })
-
-    return () => {
-     console.log("socket closed");
-     socket.off('room')
-     socket.disconnect();
-     socket.close()
-     //socket.off();
-      //socket.disconnect();
-    };
-  }, []);
-
-  const joinQueue = () => {;
-    console.log("dddafswfwf",user);
-    
-    socket.emit('queue',{data:user});
-  };
-
-  const joinRoom = () => {
-    socket.emit('room', inputValue);
-  };
-
-  const ready = () => {
-    socket.emit('ready', {});
-  };
-
-  const startGame = () => {
-    console.log("havayiiiiiiiiiiiiiiiiiiiii");
-    
-   // socket.emit('start');
-  };
-
-    useEffect(() => {
-        const onConnect = () => {
-            console.log("CONNECTED")
-        }
-
-        const onOnline = (p) => {
-            console.log("ONLINE", p)
-        }
-
-        socket.on("connect", onConnect);        
-        socket.on("online", onOnline);
-
-        socket.emit("online", { msg: "Hello, world!!!" })
-        socket.on('chat', function (obj) {
-            if (obj.msg !== '') {
-                setTextMessages([...(textMessages || []), 
-                    {msg: obj.displayname + ": " + obj.msg, username: obj.username}])
-            }
-            console.log(obj.username + ": " + obj.msg);
-        });
-
-        return () => {
-            socket.off("connect", onConnect);
-            socket.off("online", onOnline);
-            socket.off('chat');
-        }
-    }, []);
-
-    useEffect(() => {
-        if (user == null) 
-            navigate("/", { replace: true });
-        else {
-          fetch(`${ip}:7000/friends/${user.id}`)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error("Request failed");
-              }
-              return response.json(); // assuming the server returns JSON data
-            })
-            .then((data) => {
-              setContacts(data);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-        }
-      }, []);
-      ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-  useEffect(() => {
-    if (!user) navigate("/", { replace: true });
-  });
-  const toggleSidebar = () => {
-    Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
-  };
-
-  const handleSelectUser = (e) => {
-    setSelectedUser(e);
-    setSelectedUserName(selectedUser.displayname);
-  };
-  useEffect(() => {
-    const onConnect = () => {
-      console.log("CONNECTED");
-    };
-
-    const onOnline = (p) => {
-      console.log("ONLINE", p);
-      // fetchMessages();
-
-      // console.log();
-    };
-
-    socket.on("connect", onConnect);
-    socket.on("online", onOnline);
-
-    socket.emit("online", { msg: "Hello, world!!!" });
-    socket.on("chat", function (obj) {
-      if (obj.msg !== "") {
-        setTextMessages([
-          ...(textMessages || []),
-          { msg: obj.displayname + ": " + obj.msg, username: obj.username },
-        ]);
-      }
-      console.log(obj.username + ": " + obj.msg);
-    });
-    fetchAllUsers();
-    return () => {
-      socket.off("connect", onConnect);
-      socket.off("online", onOnline);
-      socket.off("chat");
-    };
-  }, [isStart]);
   const fetchMessages = () => {
     fetch(`${ip}:7000/directmessages/messages/${user.id}/${selectedUser.id}`)
       .then((response) => {
@@ -282,12 +71,302 @@ useEffect(() => {
       .then((data) => {
         console.log(data);
 
-        setMessages(data);
+        setMessages(prop => data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  // if(!messages)
+  //   fetchMessages()
+
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+//   const [isSocket,setIsSoket]  = useState(false);
+//   const [socket,setSocket] = useState(io());
+//   useEffect(()=>{
+
+//     if (Object.keys(selectedUser).length) {
+//       fetchMessages();
+//       // console.log(messages);
+//     }
+//   },[selectedUser])
+//   async function updateMessages() 
+//   {
+    
+//   }
+//     if(isSocket == false)
+//     {
+
+//       setSocket( io(`${ip}:4001/pong`,{
+//         closeOnBeforeunload:true,
+//         protocols:'ws',
+//         secure:true,
+//         randomizationFactor:0.8,
+//         transports: ['websocket'],
+//         autoConnect:false,
+//         auth:{
+//           headers:{
+//               'USER':JSON.stringify({user})
+//           },
+          
+//       },
+      
+//       }));
+//       setIsSoket(true);
+//     }
+//     useEffect(()=>{
+//   //console.log("[[[[[[[[[[[[]]]]]]]]]]]]]]]]");
+//       if(socket)
+//         return;
+//       //socket.connect()
+//       socket.on("connection",(data)=>{
+//         console.log("conectionnnnn");
+//       })
+//       return()=>{
+//         socket.close();
+//         //socket.disconnect();
+//       }
+//     },[socket])
+
+//      // Update the server URL and namespace
+//     //  let width  =600;
+//     //  let height = 300;
+//     //  let paddleHeight = ((200 * height) / 1080) /2;
+//   //const [room, setRoom] = useState(null);
+//   const [inputValue, setInputValue] = useState('');
+   const [isStart,setIsStart] = useState(false);
+// const [pos,setPos] = useState("");
+//   // const [chat,setChat] = useState([]);
+//   // const [end,setEnd] = useState(false);
+//   // const [players,setPlayers] = useState([]);
+//   const [player1,setPlayer1] = useState("player1");
+//   const [player2,setPlayer2] = useState("player2");
+//   const [winner,setWinner]  =useState({});
+
+
+
+//   // useEffect(()=>{
+
+//   //   console.log("wiinnn");
+    
+//   // },[winner])
+
+//   const [num,setNum] = useState(0);
+//   const [newmess,setNewmess] = useState([]);
+//   let i = 0
+
+// useEffect(()=>{
+
+//   //console.log("[[[[[[[[[[[[]]]]]]]]]]]]]]]]");
+//   socket.connect()
+
+//     socket.on("connection",(data)=>{
+//       console.log("conectionnnnn");
+//     })
+//     socket.on('info', (data) => {
+//       console.log("infoo");
+      
+//       console.log("info",data);
+      
+      
+//   });
+//   socket.on(`chat/${user.id}`,(data)=>{
+    
+//     // setSelectedUser(selectedUser);
+//     if(selectedUser.id !== data.senderid)return;
+//     console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
+//       const obj = {senderid:data.senderid, msg:data.msg,publishdate:Date()}
+//    //fetchMessages();
+//       setNewmess(prev => [...prev,obj]);
+//       //setMessages(prev => [...prev,obj])
+      
+      
+//     console.log(data);
+    
+//     // if(Object.keys(selectedUser).length == 0) return
+//     // if(selectedUser.id != data.sender.id)return
+//    // console.log(data);
+//   //  let arr = newmess;
+//   //  arr.pop()
+//   //  arr.push(obj)
+//   //  setNewmess(prev => [...prev,arr]);
+//    console.log(newmess);
+    
+//     //senderid: 40, message: 'barev', publishdate: '2023-07-07T07:14:37.655Z'
+    
+    
+//   })
+  
+//   return () => {
+//     console.log("socket closed");
+//     socket.off('room')
+//     socket.off(`chat/${user.id}`);
+//     socket.off('info')
+//     //socket.close()
+//     socket.disconnect();
+//     //socket.off();
+//      //socket.disconnect();
+//    };
+// },[selectedUser])
+
+// useEffect(() => {
+//   console.log("----------------------------");
+
+//   // setSelectedUser(selectedUser)
+//   //socket.emit('chat',{userid:user.id ,msg:"lorem ipsum"})
+  
+//     // socket.onopen = function(event) {
+//     //     // console.log('Connected to the server');
+        
+//     //     // Send data to the server
+//     //     const data = user;
+//     //     socket.send(data);
+//     //   };
+//     // socket.on('connect', () => {
+//     //    console.log('Connected to server');
+//     // });
+
+
+
+//     socket.on('playerinfo',(data,data1)=>{
+      
+//       console.log("sddsddsdsdsdsd",data,data1);
+//       setPlayer1(data.displayname);
+//       setPlayer2(data1.displayname);
+      
+//     });
+//     //  console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+//     //  console.log(selectedUser.id);
+//     //  let idd = selectedUser.id
+//     // const recv = selectedUser;
+//     // setId(selectedUser.id ?? 0);
+//     // console.log(idd);
+//     //  console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+//     //console.log("iiiiiiiiiii",i++);
+   
+
+//     socket.on('room', (code) => {
+        
+//         console.log("room sdgddfdggrs");
+//         //console.log("ssssssssssssssssssss",data);
+
+//         // if(data == user.id)
+//         //   setPos("left");
+//         // else
+//         //   setPos("right");
+//         if(!isStart)
+//         {
+//           socket.emit('start');
+//           setIsStart(true);
+          
+//         }
+//     });
+
+//     socket.on('stop', (data)=>{
+//       console.log("stop=>",data);
+//       setWinner(data);
+//       setIsStart(false);
+//       setEnd(true);
+//      // window.location.reload();
+//       socket.close();
+      
+      
+//     });
+//     socket.on('disconnect', (data)=>{
+//       console.log("disconnect=>",data);
+//       socket.close();
+      
+//     });
+//     return () => {
+//      console.log("socket closed");
+//      socket.off('room')
+//      //socket.off('info')
+//      //socket.off(`chat/${user.id}`);
+//      //socket.disconnect();
+//      socket.close()
+//      //socket.off();
+//       //socket.disconnect();
+//     };
+//   }, [selectedUser]);
+
+  const joinQueue = () => {;
+    console.log("dddafswfwf",user);
+    
+    //socket.emit('queue',{data:user});
+  };
+
+//   const joinRoom = () => {
+//     socket.emit('room', inputValue);
+//   };
+
+//   const ready = () => {
+//     socket.emit('ready', {});
+//   };
+
+//   const startGame = () => {
+//     console.log("havayiiiiiiiiiiiiiiiiiiiii");
+    
+//    // socket.emit('start');
+//   };
+
+    // useEffect(() => {
+    //     const onConnect = () => {
+    //         console.log("CONNECTED")
+    //     }
+
+    //     const onOnline = (p) => {
+    //         console.log("ONLINE", p)
+    //     }
+
+    //     socket.on("connect", onConnect);        
+    //     socket.on("online", onOnline);
+
+    //     socket.emit("online", { msg: "Hello, world!!!" })
+    //     return () => {
+    //         socket.off("connect", onConnect);
+    //         socket.off("online", onOnline);
+    //         //socket.off('chat');
+    //     }
+    // }, []);
+
+  //   useEffect(() => {
+
+  //       if (user == null) 
+  //           navigate("/", { replace: true });
+  //       else {
+  //         fetch(`${ip}:7000/friends/${user.id}`)
+  //           .then((response) => {
+  //             if (!response.ok) {
+  //               throw new Error("Request failed");
+  //             }
+  //             return response.json(); // assuming the server returns JSON data
+  //           })
+  //           .then((data) => {
+  //             setContacts(data);
+  //           })
+  //           .catch((error) => {
+  //             console.log(error);
+  //           });
+  //       }
+  //     }, []);
+  //     ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+  // useEffect(() => {
+
+  //   if (!user) navigate("/", { replace: true });
+  // },[]);
+  const toggleSidebar = () => {
+    Object.keys(selectedUser).length != 0 && setOpenSidebar(!openSidebar);
+  };
+
+  const handleSelectUser = (e) => {
+    e.priventDesault;
+    setSelectedUser(e);
+    setSelectedUserName(selectedUser.displayname);
+  };
+ 
+ 
   const fetchAllUsers = () => {
     fetch(`${ip}:7000/users`)
       .then((response) => {
@@ -306,7 +385,16 @@ useEffect(() => {
       });
   };
 
-  useEffect(() => {
+  // useEffect(() => {
+
+   
+  //     // console.log(selectedUser);
+
+     
+  //   }
+  //   // fetchAllUsers();
+  // }, []);
+  useEffect(()=>{
     if (user) {
       fetch(`${ip}:7000/directmessages/chats/${user.id}`)
         .then((response) => {
@@ -321,15 +409,8 @@ useEffect(() => {
         .catch((error) => {
           console.log(error);
         });
-      // console.log(selectedUser);
-
-      if (Object.keys(selectedUser).length) {
-        fetchMessages();
-        // console.log(messages);
       }
-    }
-    // fetchAllUsers();
-  }, [selectedUserName, sended, allUsers]);
+  }, [allUsers])
   const handleSearch = (e) => {
     const query = e.target.value;
     setSearchQuery(query);
@@ -362,19 +443,19 @@ useEffect(() => {
   const sendMessage = async (event) => {
     event.preventDefault();
 
-    let msg = message;
-    msg = msg.replace(/(<([^>]+)>)/gi, "");
-    console.log("msgggggg", msg);
+    // let msg = message;
+    // msg = msg.replace(/(<([^>]+)>)/gi, "");
+    // console.log("msgggggg", msg);
 
-    console.log("sending msg: " + msg + " from " + username);
-    socket.emit("chat", {
-      data: user,
-      msg: msg,
-      userid: chatid,
-      username: username,
-    });
+    // console.log("sending msg: " + msg + " from " + username);
+    // socket.emit("chat", {
+    //   data: user,
+    //   msg: msg,
+    //   userid: chatid,
+    //   username: username,*
+    // });
 
-    setMessage("");
+    // setMessage("");
   };
   // useEffect(()=>{
   //   console.log();
@@ -384,13 +465,16 @@ useEffect(() => {
   const handleKeyDown = (e) => {
     if (e.key == "Enter") {
       sendDMMessage();
-      setDMMessage("");
-      fetchAllUsers();
+      //setDMMessage("");
+      //fetchAllUsers();
     }
   };
   const sendDMMessage = () => {
     const msg = dmMessage.trim();
     if (!msg.length) return;
+    console.log("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+    socket.emit('chat',{senderid:user.id,userid:selectedUser,msg:msg})
+    
     // console.log(user, selectedUser);
     // console.log(dmMessage);
     // console.log(typeof(user.id));
@@ -419,17 +503,15 @@ useEffect(() => {
         return response.json(); // assuming the server returns JSON data
       })
       .then((data) => {
-        setSended(!sended);
-        // console.log(data);
+        //setSended(!sended);
+        //socket.emit('chat',{senderid:selectedUser.id,userid:user.id ,msg:"lorem ipsum"})
+         console.log(data);
       })
       .catch((error) => {
         console.log(error);
       });
   };
 
-  socket.on("participants", (count) => {
-    console.log("online :" + count);
-  });
 
   return (
     <>
@@ -635,6 +717,9 @@ useEffect(() => {
                           className="w-1/2 flex flex-col"
                           style={{ height: "70vh" }}
                         >
+                           <div className="">
+                          
+                        </div>
                           {messages &&
                             messages.map((msg, key) =>
                               user && user.id != msg.senderid ? (
@@ -666,8 +751,13 @@ useEffect(() => {
                                   />
                                 </div>
                               )
+                              
                             )}
+                            <ChatContent selectedUser={selectedUser}socket={socket}/>
+                            
+                            
                         </div>
+                       
                       </div>
                       {
                         <div className="flex py-5 justify-around">
