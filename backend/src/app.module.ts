@@ -74,9 +74,9 @@ import { MuteChatsController } from './MuteChats/MuteChats.controller';
   export class AppModule {
     constructor(){
       console.log("app module called");
-      console.log("============================");
-      console.log(configg);
-      console.log("============================");
+      // console.log("============================");
+      // console.log(configg);
+      // console.log("============================");
     /*   // createPostgreSQLConnection();
      let  UID = "Your application uid"
      let SECRET = "Your secret token"

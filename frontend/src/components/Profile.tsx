@@ -204,7 +204,7 @@ const Profile = () => {
             <div
               className="flex p-2 items-center hover:cursor-pointer"
               style={{ width: "40%" }}
-              onClick={() => setTFA(!TFA)}
+              onClick={() => setTFA(prev => !prev)}
             >
               <div className="flex flex-col justify-center items-center self-start py-3">
                 <span className="text-lg font-bold p-3">TFA: </span>

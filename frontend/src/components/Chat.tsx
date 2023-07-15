@@ -28,7 +28,7 @@ const chatid = urlParams.get('id');
 //     socket.emit(`online`, chatid);
 // };
 
-const Chat = () => {
+const Chat4 = () => {
     const user = useSelector((state: AppState) => state.user);
     const navigate = useNavigate();
     const [contacts, setContacts] = useState([]);
@@ -295,7 +295,7 @@ useEffect(() => {
         )
     }
 
-export default Chat;
+export default Chat4;
 
  {/*  <div className="mt-8 container mx-auto shadow-lg rounded-lg">
                 <div className="px-5 py-5 flex justify-between items-center bg-white border-b-2">

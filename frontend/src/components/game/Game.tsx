@@ -228,20 +228,45 @@ function Game({socket,name1,name2}) {
           //socket.disconnect();
         };
       }, []);
+
+      const colors = [
+        { name: 'Gray', value: 'bg-gray-800' },
+        { name: 'Red', value: 'bg-red-500' },
+        { name: 'Blue', value: 'bg-blue-500' },
+        { name: 'Green', value: 'bg-green-500' },
+        // Add more color options as needed
+      ];
+      
+        const [selectedColor, setSelectedColor] = useState(colors[0].value); // Set initial color
+      
+        const handleColorChange = (event) => {
+          setSelectedColor(event.target.value);
+        };
       
   return (
-    <div className="flex flex-col items-center bg-gray-800">
-        <h2 className="text-white text-3xl py-4">Score: {who} </h2>
-        <h3 className="text-white text-2xl py-2">{name1} vs {name2}</h3> 
-        <div className="flex justify-center items-center h-screen">
-            <canvas
-            ref={canvasRef}
-            className="border-2 border-white"
-            width={width}
-            height={height}
-            />
-          </div>
-        </div>
+    <>
+    <div className={`flex flex-col items-center ${selectedColor}`}>
+     <select
+        className="w-[10%] justify-start self-start text-white text-lg mt-4 bg-gray-800 border-2 border-white rounded p-2 focus:outline-none"
+        value={selectedColor}
+        onChange={handleColorChange}
+      >
+        {colors.map((color) => (
+          <option key={color.value} value={color.value}>{color.name}</option>
+        ))}
+      </select>
+    <h2 className="text-white text-3xl py-4">Score: {who}</h2>
+    <h3 className="text-white text-2xl py-2">{name1} vs {name2}</h3> 
+    <div className="flex justify-center items-center h-screen">
+      <canvas
+        ref={canvasRef}
+        className="border-2 border-white"
+        width={width}
+        height={height}
+      />
+    </div>
+  </div>
+  </>
 
   )
 }

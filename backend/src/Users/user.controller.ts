@@ -85,6 +85,8 @@ export class UsersController {
   @Patch('nickname')
   async updateDisplayName(@Body() payload: { userid: number, nickname: string }, @Res() res): Promise<void> {
     const { userid, nickname } = payload;
+    console.log("====>",userid,nickname);
+    
     return res.send(await this.usersService.updateDisplayName(userid, nickname));
   }
 
