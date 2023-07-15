@@ -11,6 +11,10 @@ export class MuteChatsService {
   ) {}
 
   async CheckMuteStatus(userid: number, checkuserid: number): Promise<object> {
+    if (!userid || !checkuserid)
+    {
+      throw new BadRequestException("Invalid parameters");
+    }
     return { muted: await this.muteChatsRepository.exist({ where: { userid: userid, muteduserid: checkuserid } }) };
   }
 
