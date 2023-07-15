@@ -15,27 +15,22 @@ function Nick({ open, onClose }) {
     setInputValue(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = fetch(`${ip}/users/nickname`, {
+      const response = await fetch(`${ip}:7000/users/nickname`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userid: user.id, nickname: inputValue }),
+        body: JSON.stringify({ userid: user.id, nickname: inputValue}),
       });
 
-      if (response.ok) {
         dispatch(setUser({ ...user, displayname: inputValue }));
-        //console.log(data);
-        if (onClose) onclose();
-      } else {
-        setErrorMessage("The nickname is taken");
-      }
+    
     } catch (error) {
       console.error("================>", error);
-      setErrorMessage("An error occurred");
+      setErrorMessage("An error occurred =>" + error);
     }
   };
 
