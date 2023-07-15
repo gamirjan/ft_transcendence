@@ -10,6 +10,10 @@ export class MuteChatsService {
     private muteChatsRepository: Repository<Mutechat>
   ) {}
 
+  async CheckMuteStatus(userid: number, checkuserid: number): Promise<object> {
+    return { muted: await this.muteChatsRepository.exist({ where: { userid: userid, muteduserid: checkuserid } }) };
+  }
+
   async MuteUser(callinguserid: number, userid: number): Promise<Mutechat> {
     if (!callinguserid || !userid)
     {
