@@ -19,7 +19,7 @@ function Nick({ open, onClose }) {
     event.preventDefault();
     try {
       const response = fetch(`${ip}/users/nickname`, {
-        method: "POST",
+        method: "PATCH",
         headers: {
           "Content-Type": "application/json",
         },

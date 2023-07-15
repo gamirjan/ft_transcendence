@@ -57,67 +57,66 @@ const ChatComponent = () => {
   }, [isCreatingChat]);
 console.log(friendList);
 
-  return (
-    <div className="flex h-screen bg-gray-100">
-      <div className="w-1/5 bg-indigo-900 text-white">
-        <div className="flex items-center justify-between px-4 py-2 border-b border-indigo-800">
-          <h2 className="text-lg font-bold">Chat List</h2>
-          <button
-            className="w-8 h-8 bg-indigo-700 text-white rounded-full flex items-center justify-center"
-            onClick={handleNewChatClick}
+return (
+  <div className="flex h-screen bg-gray-100">
+    <div className="w-1/5 bg-purple-900 text-white">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-purple-800">
+        <h2 className="text-lg font-bold">Chat List</h2>
+        <button
+          className="w-8 h-8 bg-purple-700 text-white rounded-full flex items-center justify-center"
+          onClick={handleNewChatClick}
+        >
+          +
+        </button>
+      </div>
+      <div className="py-4">
+        {chatList.map((chat) => (
+          <div
+            key={chat.id}
+            className={`flex items-center px-4 py-2 cursor-pointer ${
+              selectedChat?.id === chat.id ? "bg-purple-800" : ""
+            }`}
+            onClick={() => handleChatClick(chat)}
           >
-            +
-          </button>
-        </div>
-        <div className="py-4">
-          {chatList.map((chat) => (
-            <div
-              key={chat.id}
-              className={`px-4 py-2 cursor-pointer ${
-                selectedChat?.id === chat.id ? "bg-indigo-800" : ""
-              }`}
-              onClick={() => handleChatClick(chat)}
-            >
-              {chat.name}
-            </div>
-          ))}
-        </div>
+            <div className="w-4 h-4 bg-white rounded-full mr-2"></div>
+            <div className="text-sm">{chat.name}</div>
+          </div>
+        ))}
       </div>
-      <div className="flex-1 bg-white">
-        {selectedChat ? (
-          <div className="h-full flex items-center justify-center text-indigo-900">
-            Chat with {selectedChat.name}
-          </div>
-        ) : (
-          <div className="h-full flex items-center justify-center text-indigo-900">
-            No chat selected
-          </div>
-        )}
-      </div>
-      {isCreatingChat && (
-        <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
-          <div className="bg-white w-1/2 p-4">
-            <h2 className="text-lg font-bold mb-2">Select Friends</h2>
-            <ul>
-              {friendList.map((friend) => (
-                <li
-                  key={friend.id}
-                  className={`px-4 py-2 cursor-pointer ${
-                    selectedFriends.some((selectedFriend) => selectedFriend.id === friend.id)
-                      ? "bg-indigo-200"
-                      : ""
-                  }`}
-                  onClick={() => handleFriendSelect(friend)}
-                >
-                  {friend.user.displayname}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
+    </div>
+    <div className="flex-1 bg-white flex items-center justify-center">
+      {selectedChat ? (
+        <div className="text-purple-900">Chat with {selectedChat.name}</div>
+      ) : (
+        <div className="text-purple-900">No chat selected</div>
       )}
     </div>
-  );
+    {isCreatingChat && (
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50">
+        <div className="bg-white w-1/2 p-4">
+          <h2 className="text-lg font-bold mb-2">Select Friends</h2>
+          <ul>
+            {friendList.map((friend) => (
+              <li
+                key={friend.id}
+                className={`flex items-center px-4 py-2 cursor-pointer ${
+                  selectedFriends.some((selectedFriend) => selectedFriend.id === friend.id)
+                    ? "bg-purple-200"
+                    : ""
+                }`}
+                onClick={() => handleFriendSelect(friend)}
+              >
+                <div className="w-4 h-4 bg-purple-900 rounded-full mr-2"></div>
+                <div>{friend.user.displayname}</div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default ChatComponent;

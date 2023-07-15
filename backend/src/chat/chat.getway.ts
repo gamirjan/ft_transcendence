@@ -32,12 +32,12 @@ export class ChatGetway {
       ) {}
     afterInit(server: Server){
       }
-    handleConnections(client: Socket){
-        console.log('New connection');
-        const count = this.server.engine.clientsCount;
-        console.log("Connected clients: " + count);
-        this.server.emit('participants',count);
-    }
+    // handleConnections(client: Socket){
+    //     console.log('New connection');
+    //     const count = this.server.engine.clientsCount;
+    //     console.log("Connected clients: " + count);
+    //     this.server.emit('participants',count);
+    // }
     handleDisconnects(client: Socket){
         console.log('Disconnection');
         const count = this.server.engine.clientsCount;
@@ -61,13 +61,19 @@ export class ChatGetway {
         @MessageBody() data: any,
         @ConnectedSocket() client: Socket,
         ) {
-            console.log("-----------------------------------------")            
-        console.log(data.data.id + ': ' + data.msg);     
-        console.log("-----------------------------------------")
-        // socket.broadcast.emit('message', msg); // to all, but the sender
-        // this.server.emit('message',data); // to all, including the sender
-        //it need to recive the recipient user id
-        this.server.to(data.userid).emit('chat',data); // to all, including the sender
+          //console.log(data.data.id + ': ' + data.msg);     
+          // socket.broadcast.emit('message', msg); // to all, but the sender
+          // this.server.emit('message',data); // to all, including the sender
+          //it need to recive the recipient user id
+          // console.log("-----------------------------------------")
+          //   console.log(`chat/${data.userid.id}`);
+          //   console.log(data);
+            
+          // console.log("-----------------------------------------")
+       
+          this.server.emit(`chat/${data.userid.id}`,data);
+          console.log("//////////////////////////////////////////////////////////////////////ffffffff/////////////////////////////////");
+           // to all, including the sender
         // client.emit('chat',data);
     }
     @SubscribeMessage('channels')
@@ -90,7 +96,7 @@ export class ChatGetway {
     async handleConnection(@ConnectedSocket() client: Socket): Promise<any> {
         try
         {
-            console.log("dddddddddddddddd");
+           // console.log("dddddddddddddddd");
           //console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
           const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
           ////console.log(user);

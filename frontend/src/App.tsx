@@ -34,6 +34,10 @@ import { io } from "socket.io-client";
 import { ip } from "./components/utils/ip";
 import FileUploadForm from "./components/file/fileUpload";
 import Nick from "./components/nickname/nickname";
+import ChatComponent1 from "./components/Chat/testChat";
+import ChatMsg from "./components/ChatMsg";
+import Chat4 from "./components/Chat";
+import Test from "./components/Chat/testChat";
 
 function App() {
   const user = useSelector((state: AppState) => state.user);
