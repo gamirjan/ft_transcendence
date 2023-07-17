@@ -27,7 +27,7 @@ const TwoFactorProvider = ({user}) => {
       userid: user.id,
       pin: otpPin,
     };
-    await SetStatus(user.id,0);
+    await SetStatus(user.id,1);
     fetch(`${ip}:7000/twofactor/check`, {
       method: "POST",
       // mode:'no-cors',

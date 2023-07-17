@@ -17,6 +17,12 @@ function Nick({ open, onClose }) {
 
    const handleSubmit = async (event) => {
     event.preventDefault();
+    setErrorMessage("");
+    if(inputValue.length < 3 || inputValue.length > 20 || inputValue.trim() == "")
+    {
+      setErrorMessage("Nickname must be between 3 and 20 characters");
+      return;
+    }
     try {
       const response = await fetch(`${ip}:7000/users/nickname`, {
         method: "PATCH",
@@ -25,8 +31,14 @@ function Nick({ open, onClose }) {
         },
         body: JSON.stringify({ userid: user.id, nickname: inputValue}),
       });
-
+        console.log(response.status != 200);
+        if(response.status != 200)
+        {
+          setErrorMessage("this nickname is already taken");
+          return;
+        }
         dispatch(setUser({ ...user, displayname: inputValue }));
+        onClose();
     
     } catch (error) {
       console.error("================>", error);

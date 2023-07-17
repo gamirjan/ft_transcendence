@@ -6,6 +6,7 @@ import LayoutProvider from ".././LayoutProvider";
 import { useNavigate } from 'react-router-dom';
 import {setUser, store} from "../redux"
 import Game from './Game';
+import { SetStatus } from '../Ft_Auth';
 type PaddlePosition = 'left' | 'right';
 const MatchmakingGame = () => {
   const [isSocket,setIsSoket]  = useState(false);
@@ -110,6 +111,8 @@ useEffect(() => {
         if(!isStart)
         {
           socket.emit('start');
+          SetStatus(user.id,2)
+          dispatch(setUser({...user,status:2}))
           setIsStart(true);
           
         }
@@ -120,6 +123,9 @@ useEffect(() => {
       fetchUser();
       setWinner(data);
       setIsStart(false);
+      dispatch(setUser({...user,status:1}))
+      SetStatus(user.id,1);
+
       setEnd(true);
      // window.location.reload();
       //socket.close();
@@ -207,7 +213,7 @@ useEffect(() => {
         style={{ width: '80%',height: '30%'}}
       />
       <button
-        onClick={joinQueue}
+        onClick={()=>window.location.reload()}
         className="bg-yellow-600 hover:bg-yellow-400 text-black px-6 py-2 rounded-md transition-colors duration-300 transform hover:scale-105"
       >
         New Game

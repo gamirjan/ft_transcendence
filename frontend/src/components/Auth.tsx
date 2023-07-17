@@ -7,7 +7,7 @@ import { setUser } from './redux';
 import LayoutProvider from './LayoutProvider';
 import TwoFactorProvider from './TwoFactorProvider';
 import { SetStatus } from './Ft_Auth';
-const Auth = () => {
+const Auth =  () => {
 
 	// console.log("heeeellloooo");
 	
@@ -32,12 +32,12 @@ const Auth = () => {
 			return response.json()
 		
 		})
-		.then(data => {
+		.then(async(data) => {
 			
 			console.log("daddadadada",data);
 			if (!data.istwofactorenabled)
 			{
-				SetStatus(data.id);
+				 await SetStatus(data.id,1);
 				dispatch(setUser(null));
 				dispatch(setUser(data));
 				navigate("/home",{replace:true})

@@ -49,7 +49,7 @@ const Ft_Auth = () => {
 				console.log("ddddddddd",data);
 				if (!data.istwofactorenabled)
 				{	
-					SetStatus(data.id,0);
+					SetStatus(data.id,1);
 					dispatch(setUser(null));
 					dispatch(setUser(data));
 					console.log(data.status);
