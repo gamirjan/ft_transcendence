@@ -11,7 +11,7 @@ function Game({socket,name1,name2}) {
     
     const [width,setWidth] = useState((window.innerWidth / 2));
     const [height,setheight] = useState((window.innerHeight /2));
-    const[paddleHeight,setPaddleHeight] = useState(((200 * height) / 1080))
+    const[paddleHeight,setPaddleHeight] = useState(((200 * height) / (1080 * 1.5)))
     // let paddleHeight = ((200 * height) / 1080);
  const [room, setRoom] = useState(null);
  const [gameStarted, setGameStarted] = useState(false);
