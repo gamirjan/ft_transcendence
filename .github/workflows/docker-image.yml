@@ -24,6 +24,6 @@ jobs:
       run: | 
          output=$(sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'docker ps | wc -l')
          if [ "$output" != "5" ]; then
-           sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'docker logs ft_transendence-backend-1'
+           sshpass -p '${{ secrets.VM_PASS }}' ssh -o StrictHostKeyChecking=no gevorg@20.123.193.166 'docker logs backend'
            exit 1
          fi
