@@ -14,6 +14,7 @@ import { RoomService } from '../Game/services/room.service';
 import { Player } from '../Game/interfaces/player.interface';
 import { Input } from '../Game/interfaces/input.interface';
 import { Room } from '../Game/interfaces/room.interface';
+import { Injectable } from '@nestjs/common';
 
 let sockets = [];
 @WebSocketGateway(4001, { 
@@ -21,16 +22,38 @@ let sockets = [];
   cors: {
     origin:"*",
   },
-  namespace: 'pong',
+  namespace: 'ping',
 })
+
+@Injectable()
 export class ChatGetway {
     @WebSocketServer()
     server: Server;
     constructor(
+        
         private readonly userService: UsersService,
         private readonly roomService: RoomService,
       ) {}
     afterInit(server: Server){
+      }
+      async handleConnection(@ConnectedSocket() client: Socket): Promise<any> {
+        try
+        {
+           // console.log("dddddddddddddddd");
+          //console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
+          const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
+          ////console.log(user);
+          console.log("dddddddddddddddddddddddddddddddddddd");
+          console.log(user.id);
+          
+          console.log("dddddddddddddddddddddddddddddddddddd");
+
+          
+          if (!user) return client.disconnect();
+          
+          client.emit('info', { user });
+        }
+        catch {}
       }
     // handleConnections(client: Socket){
     //     console.log('New connection');
@@ -71,7 +94,10 @@ export class ChatGetway {
             
           // console.log("-----------------------------------------")
        
-          this.server.emit(`chat/${data.userid.id}`,data);
+          //this.server.emit(`chat/${data.values.id1}`,data);
+          this.server.emit(`chat/${data.values.id2}`,data);
+          console.log(data.values.id2,data.values.id1);
+          
           console.log("//////////////////////////////////////////////////////////////////////ffffffff/////////////////////////////////");
            // to all, including the sender
         // client.emit('chat',data);
@@ -93,20 +119,7 @@ export class ChatGetway {
         console.log("Room: " + room);
         client.join(room);
     }
-    async handleConnection(@ConnectedSocket() client: Socket): Promise<any> {
-        try
-        {
-           // console.log("dddddddddddddddd");
-          //console.log('New connection',JSON.parse(client.handshake.auth.headers.USER).user.id);
-          const user = await this.userService.findOneById(this.roomService.getUserFromSocket(client).id_42);
-          ////console.log(user);
-          
-          if (!user) return client.disconnect();
-          
-          client.emit('info', { user });
-        }
-        catch {}
-      }
+   
     
       async handleDisconnect(@ConnectedSocket() client: Socket): Promise<any> {
         try {

@@ -69,7 +69,7 @@ import { MuteChatsController } from './MuteChats/MuteChats.controller';
 
     controllers: [AppController,UsersController, AddUsersController,FriendController,AuthController, ChannelsController,
       ChannelUsersController, GoogleController,Ft_AuthController, ChannelMessagesController, GameController, DirectMessagesController, ImageController, MuteChatsController],
-    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, ChatGetway, GoogleService,Ft_AuthService,GameServer,RoomService,PongService],
+    providers: [AppService, ShutdownService,UsersService,AddUsersService,UserFriendService,AuthService, GoogleService,Ft_AuthService,GameServer,RoomService,PongService],
   })
   export class AppModule {
     constructor(){

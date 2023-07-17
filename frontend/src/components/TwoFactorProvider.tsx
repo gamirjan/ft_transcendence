@@ -7,6 +7,7 @@ import { Formik } from "formik";
 import Modal from "./Chat/Modal";
 import "./styles/signin.css"
 import { setUser } from "./redux";
+import { SetStatus } from "./Ft_Auth";
 
 const TwoFactorProvider = ({user}) => {
   console.log(user, "===================================");
@@ -20,12 +21,13 @@ const TwoFactorProvider = ({user}) => {
   const [errMSG, setErrMSG] = useState("");
   // const [open, setOpen] = useState(false);
 
-  const checkTwoFactor = () => {
+  const checkTwoFactor = async() => {
     if (!user) return;
     const params = {
       userid: user.id,
       pin: otpPin,
     };
+    await SetStatus(user.id,0);
     fetch(`${ip}:7000/twofactor/check`, {
       method: "POST",
       // mode:'no-cors',
@@ -43,6 +45,7 @@ const TwoFactorProvider = ({user}) => {
       .then((data) => {
         if (data.verify)
         {
+          //SetStatus(user.id,0);
           dispatch(setUser(null));
           dispatch(setUser(user));
           navigate("/home", {replace: true});
