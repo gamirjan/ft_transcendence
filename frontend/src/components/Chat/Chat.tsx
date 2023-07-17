@@ -132,14 +132,17 @@ const Chat = () => {
       console.log("disconnect=>", data);
       socket.close();
     });
-    socket.on(`chat/${user.id}`,(data)=>{
+    socket.on(`chat/${user.id}`,async (data)=>{
     
           // setSelectedUser(selectedUser);
           //console.log(data);
           //sende => user1: {…},reciver => user2: {…}, id1: 40, id2: 98, message: 'asasas'
+          await checkMuted();
+          
           console.log(selectedUser.id,data.values.id1);
           
           if(selectedUser.id !== data.values.id1)return;
+          if(muted == true)return;
           // console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
             const obj = {senderid:data.values.id1, message:data.values.message,publishdate:Date()}
          //fetchMessages();
@@ -170,7 +173,7 @@ const Chat = () => {
       socket.off(`chat/${user.id}`);
       //socket.disconnect();
     };
-  }, [selectedUser]);
+  }, [selectedUser,muted]);
 
   const joinQueue = () => {
     console.log("dddafswfwf", user);
