@@ -35,7 +35,7 @@ const Chat = () => {
   const [socket, setSocket] = useState(io());
   if (isSocket == false) {
     setSocket(
-      io(`${ip}:4001/pong`, {
+      io(`${ip}:4001/ping`, {
         closeOnBeforeunload: true,
         protocols: "ws",
         secure: true,
@@ -76,6 +76,7 @@ const Chat = () => {
   const [player1, setPlayer1] = useState("player1");
   const [player2, setPlayer2] = useState("player2");
   const [winner, setWinner] = useState({});
+  const [newmess,setNewmess] = useState([]);
 
   useEffect(() => {
     console.log("wiinnn");
@@ -131,19 +132,45 @@ const Chat = () => {
       console.log("disconnect=>", data);
       socket.close();
     });
-    socket.on("chat", (data) => {
-      console.log("chatt", data);
-    });
-
+    socket.on(`chat/${user.id}`,(data)=>{
+    
+          // setSelectedUser(selectedUser);
+          //console.log(data);
+          //sende => user1: {…},reciver => user2: {…}, id1: 40, id2: 98, message: 'asasas'
+          console.log(selectedUser.id,data.values.id1);
+          
+          if(selectedUser.id !== data.values.id1)return;
+          // console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
+            const obj = {senderid:data.values.id1, message:data.values.message,publishdate:Date()}
+         //fetchMessages();
+            setNewmess(prev => [...prev,obj]);
+            //setMessages(prev => [...prev,obj])
+            
+            
+          console.log(data);
+          
+          // if(Object.keys(selectedUser).length == 0) return
+          // if(selectedUser.id != data.sender.id)return
+         // console.log(data);
+        //  let arr = newmess;
+        //  arr.pop()
+        //  arr.push(obj)
+        //  setNewmess(prev => [...prev,arr]);
+         console.log(newmess);
+          
+          //senderid: 40, message: 'barev', publishdate: '2023-07-07T07:14:37.655Z'
+          
+          
+        })
     return () => {
       console.log("socket closed");
       socket.off("room");
-      socket.disconnect();
-      socket.close();
-      //socket.off();
+      //socket.disconnect();
+      //socket.close();
+      socket.off(`chat/${user.id}`);
       //socket.disconnect();
     };
-  }, []);
+  }, [selectedUser]);
 
   const joinQueue = () => {
     console.log("dddafswfwf", user);
@@ -178,15 +205,7 @@ const Chat = () => {
     socket.on("online", onOnline);
 
     socket.emit("online", { msg: "Hello, world!!!" });
-    socket.on("chat", function (obj) {
-      if (obj.msg !== "") {
-        setTextMessages([
-          ...(textMessages || []),
-          { msg: obj.displayname + ": " + obj.msg, username: obj.username },
-        ]);
-      }
-      console.log(obj.username + ": " + obj.msg);
-    });
+
 
     return () => {
       socket.off("connect", onConnect);
@@ -242,15 +261,15 @@ const Chat = () => {
     socket.on("online", onOnline);
 
     socket.emit("online", { msg: "Hello, world!!!" });
-    socket.on("chat", function (obj) {
-      if (obj.msg !== "") {
-        setTextMessages([
-          ...(textMessages || []),
-          { msg: obj.displayname + ": " + obj.msg, username: obj.username },
-        ]);
-      }
-      console.log(obj.username + ": " + obj.msg);
-    });
+    // socket.on("chat", function (obj) {
+    //   if (obj.msg !== "") {
+    //     setTextMessages([
+    //       ...(textMessages || []),
+    //       { msg: obj.displayname + ": " + obj.msg, username: obj.username },
+    //     ]);
+    //   }
+    //   console.log(obj.username + ": " + obj.msg);
+    // });
     fetchAllUsers();
     return () => {
       socket.off("connect", onConnect);
@@ -478,6 +497,7 @@ const Chat = () => {
       id2: selectedUser.id,
       message: msg,
     };
+    socket.emit('chat',{values})
     /* method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({   
@@ -715,8 +735,41 @@ const Chat = () => {
                             className="w-1/2 flex flex-col"
                             style={{ height: "70vh" }}
                           >
-                            {messages &&
+                           
+                                {messages &&
                               messages.map((msg, key) =>
+                                user && user.id != msg.senderid ? (
+                                  <div
+                                    className="flex justify-start mb-4"
+                                    key={key}
+                                  >
+                                    <img
+                                      src={selectedUser.avatarurl}
+                                      className="object-cover h-8 w-8 rounded-full"
+                                      alt=""
+                                    />
+                                    <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#1b1a10] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
+                                      {msg.message}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div
+                                    className="flex justify-end mb-4"
+                                    key={key}
+                                  >
+                                    <div className="mr-2 py-3 px-4  bg-[#1f2937] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
+                                      {msg.message}
+                                    </div>
+                                    <img
+                                      src={user.avatarurl}
+                                      className="object-cover h-8 w-8 rounded-full"
+                                      alt=""
+                                    />
+                                  </div>
+                                )
+                              )}
+                               {newmess &&
+                              newmess.map((msg, key) =>
                                 user && user.id != msg.senderid ? (
                                   <div
                                     className="flex justify-start mb-4"

@@ -9,9 +9,20 @@ import { useState } from 'react';
 import TwoFactorProvider from './TwoFactorProvider';
 import LayoutProvider from './LayoutProvider';
 
+export const SetStatus =async (id,num)=>{
+	
+	fetch(`${ip}:7000/users/status`, {
+		method: 'PATCH',
+		body: JSON.stringify({userid:id,status:num}),
+		headers: {
+			'Content-Type': 'application/json',
+		},
+	})
+	.then(res => res)
+	.then(data=>console.log(data))
+}
 const Ft_Auth = () => {
 	console.log("ft_auttthhththt");
-	
 	const navigate = useNavigate();
 	const user = useSelector((state: AppState) => state.user);
 	const [currentUser, setCurrentUser] = useState(user);
@@ -37,9 +48,12 @@ const Ft_Auth = () => {
 			.then(data => {
 				console.log("ddddddddd",data);
 				if (!data.istwofactorenabled)
-				{
+				{	
+					SetStatus(data.id,0);
 					dispatch(setUser(null));
 					dispatch(setUser(data));
+					console.log(data.status);
+					
 					navigate("/home",{replace:true})
 				}
 				else

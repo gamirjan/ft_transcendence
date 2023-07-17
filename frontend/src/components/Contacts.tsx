@@ -165,15 +165,13 @@ const Contacts = () => {
             onChange={handleSearch}
           />
         </div>
-        {filteredContacts.length ? (
-          <>
             <div className="mt-5 flex flex-col w-full p-5 bg-[#46464636] justify-center shadow items-center backdrop-blur rounded-xl overflow-y-scroll">
               <div className="flex flex-col text-3xl">Contacts</div>
               <div
                 className="flex flex-row flex-wrap h-full justify-start items-start w-full p-5"
                 style={{ maxHeight: "70vh" }}
               >
-                {filteredContacts.map((elem, key) => (
+                { filteredContacts.length ? filteredContacts.map((elem, key) => (
                   <div
                     key={key}
                     className="flex p-3 w-1/3 justify-center rounded-xl items-center hover:cursor-pointer hover:bg-[#46464636]"
@@ -200,7 +198,7 @@ const Contacts = () => {
                       </div>
                     </div>
                   </div>
-                ))}
+                )) : (<></>)}
                 <div className="flex flex-col w-full justify-center items-center py-5 text-3xl">
                   Suggestions
                 </div>
@@ -269,10 +267,6 @@ const Contacts = () => {
                 )}
               </div>
             </div>
-          </>
-        ) : (
-          <></>
-        )}
         {selectedUser ? (
           <Modal
             open={open}

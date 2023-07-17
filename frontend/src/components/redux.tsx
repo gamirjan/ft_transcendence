@@ -18,6 +18,7 @@ interface AppState {
     istwofactorenabled: boolean;
     wins: number;
     losses: number;
+    status:number
   } | null;
 }
 

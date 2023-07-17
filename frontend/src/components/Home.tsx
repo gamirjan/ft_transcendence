@@ -5,6 +5,9 @@ import Layout from "./Layout";
 import { useSelector } from "react-redux";
 import { store } from "./redux";
 import LayoutProvider from "./LayoutProvider";
+import { ip } from "./utils/ip";
+
+
 
 const Home = () => {
   const user = useSelector((state: AppState) => state.user);

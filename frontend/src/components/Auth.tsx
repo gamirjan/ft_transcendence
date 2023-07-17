@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from './redux';
 import LayoutProvider from './LayoutProvider';
 import TwoFactorProvider from './TwoFactorProvider';
+import { SetStatus } from './Ft_Auth';
 const Auth = () => {
 
 	// console.log("heeeellloooo");
@@ -36,6 +37,7 @@ const Auth = () => {
 			console.log("daddadadada",data);
 			if (!data.istwofactorenabled)
 			{
+				SetStatus(data.id);
 				dispatch(setUser(null));
 				dispatch(setUser(data));
 				navigate("/home",{replace:true})

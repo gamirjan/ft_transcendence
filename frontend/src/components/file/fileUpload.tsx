@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUser } from "../redux";
 import Modal from "../Chat/Modal";
+import { ip } from "../utils/ip";
 
 function FileUploadForm({ open, onClose }) {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -32,7 +33,7 @@ function FileUploadForm({ open, onClose }) {
       formData.append("image", selectedFile);
       formData.append("userid", user.id);
 
-      fetch("http://transendence.net:7000/users/avatar", {
+      fetch(`${ip}:7000/users/avatar`, {
         method: "POST",
         body: formData,
       })

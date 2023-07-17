@@ -39,6 +39,7 @@ import ChatMsg from "./components/ChatMsg";
 import Chat4 from "./components/Chat";
 import Test from "./components/Chat/testChat";
 import NotFound from "./components/NotFound";
+import ChatService from "./components/Chat/ChatService";
 
 function App() {
   const user = useSelector((state: AppState) => state.user);
@@ -65,14 +66,12 @@ function App() {
         <Route path="/twofactor" element={<TwoFactorProvider user={user} />} />
         <Route path="/ft_auth" element={<Ft_Auth />} />
         <Route path="/out" element={<Out />} />
-        {/* <Route path="/thegame" element={<PingPong/>}/> */}
-        {/* <Route path="/chat1" element={<ChatComponent/>}/> */}
-        {/* <Route path="/main" element={<PingPong width={800} height={300}/>}/> */}
         <Route path="/pin" element={<Pin />} />
         <Route path="/gg" element={<MatchmakingGame />} />
-        <Route path="/test" element={<FileUploadForm  />} />
-        <Route path="/test2" element={<Nick />} />
+        {/* <Route path="/test" element={<FileUploadForm  />} />
+        <Route path="/test2" element={<Nick />} /> */}
         <Route path="*" element={<NotFound/>}/>
+        <Route path="chattest" element={<ChatService/>}/>
         {/* <Route path="/aa" element={<GameMatch/>}/> */}
       </Routes>
     </Router>
