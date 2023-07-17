@@ -181,7 +181,7 @@ const Profile = () => {
                 className=" w-10 m-0 bottom-0 right-0 bg-gray-200 rounded-full p-2 hover:bg-gray-300"
                 onClick={() => setmodal(true)}
               >
-              
+              ✎
               </button>
               <img
                 src={user.avatarurl}
@@ -190,13 +190,12 @@ const Profile = () => {
               />
             </div>
             <p className="text-2xl text-center">{user.displayname}</p>
-
-            <div
-              onClick={() => {
-                setNick(!nick);
-              }}
-            > edit</div>
-            <div></div>
+            <button
+                className=" w-10 m-0 bottom-0 right-0 bg-gray-200 rounded-full p-0 hover:bg-gray-300"
+                onClick={() => setNick(!nick)}
+              >
+              ✎
+              </button>
           </div>
           <FileUploadForm open={modal} onClose={() => setmodal(false)} />
           <Nick open={nick} onClose={() => setNick(false)} />
@@ -271,34 +270,9 @@ const Profile = () => {
       </div>
 
       <div
-        className="text-xs md:text-sm bg-[#8a828236] backdrop-blur border-2 border-[#585858] rounded-t-lg shadow-xl flex justify-center mt-10"
-        style={{ maxHeight: "40vh", minWidth: "50vw" }}
+        className="grid grid-flow-col text-xs md:text-sm bg-[#8a828236] backdrop-blur border-2 border-[#585858] rounded-t-lg shadow-xl  mt-10"
+        style={{ maxHeight: "40vh", minWidth: "20%" }}
       >
-        <div className="flex flex-col w-full">
-          <div className=" p-8 w-full flex flex-col justify-center items-center">
-            <h4 className="text-xs md:text-lg text-white font-bold">
-              Personal Info
-            </h4>
-            <ul className="mt-2 text-gray-400">
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Birthday:</span>
-                <span className="text-gray-300">Hidden</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Mobile:</span>
-                <span className="text-gray-300">Hidden</span>
-              </li>
-              <li className="flex border-b py-2">
-                <span className="font-bold w-24">Email:</span>
-                <span className="text-gray-300">{userByID.twofactoremail}</span>
-              </li>
-              <li className="flex border-b py-2 flex-row justify-between ">
-                <span className="font-bold w-24 self-start">Loses:</span>
-                <span className="text-gray-300 self-end">7</span>
-              </li>
-            </ul>
-          </div>
-        </div>
 
         <div className="flex flex-col">
           <div className="p-8">
@@ -324,8 +298,8 @@ const Profile = () => {
                 <span className="font-bold w-24">Win Ratio:</span>
                 <span className="text-gray-300">
                   {Math.round(
-                    (scores.ScoreWins /
-                      (scores.ScoreWins + scores.ScoreLoses)) *
+                    (user.wins /
+                      (user.wins + user.losses)) *
                       100
                   )}
                   %
