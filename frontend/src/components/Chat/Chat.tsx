@@ -146,7 +146,7 @@ const Chat = () => {
           // console.log("ddddddddddddddddddddddddddddddddddddddddddddddddd");
             const obj = {senderid:data.values.id1, message:data.values.message,publishdate:Date()}
          //fetchMessages();
-            setNewmess(prev => [...prev,obj]);
+         setMessages(prev => [...prev,obj]);
             //setMessages(prev => [...prev,obj])
             
             
@@ -392,6 +392,13 @@ const Chat = () => {
   // }, [])
   const handleKeyDown = (e) => {
     if (e.key == "Enter") {
+      console.log("=============================>",muted);
+      
+      if(muted == true){
+
+        alert("this user is muted");
+        return;
+      }
       sendDMMessage();
       setDMMessage("");
       fetchAllUsers();
@@ -741,38 +748,6 @@ const Chat = () => {
                            
                                 {messages &&
                               messages.map((msg, key) =>
-                                user && user.id != msg.senderid ? (
-                                  <div
-                                    className="flex justify-start mb-4"
-                                    key={key}
-                                  >
-                                    <img
-                                      src={selectedUser.avatarurl}
-                                      className="object-cover h-8 w-8 rounded-full"
-                                      alt=""
-                                    />
-                                    <div className="ml-2 py-3 max-w-[480px] break-all px-4 bg-[#1b1a10] rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-                                      {msg.message}
-                                    </div>
-                                  </div>
-                                ) : (
-                                  <div
-                                    className="flex justify-end mb-4"
-                                    key={key}
-                                  >
-                                    <div className="mr-2 py-3 px-4  bg-[#1f2937] max-w-[480px] break-all rounded-bl-3xl rounded-tl-3xl rounded-tr-xl text-white">
-                                      {msg.message}
-                                    </div>
-                                    <img
-                                      src={user.avatarurl}
-                                      className="object-cover h-8 w-8 rounded-full"
-                                      alt=""
-                                    />
-                                  </div>
-                                )
-                              )}
-                               {newmess &&
-                              newmess.map((msg, key) =>
                                 user && user.id != msg.senderid ? (
                                   <div
                                     className="flex justify-start mb-4"

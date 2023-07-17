@@ -189,8 +189,15 @@ const Contacts = () => {
                         />
                       </div>
                       <div className="flex flex-col">
-                        <div className="text-lg font-bold  break-all text-center">
-                          {elem.user.displayname}
+                        <div className="flex flex-row justify-center text-lg font-bold  break-all text-center">
+                          {elem.user.status==0 ? 
+                          <p className="text-red-500 text-2xl">•</p>
+                          : elem.user.status==1 ?
+                          <p className="text-green-500 text-2xl">•</p>
+                          : elem.user.status==2 ?
+                          <p className="text-yellow-500 text-2xl">•</p>:<></>
+                          }
+                          <p className="ml-3">{elem.user.displayname}</p>
                         </div>
                         <p className="text-gray-400  break-all text-center">
                           {elem.user.email ? elem.user.email : "Hidden"}

@@ -10,7 +10,7 @@ function Out() {
   const user = useSelector((state: AppState) => state.user);
 
     useEffect(()=>{
-        SetStatus(user.id,1)
+        SetStatus(user.id,0)
         dispatch(setUser(null));
         navigate("/",{replace:true})
         
