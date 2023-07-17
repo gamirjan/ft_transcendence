@@ -185,7 +185,7 @@ const Contacts = () => {
                         <img
                           src={elem.user.avatarurl}
                           alt="Avatar"
-                          className="w-32 h-32 rounded-full"
+                          className="object-cover w-32 h-32 rounded-full"
                         />
                       </div>
                       <div className="flex flex-col">
@@ -225,7 +225,7 @@ const Contacts = () => {
                             <img
                               src={elem.avatarurl}
                               alt="Avatar"
-                              className="w-32 h-32 rounded-full"
+                              className="object-cover w-32 h-32 rounded-full"
                             />
                           </div>
                           <div className="flex flex-col">
@@ -256,7 +256,7 @@ const Contacts = () => {
                             <img
                               src={elem.avatarurl}
                               alt="Avatar"
-                              className="w-32 h-32 rounded-full"
+                              className="object-cover w-32 h-32 rounded-full"
                             />
                           </div>
                           <div className="flex flex-col">
@@ -286,7 +286,7 @@ const Contacts = () => {
                   <img
                     src={selectedUser.avatarurl}
                     alt="Avatar"
-                    className="w-32 h-32 rounded-full"
+                    className="object-cover w-32 h-32 rounded-full"
                   />
                 </div>
                 <div className="flex flex-col">
