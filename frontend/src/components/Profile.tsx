@@ -185,7 +185,7 @@ const Profile = () => {
               </button>
               <img
                 src={user.avatarurl}
-                className="border-4 border-white rounded-full"
+                className="object-cover border-4 border-white rounded-full"
                 style={{ width: "90%", height: "80%" }}
               />
             </div>
