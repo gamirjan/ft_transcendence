@@ -278,7 +278,7 @@ const Contacts = () => {
           <Modal
             open={open}
             onClose={() => setOpen(false)}
-            contentClassName={"bg-[#46464636] backdrop-blur w-[40%] h-[30%]"}
+            contentClassName={"bg-[#46464636] backdrop-blur w-[60%] h-[50%]"}
           >
             <div className="flex flex-row p-5 w-full justify-between rounded-xl">
               <div key={selectedUser.id} className="flex flex-col self-start">
@@ -298,6 +298,46 @@ const Contacts = () => {
                   </p>
                 </div>
               </div>
+
+              <div className="flex flex-col">
+                <div className="p-1">
+                  <h4 className="text-xs md:text-lg text-white font-bold">
+                    Game Info
+                  </h4>
+                  <ul className="mt-2 text-gray-400">
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Total:</span>
+                      <span className="text-gray-300">{`${
+                        user.wins + user.losses
+                      }`}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Wins:</span>
+                      <span className="text-gray-300">{user.wins}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Loses:</span>
+                      <span className="text-gray-300">{user.losses}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Win Ratio:</span>
+                      <span className="text-gray-300">
+                        {(user.wins + user.losses) ? (
+                          Math.round(
+                            (user.wins /
+                              (user.wins + user.losses)) *
+                              100
+                          )
+                        ) : (
+                          0
+                        )}
+                        %
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
               <div className="flex flex-col self-end h-full">
                 <div className="flex flex-col w-full ">
                   {!(selectedUser &&
