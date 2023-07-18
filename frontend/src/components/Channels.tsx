@@ -676,10 +676,9 @@ const ChannelComponent = () => {
                       />
                     </div>
 
-                    <div className="flex flex-col h-full py-5">
-                      <div className="flex flex-col h-full relative">
-                        <div className="absolute top-5 bottom-0 left-0 w-full">
-                          <div className="overflow-y-scroll  flex justify-center">
+                    <div className="flex flex-col h-auto px-5 pt-1">
+                      <div className="flex flex-col top-5 bottom-0 left-0 w-full">
+                        <div className="overflow-y-scroll  flex justify-center h-[80%]">
                             <div
                               className="w-1/2 flex flex-col"
                               style={{ height: "65vh" }}
@@ -722,7 +721,7 @@ const ChannelComponent = () => {
                             <div className="flex py-5 justify-around">
                               <input
                                 disabled={!selectedChannel || muted}
-                                className={`w-1/2 bg-[#36323270] backdrop-blur-sm py-5 px-3 rounded-xl outline-none border-[#2f2f2f] border-2 \
+                                className={`w-1/2 h-auto px-3 rounded-xl bg-[#36323270] outline-none border-[#2f2f2f] border-2 \
                 ${
                   selectedChannel
                     ? "hover:border-[#707579] focus:border-[#707579]"
@@ -737,7 +736,6 @@ const ChannelComponent = () => {
                             </div>
                           }
                         </div>
-                      </div>
                       {/* </div> */}
                     </div>
                   </div>
@@ -754,7 +752,7 @@ const ChannelComponent = () => {
                             X
                           </div>
                           <div className=" flex justify-end font-semibold text-2xl px-10">
-                            Chat
+                            Channel
                           </div>
                         </div>
                       </div>

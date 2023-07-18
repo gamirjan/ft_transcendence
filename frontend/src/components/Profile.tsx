@@ -297,10 +297,14 @@ const Profile = () => {
               <li className="flex border-b py-2">
                 <span className="font-bold w-24">Win Ratio:</span>
                 <span className="text-gray-300">
-                  {Math.round(
-                    (user.wins /
-                      (user.wins + user.losses)) *
-                      100
+                  {(user.wins + user.losses) ? (
+                    Math.round(
+                      (user.wins /
+                        (user.wins + user.losses)) *
+                        100
+                    )
+                  ) : (
+                    0
                   )}
                   %
                 </span>

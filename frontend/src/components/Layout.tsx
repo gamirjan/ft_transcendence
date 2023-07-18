@@ -11,10 +11,10 @@ const Layout = ({ children, auth = true, scrollable = false }) => {
         !scrollable ? "overflow-hidden" : "overflow-y-scroll"
       } min-h-full max-h-full text-[#aaaaaa] bg-[#181818] w-full`}
     >
-      <div className="flex flex-row sticky shadow bg-[#181923] top-0 z-[2] border-b-2 border-[#585858] justify-around py-3">
-        <div className="flex text-2xl font-bold justify-center items-center h-full self-start">Loro piana</div>
+      <div className="flex flex-row sticky shadow bg-[#181923] top-0 z-[2] border-b-2 border-[#585858] justify-around py-0 md:py-3">
+        <div className="flex text-xs md:text-2xl font-bold justify-center items-center h-full self-start hidden md:flex">Loro piana</div>
         <div
-          className={`flex flex-row justify-between text-2xl space-x-4 font-bold self-end ${
+          className={`flex flex-row justify-between text-2xl space-x-0 md:space-x-4 font-bold self-end ${
             !auth ? "hidden" : ""
           }`}
         >

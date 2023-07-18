@@ -278,11 +278,11 @@ const Contacts = () => {
           <Modal
             open={open}
             onClose={() => setOpen(false)}
-            contentClassName={"bg-[#46464636] backdrop-blur w-[40%] h-[30%]"}
+            contentClassName={"bg-[#46464636] backdrop-blur h-[50%]"}
           >
-            <div className="flex flex-row p-5 w-full justify-between rounded-xl">
-              <div key={selectedUser.id} className="flex flex-col self-start">
-                <div className="flex flex-col justify-center items-center p-5">
+            <div className="flex flex-row p-5 justify-between items-center rounded-xl">
+              <div key={selectedUser.id} className="flex flex-col">
+                <div className="flex justify-center items-center p-5">
                   <img
                     src={selectedUser.avatarurl}
                     alt="Avatar"
@@ -290,36 +290,77 @@ const Contacts = () => {
                   />
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-lg font-bold  break-all text-center">
+                  <p className="text-lg font-bold  break-all text-center">
                     {selectedUser.displayname}
-                  </div>
+                  </p>
                   <p className="text-gray-400  break-all text-center">
                     {selectedUser.email ? selectedUser.email : "Hidden"}
                   </p>
+
+                  <div className="self-center h-full">
+                    <div className="flex flex-col w-full ">
+                      {!(selectedUser &&
+                      filteredContacts.find(
+                        (obj) => obj.user.id == selectedUser.id)
+                      ) ? (
+                        <button
+                          className="mt-5 flex justify-end items-center m-0 px-10 py-3 bg-green-900"
+                          onClick={addFriend}
+                        >
+                          Add Friend
+                        </button>
+                      ) : (
+                        <button
+                          className="mt-5 flex justify-end m-0 items-center px-10 py-3 bg-red-900"
+                          onClick={removeFriend}
+                        >
+                          Remove Friend
+                        </button>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="flex flex-col self-end h-full">
-                <div className="flex flex-col w-full ">
-                  {!(selectedUser &&
-                  filteredContacts.find(
-                    (obj) => obj.user.id == selectedUser.id)
-                  ) ? (
-                    <button
-                      className="mt-5 flex justify-end items-center m-0 px-10 py-3 bg-green-900"
-                      onClick={addFriend}
-                    >
-                      Add Friend
-                    </button>
-                  ) : (
-                    <button
-                      className="mt-5 flex justify-end m-0 items-center px-10 py-3 bg-red-900"
-                      onClick={removeFriend}
-                    >
-                      Remove Friend
-                    </button>
-                  )}
+
+              <div className="flex flex-col p-5">
+                <div className="p-1">
+                  <h4 className="text-xs md:text-lg text-white font-bold">
+                    Game Info
+                  </h4>
+                  <ul className="mt-2 text-gray-400">
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Total:</span>
+                      <span className="text-gray-300">{`${
+                        selectedUser.wins + selectedUser.losses
+                      }`}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Wins:</span>
+                      <span className="text-gray-300">{selectedUser.wins}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Loses:</span>
+                      <span className="text-gray-300">{selectedUser.losses}</span>
+                    </li>
+                    <li className="flex border-b py-2">
+                      <span className="font-bold w-24">Win Ratio:</span>
+                      <span className="text-gray-300">
+                        {(selectedUser.wins + selectedUser.losses) ? (
+                          Math.round(
+                            (selectedUser.wins /
+                              (selectedUser.wins + selectedUser.losses)) *
+                              100
+                          )
+                        ) : (
+                          0
+                        )}
+                        %
+                      </span>
+                    </li>
+                  </ul>
                 </div>
               </div>
+
             </div>
           </Modal>
         ) : (

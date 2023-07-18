@@ -547,7 +547,7 @@ const Chat = () => {
           style={{ zIndex: 100, minWidth: "1000px" }}
         >
           <div
-            className={`container mx-auto h-full flex flex-col text-white shadow-lg rounded-lg`}
+            className={`container mx-auto w-full h-full flex flex-col text-white shadow-lg rounded-lg`}
             style={{
               backgroundImage: `url(${chatContent})`,
               backgroundRepeat: "repeat",
@@ -684,7 +684,7 @@ const Chat = () => {
               {/* <!-- end chat list --> */}
               {/* <!-- message --> */}
               <div
-                className={`w-full flex flex-row justify-between border-r-2 border-[#585858] ${
+                className={`flex flex-row w-full h-full justify-between border-r-2 border-[#585858] ${
                   !(selectedUser && Object.keys(selectedUser).length != 0)
                     ? "hidden"
                     : ""
@@ -713,9 +713,16 @@ const Chat = () => {
                           />
                         </div>
                         <div className="flex flex-col">
-                          <div className="ml-2  py-3 px-4 justify-center rounded-xl text-white">
+                          <div className="flex flex-row ml-2 py-3 px-4 items-center justify-center rounded-xl text-white">
                             {selectedUser.displayname ??
                               (user ? user.displayname : "Saved Message")}
+                              {selectedUser.status==0 ? 
+                              <p className="text-red-500 text-2xl">•</p>
+                              : selectedUser.status==1 ?
+                              <p className="text-green-500 text-2xl">•</p>
+                              : selectedUser.status==2 ?
+                              <p className="text-yellow-500 text-2xl">•</p>:<></>
+                              }
                           </div>
                         </div>
                         <div className="flex flex-col">
@@ -737,12 +744,11 @@ const Chat = () => {
                     />
                   </div>
 
-                  <div className="flex flex-col h-full py-5">
-                    <div className="flex flex-col h-full relative">
-                      <div className="absolute top-5 bottom-0 left-0 w-full">
-                        <div className="overflow-y-scroll  flex justify-center">
+                  <div className="flex flex-col h-auto px-5 pt-1">
+                      <div className="flex flex-col top-5 bottom-0 left-0 w-full">
+                        <div className="overflow-y-scroll  flex justify-center h-[80%]">
                           <div
-                            className="w-1/2 flex flex-col"
+                            className="w-4/5 flex flex-col"
                             style={{ height: "70vh" }}
                           >
                            
@@ -781,7 +787,7 @@ const Chat = () => {
                           </div>
                         </div>
                         {
-                          <div className="flex py-5 justify-around">
+                          <div className="flex pt-1 justify-around">
                             <input
                               disabled={
                                 !(
@@ -789,7 +795,7 @@ const Chat = () => {
                                   Object.keys(selectedUser).length
                                 )
                               }
-                              className={`w-1/2  py-5 px-3 rounded-xl bg-[#36323270] outline-none border-[#2f2f2f] border-2 \
+                              className={`w-1/2 h-auto px-3 rounded-xl bg-[#36323270] outline-none border-[#2f2f2f] border-2 \
                 ${
                   selectedUser && Object.keys(selectedUser).length
                     ? "hover:border-[#707579] focus:border-[#707579]"
@@ -803,35 +809,32 @@ const Chat = () => {
                             />
                           </div>
                         }
-                      </div>
                     </div>
                     {/* </div> */}
                   </div>
                 </div>
                 {openSidebar && (
                   <div
-                    className={`flex flex-col bg-[#36323270] h-full w-full border-l-2 border-[#585858] toggleSidebar`}
+                    className={`flex flex-col bg-[#36323270] h-full items-center w-[50%] border-l-2 border-[#585858] toggleSidebar`}
                   >
-                    <div className="flex flex-row justify-start py-5 w-full px-5">
-                      <div className="flex flex-row">
+                    <div className="grid justify-items-stretch py-5 w-full px-5">
+                        <div className="justify-self-center font-semibold text-2xl px-10 relative">
+                          Profile
+                        </div>
                         <div
-                          className="flex justify-center hover:cursor-pointer hover:bg-[#36323270] hover:rounded-full p-2 w-10 h-10"
+                          className="absolute justify-self-end hover:cursor-pointer hover:bg-[#36323270] hover:rounded-full p-2 w-10 h-10"
                           onClick={toggleSidebar}
                         >
                           X
                         </div>
-                        <div className=" flex justify-end font-semibold text-2xl px-10">
-                          Profile
-                        </div>
-                      </div>
                     </div>
-                    <div className="flex flex-col">
-                      <div className="flex flex-row">
+                    <div className="flex flex-col h-[40%] p-5">
+                      <div className="flex flex-row h-full items-center">
                         <div className="flex flex-row h-auto w-full relative">
                           <img
                             src={selectedUser.avatarurl}
                             alt=""
-                            className="object-cover h-50 w-full"
+                            className="object-cover w-60 h-60 rounded-xl"
                           />
                           <div className="absolute flex justify-start bottom-0 p-3 w-full bg-[#3d3c4096]">
                             {selectedUser.displayname}
@@ -840,28 +843,66 @@ const Chat = () => {
                       </div>
                     </div>
                     <div className="flex p-5 flex-col">
-                      <div className="rounded-xl hover:bg-[#36323270] p-5 text-white">
                         <pre>
                           {"Email: " + (selectedUser.email ?? "Hidden")}
                         </pre>
-                      </div>
                     </div>
-                    <div className="flex p-2 flex-col w-full">
+
+                    <div className="flex flex-row p-5 pt-0 w-[100%] justify-items-start">
+                      <div className="flex flex-col p-3 text-xs w-[50%]">
+                        <h4 className="text-xs md:text-lg text-white font-bold">
+                          Game Info
+                        </h4>
+                        <ul className="mt-2 text-gray-400">
+                          <li className="flex border-b py-2">
+                            <span className="font-bold w-24">Total:</span>
+                            <span className="text-gray-300">{`${
+                              selectedUser.wins + selectedUser.losses
+                            }`}</span>
+                          </li>
+                          <li className="flex border-b py-2">
+                            <span className="font-bold w-24">Wins:</span>
+                            <span className="text-gray-300">{selectedUser.wins}</span>
+                          </li>
+                          <li className="flex border-b py-2">
+                            <span className="font-bold w-24">Loses:</span>
+                            <span className="text-gray-300">{selectedUser.losses}</span>
+                          </li>
+                          <li className="flex border-b py-2">
+                            <span className="font-bold w-24">Win Ratio:</span>
+                            <span className="text-gray-300">
+                              {(selectedUser.wins + selectedUser.losses) ? (
+                                Math.round(
+                                  (selectedUser.wins /
+                                    (selectedUser.wins + selectedUser.losses)) *
+                                    100
+                                )
+                              ) : (
+                                0
+                              )}
+                              %
+                            </span>
+                          </li>
+                        </ul>
+                      </div>
+                    
+                    <div className="flex p-3 flex-col w-[50%]">
                       {muted ? (
                         <button
-                          className="p-4 bg-[#3e3836] rounded-xl hover:bg-[#2b2727] text-[#aaaaaa]"
+                          className="p-1 mt-0 bg-[#3e3836] rounded-xl hover:bg-[#2b2727] text-[#aaaaaa]"
                           onClick={unMuteUser}
                         >
                           Unmute User
                         </button>
                       ) : (
                         <button
-                          className="p-4 bg-[#3e3836] rounded-xl hover:bg-[#2b2727] text-[#aaaaaa]"
+                          className="p-1 mt-0 bg-[#3e3836] rounded-xl hover:bg-[#2b2727] text-[#aaaaaa]"
                           onClick={muteUser}
                         >
                           Mute User
                         </button>
                       )}
+                    </div>
                     </div>
                   </div>
                 )}
