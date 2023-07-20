@@ -18,7 +18,7 @@ const configg :TypeOrmModuleOptions=
     autoLoadEntities: true,
     synchronize: false,
     entities:['src/**/*.entity.ts'],
-    ssl: true,
+    ssl: false,
 }
 
 export default configg
