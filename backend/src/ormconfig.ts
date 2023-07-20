@@ -16,7 +16,7 @@ const configg :TypeOrmModuleOptions=
     username: process.env.USE,
     password:  process.env.PASSWORD as string,
     autoLoadEntities: true,
-    synchronize: false,
+    synchronize: true,
     entities:['src/**/*.entity.ts'],
     ssl: false,
 }
